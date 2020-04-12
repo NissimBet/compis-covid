@@ -1,0 +1,44 @@
+/*
+	Gramatica para Lenguaje Covid19
+	Generada por Nissim Betesh y Alejandro Longoria
+    
+    Generar diagramas de sintaxis en 
+    (https://www.bottlecaps.de/rr/ui)
+
+*/
+
+/*
+    TODO
+    La parte que me falta es la seccion de Asignacion 
+    del documento. Revisa ASIGNACION y EXPRESION 
+    Tampoco he manejado el and y el or
+    Faltan las funciones especiales
+*/
+
+PROGRAMA  ::= 'Programa' 'id' ';' VARS? FUNCION* PRINCIPAL
+VARS ::= 'var' (TIPO ':' LISTA_ID ';')+
+LISTA_ID ::= ID_COMPLETO (',' ID_COMPLETO)*
+ID_COMPLETO ::='id' DIMENSION? 
+DIMENSION ::= ('[' VAR_CTE ']' ('[' VAR_CTE ']')? )?
+TIPO ::= 'int' | 'float' | 'string' | 'char' | 'Dataframe'
+FUNCION ::= 'funcion' TIPO_RETORNO 'nombre_modulo' '(' PARAMETROS? ')' VARS? '{' ESTATUTO* '}'
+TIPO_RETORNO ::= TIPO | 'void'
+PARAMETROS ::= EXPRESION (',' EXPRESION)*
+ESTATUTO ::= ASIGNACION | LLAMADA | RETORNO | LECTURA | ESCRITURA | CARGA_DATOS | DECISION | REPETICION
+ASIGNACION ::= ID_COMPLETO '=' EXPRESION ';'
+LLAMADA_VOID ::= 'nombre_modulo' '(' EXPRESION* ')' ';'
+RETORNO ::= 'regresa' '(' EXP ')' ';'
+LECTURA ::= 'lee' '(' LISTA_ID ')' ';'
+ESCRITURA ::= 'escribe' '(' (EXPRESION | CTE_S )+ ')' ';'
+CARGA_DATOS ::= 'CargaArchivo' '(' 'id' ',' 'ruta_acceso' ',' VAR_CTE ',' VAR_CTE ')' ';'
+DECISION ::= 'si' '(' EXPRESION ')' 'entonces' '{' ESTATUTO* '}' ( 'sino' '{' ESTATUTO* '}' )?
+REPETICION ::= CONDICIONAL | NO_CONDICIONAL
+CONDICIONAL ::= 'mientras' '(' EXPRESION ')' 'haz' '{' ESTATUTO* '}'
+NO_CONDICIONAL ::= 'desde' ID_COMPLETO '=' EXP 'hasta' EXP 'hacer' '{' ESTATUTO* '}'
+VAR_CTE ::= 'id' | 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_S'
+EXPRESION ::= ( EXP | LLAMADA) ( ('>' | '<' | '==') ( EXP | LLAMADA ) )?
+EXP ::= TERMINO ( ( '+' | '-' ) TERMINO )*
+TERMINO ::= FACTOR ( ('*' | '/') FACTOR )*
+FACTOR ::= ( '(' EXPRESION ')' )  | ( ('+' | '-')? VAR_CTE)
+LLAMADA ::= id '(' FUNC_USE_PARAMS ')'
+FUNC_USE_PARAMS ::= (TIPO 'id' ',')*
