@@ -15,13 +15,13 @@
     Faltan las funciones especiales
 */
 
-PROGRAMA  ::= 'Programa' 'id' ';' VARS? FUNCION* PRINCIPAL
+PROGRAMA  ::= 'program' 'id' ';' VARS? FUNCION* PRINCIPAL
 VARS ::= 'var' (TIPO ':' LISTA_ID ';')+
 LISTA_ID ::= ID_COMPLETO (',' ID_COMPLETO)*
 ID_COMPLETO ::='id' DIMENSION? 
 DIMENSION ::= ('[' VAR_CTE ']' ('[' VAR_CTE ']')? )?
 TIPO ::= 'int' | 'float' | 'string' | 'char' | 'Dataframe'
-FUNCION ::= 'funcion' TIPO_RETORNO 'nombre_modulo' '(' PARAMETROS? ')' VARS? '{' ESTATUTO* '}'
+FUNCION ::= 'funcion' TIPO_RETORNO 'nombre_modulo' '(' PARAMETROS? ')' VARS? '{' BLOQUE? '}'
 TIPO_RETORNO ::= TIPO | 'void'
 PARAMETROS ::= EXPRESION (',' EXPRESION)*
 ESTATUTO ::= ASIGNACION | LLAMADA | RETORNO | LECTURA | ESCRITURA | CARGA_DATOS | DECISION | REPETICION
@@ -31,14 +31,18 @@ RETORNO ::= 'regresa' '(' EXP ')' ';'
 LECTURA ::= 'lee' '(' LISTA_ID ')' ';'
 ESCRITURA ::= 'escribe' '(' (EXPRESION | CTE_S )+ ')' ';'
 CARGA_DATOS ::= 'CargaArchivo' '(' 'id' ',' 'ruta_acceso' ',' VAR_CTE ',' VAR_CTE ')' ';'
+MAIN ::= 'main' '(' ')' VARS '{' BLOQUE '}' 
 DECISION ::= 'si' '(' EXPRESION ')' 'entonces' '{' ESTATUTO* '}' ( 'sino' '{' ESTATUTO* '}' )?
 REPETICION ::= CONDICIONAL | NO_CONDICIONAL
 CONDICIONAL ::= 'mientras' '(' EXPRESION ')' 'haz' '{' ESTATUTO* '}'
 NO_CONDICIONAL ::= 'desde' ID_COMPLETO '=' EXP 'hasta' EXP 'hacer' '{' ESTATUTO* '}'
 VAR_CTE ::= 'id' | 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_S'
-EXPRESION ::= ( EXP | LLAMADA) ( ('>' | '<' | '==') ( EXP | LLAMADA ) )?
+EXPRESION ::= ( EXP | LLAMADA) ( COMPARISON_OPS ( EXP | LLAMADA ) )?
+COMPARISON_OPS ::= '<' | '>' | DIFF | EQUAL
 EXP ::= TERMINO ( ( '+' | '-' ) TERMINO )*
 TERMINO ::= FACTOR ( ('*' | '/') FACTOR )*
 FACTOR ::= ( '(' EXPRESION ')' )  | ( ('+' | '-')? VAR_CTE)
+
 LLAMADA ::= id '(' FUNC_USE_PARAMS ')'
 FUNC_USE_PARAMS ::= (TIPO 'id' ',')*
+CTE_STRING ::= ID | CTE_STRING

@@ -12,29 +12,54 @@ import ply.lex as lex
 # Rule to match reserved words and identifiers
 reserved = {
     'program': 'PROGRAM',
-    'print': 'PRINT',
+    'function': 'FUNCTION',
+
     'if': 'IF',
+    'then': 'THEN',
     'else': 'ELSE',
+
     'var': 'VAR',
+    'return': 'RETURN',
+
+    'main': 'MAIN',
+
+    'read': 'READ',
+    'write': 'WRITE',
+    'load': 'LOAD',
+
+    # loops
+    'while': 'WHILE',
+    'do': 'DO',
+    'from': 'FROM',
+    'to': 'TO',
+
+    # data types
     'int': 'INT',
-    'float': 'FLOAT'
+    'float': 'FLOAT',
+    'string': 'STRING',
+    'char': 'CHAR',
+    'void': 'VOID',
+    'dataFrame': 'DATAFRAME'
 }
 
 # List of token names.   This is always required
 tokens = [
-
-    'DESIGUAL',
+    'EQUAL',
+    'DIFF',
     'CTE_F',
     'CTE_I',
     'ID',
-    'CTE_STRING'
+    'CTE_STRING',
+    'CTE_CHAR',
 ] + list(reserved.values())
 
 literals = '+-*/=<>(){}:;,'
 
 # Regular expression rules for simple tokens
-t_DESIGUAL = r'<>'
+t_DIFF = r'<>'
+t_EQUAL = r'=='
 t_CTE_STRING = r'\".*\"'
+t_CTE_CHAR = r'\'.\''
 
 # Expression rule to detect and convert floating point numbers
 
