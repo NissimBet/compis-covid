@@ -7,6 +7,7 @@
 # code samples from: https://ply.readthedocs.io/en/latest/ply.html
 # ------------------------------------------------------------
 
+import logging
 import ply.yacc as yacc
 
 # Get the token map from the lexer.  This is required.
@@ -404,17 +405,23 @@ program donpato;
 var float:numero;
 main() {
     numeroPi = 3.1;
-	if (numeroPi < 3.14) {
+	if (numeroPi < hi) {
 		numeroPi = 3.14159;
 	}
     else
     {
 		print("Coronavirus will destroy math");
-	};
+	}
 }
 '''
 
-if (parser.parse(data, tracking=True) == 'COMPILA'):
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filemode="w",
+    filename="parselog.txt")
+
+if (parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA'):
     print("Sintaxis aceptada")
 else:
     print("error de sintaxis")
