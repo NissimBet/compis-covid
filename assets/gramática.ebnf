@@ -7,35 +7,27 @@
 
 */
 
-/*
-    TODO
-    La parte que me falta es la seccion de Asignacion 
-    del documento. Revisa ASIGNACION y EXPRESION 
-    Tampoco he manejado el and y el or
-    Faltan las funciones especiales
-*/
-
 PROGRAMA  ::= 'program' 'id' ';' VARS? FUNCION* PRINCIPAL
 VARS ::= 'var' (TIPO ':' LISTA_ID ';')+
 LISTA_ID ::= ID_COMPLETO (',' ID_COMPLETO)*
 ID_COMPLETO ::='id' DIMENSION? 
 DIMENSION ::= ('[' VAR_CTE ']' ('[' VAR_CTE ']')? )?
 TIPO ::= 'int' | 'float' | 'string' | 'char' | 'Dataframe'
-FUNCION ::= 'funcion' TIPO_RETORNO 'nombre_modulo' '(' PARAMETROS? ')' VARS? '{' BLOQUE? '}'
+FUNCION ::= 'function' TIPO_RETORNO 'module_name' '(' PARAMETROS? ')' VARS? '{' BLOQUE? '}'
 TIPO_RETORNO ::= TIPO | 'void'
 PARAMETROS ::= EXPRESION (',' EXPRESION)*
 ESTATUTO ::= ASIGNACION | LLAMADA | RETORNO | LECTURA | ESCRITURA | CARGA_DATOS | DECISION | REPETICION
 ASIGNACION ::= ID_COMPLETO '=' EXPRESION ';'
-LLAMADA_VOID ::= 'nombre_modulo' '(' EXPRESION* ')' ';'
-RETORNO ::= 'regresa' '(' EXP ')' ';'
-LECTURA ::= 'lee' '(' LISTA_ID ')' ';'
-ESCRITURA ::= 'escribe' '(' (EXPRESION | CTE_S )+ ')' ';'
-CARGA_DATOS ::= 'CargaArchivo' '(' 'id' ',' 'ruta_acceso' ',' VAR_CTE ',' VAR_CTE ')' ';'
+LLAMADA_VOID ::= 'module_name' '(' EXPRESION* ')' ';'
+RETORNO ::= 'return' '(' EXP ')' ';'
+LECTURA ::= 'read' '(' LISTA_ID ')' ';'
+ESCRITURA ::= 'write' '(' (EXPRESION | CTE_S )+ ')' ';'
+CARGA_DATOS ::= 'load' '(' 'id' ',' 'file_path' ',' VAR_CTE ',' VAR_CTE ')' ';'
 MAIN ::= 'main' '(' ')' VARS '{' BLOQUE '}' 
-DECISION ::= 'si' '(' EXPRESION ')' 'entonces' '{' ESTATUTO* '}' ( 'sino' '{' ESTATUTO* '}' )?
+DECISION ::= 'if' '(' EXPRESION ')' 'then' '{' ESTATUTO* '}' ( 'else' '{' ESTATUTO* '}' )?
 REPETICION ::= CONDICIONAL | NO_CONDICIONAL
-CONDICIONAL ::= 'mientras' '(' EXPRESION ')' 'haz' '{' ESTATUTO* '}'
-NO_CONDICIONAL ::= 'desde' ID_COMPLETO '=' EXP 'hasta' EXP 'hacer' '{' ESTATUTO* '}'
+CONDICIONAL ::= 'while' '(' EXPRESION ')' 'do' '{' ESTATUTO* '}'
+NO_CONDICIONAL ::= 'from' ID_COMPLETO '=' EXP 'to' EXP 'do' '{' ESTATUTO* '}'
 VAR_CTE ::= 'id' | 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_S'
 EXPRESION ::= ( EXP | LLAMADA) ( COMPARISON_OPS ( EXP | LLAMADA ) )?
 COMPARISON_OPS ::= '<' | '>' | DIFF | EQUAL
