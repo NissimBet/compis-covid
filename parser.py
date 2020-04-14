@@ -214,7 +214,7 @@ def p_main_1(p):
 # TODO Hacer else if
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
-    '''condition    : IF '(' expression ')' '{' condition_1 '}' condition_2 '''
+    '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
     pass
 
 
@@ -375,7 +375,7 @@ def p_factor_1(p):
 
 
 def p_bloque(p):
-    '''bloque   : statement bloque_1'''
+    '''bloque   : bloque_1'''
     pass
 
 
@@ -400,20 +400,33 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc(start="programa")
 
+
+# EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
+
 data = '''
 program donpato;
 var float:numero;
 main() {
-    numeroPi = 3.1;
-	if (numeroPi < hi) {
-		numeroPi = 3.14159;
-	}
-    else
-    {
-		print("Coronavirus will destroy math");
-	}
+   if (3 > 2) then {
+       numero = 5.5;
+   }
 }
 '''
+
+# data = '''
+# program donpato;
+# var float:numero;
+# main() {
+#     numeroPi = 3.1;
+# 	if (numeroPi < hi) {
+# 		numeroPi = 3.14159;
+# 	}
+#     else
+#     {
+# 		print("Coronavirus will destroy math");
+# 	}
+# }
+# '''
 
 
 logging.basicConfig(
