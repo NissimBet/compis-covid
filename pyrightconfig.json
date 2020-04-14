@@ -1,4 +1,0 @@
-{
-  "exclude": ["ply_master", "tarea_3/ply"],
-  "executionEnvironments": [{ "root": "tarea_3", "pythonVersion": "3.8" }]
-}
