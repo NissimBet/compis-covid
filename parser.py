@@ -268,9 +268,11 @@ def p_var_cte(p):
                     | CTE_STRING 
                     | CTE_CHAR '''
 
+
 def p_var_cte_1(p):
     '''var_cte_1    : ID var_cte_2'''
     pass
+
 
 def p_var_cte_2(p):
     '''var_cte_2    : func_call_1
@@ -278,6 +280,8 @@ def p_var_cte_2(p):
     pass
 
 # ID ( EXPRESION* ) ;
+
+
 def p_func_call(p):
     '''func_call    : ID '(' func_call_1 ')' ';' '''
     pass
@@ -370,7 +374,7 @@ def p_factor_1(p):
 
 
 def p_bloque(p):
-    '''bloque   : statement bloque_1'''
+    '''bloque   : bloque_1'''
     pass
 
 
@@ -395,6 +399,9 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc(start="programa")
 
+
+# EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
+
 data = '''
 program donpato;
 var float:numero;
@@ -407,8 +414,26 @@ main() {
     {
 		print("Coronavirus will destroy math");
 	}
+    if (3 > 2) then {
+        numero = 5.5;
+    }
 }
 '''
+
+# data = '''
+# program donpato;
+# var float:numero;
+# main() {
+#     numeroPi = 3.1;
+# 	if (numeroPi < hi) {
+# 		numeroPi = 3.14159;
+# 	}
+#     else
+#     {
+# 		print("Coronavirus will destroy math");
+# 	}
+# }
+# '''
 
 
 logging.basicConfig(
