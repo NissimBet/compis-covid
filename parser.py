@@ -96,7 +96,6 @@ def p_tipo(p):
     pass
 
 
-# TODO definir bloque
 # function tipo_retorno ID ( parameters? ) vars? { bloque? }
 def p_function(p):
     '''function     : FUNCTION tipo_retorno ID  '(' function_1 ')' function_2 '{' bloque '}' '''
@@ -121,14 +120,15 @@ def p_tipo_retorno(p):
     pass
 
 
-# expression ( ',' expression )*
+# TIPO 'id' (',' TIPO 'id')*
 def p_parameters(p):
-    '''parameters       : expression parameters_1 '''
+    '''parameters       : tipo ID parameters_1
+                        | epsilon'''
     pass
 
 
 def p_parameters_1(p):
-    '''parameters_1     : ',' expression 
+    '''parameters_1     : ',' tipo ID
                         | epsilon'''
     pass
 
@@ -148,18 +148,6 @@ def p_statement(p):
 # ID_COMPLETO '=' EXPRESsION ';'
 def p_assignment(p):
     '''assignment   : id_completo '=' expression ';' '''
-    pass
-
-
-# ID ( EXPRESION* ) ;
-def p_void_func_call(p):
-    '''void_func_call    : ID '(' void_func_call_1 ')' ';' '''
-    pass
-
-
-def p_void_func_call_1(p):
-    '''void_func_call_1  : expression void_func_call_1 
-                        | epsilon '''
     pass
 
 
@@ -214,7 +202,7 @@ def p_main_1(p):
 # TODO Hacer else if
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
-    '''condition    : IF '(' expression ')' '{' condition_1 '}' condition_2 '''
+    '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
     pass
 
 
@@ -274,11 +262,37 @@ def p_string_var(p):
 
 
 def p_var_cte(p):
-    '''var_cte      : ID 
+    '''var_cte      : var_cte_1
                     | CTE_I 
                     | CTE_F 
                     | CTE_STRING 
                     | CTE_CHAR '''
+
+def p_var_cte_1(p):
+    '''var_cte_1    : ID var_cte_2'''
+    pass
+
+def p_var_cte_2(p):
+    '''var_cte_2    : func_call_1
+                    | epsilon'''
+    pass
+
+# ID ( EXPRESION* ) ;
+def p_func_call(p):
+    '''func_call    : ID '(' func_call_1 ')' ';' '''
+    pass
+
+
+def p_func_call_1(p):
+    '''func_call_1  : expression func_call_2
+                    | epsilon '''
+    pass
+
+
+def p_func_call_2(p):
+    '''func_call_2  : ',' expression func_call_2
+                    | epsilon '''
+    pass
 
 
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
@@ -288,8 +302,7 @@ def p_expression(p):
 
 
 def p_expression_1(p):
-    '''expression_1     : exp 
-                        | func_call '''
+    '''expression_1     : exp  '''
     pass
 
 
@@ -304,24 +317,6 @@ def p_comparison_ops(p):
                         | '>' 
                         | DIFF 
                         | EQUAL '''
-    pass
-
-
-# id (  ( TIPO id , )* )
-def p_func_call(p):
-    '''func_call    : ID '(' func_call_1 ')' '''
-    pass
-
-
-def p_func_call_1(p):
-    '''func_call_1  : tipo ID func_call_2 
-                    | epsilon '''
-    pass
-
-
-def p_func_call_2(p):
-    '''func_call_2  : ',' tipo ID func_call_2 
-                    | epsilon '''
     pass
 
 
@@ -405,7 +400,7 @@ program donpato;
 var float:numero;
 main() {
     numeroPi = 3.1;
-	if (numeroPi < hi) {
+	if (numeroPi < hi) then {
 		numeroPi = 3.14159;
 	}
     else

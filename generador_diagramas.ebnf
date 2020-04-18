@@ -13,6 +13,7 @@
     del documento. Revisa ASIGNACION y EXPRESION 
     Tampoco he manejado el and y el or
     Faltan las funciones especiales
+
 */
 
 PROGRAMA  ::= 'program' 'id' ';' VARS? FUNCION* PRINCIPAL
@@ -21,12 +22,11 @@ LISTA_ID ::= ID_COMPLETO (',' ID_COMPLETO)*
 ID_COMPLETO ::='id' DIMENSION? 
 DIMENSION ::= ('[' VAR_CTE ']' ('[' VAR_CTE ']')? )?
 TIPO ::= 'int' | 'float' | 'string' | 'char' | 'Dataframe'
-FUNCION ::= 'funcion' TIPO_RETORNO 'nombre_modulo' '(' PARAMETROS? ')' VARS? '{' BLOQUE? '}'
+FUNCION ::= 'funcion' TIPO_RETORNO 'ID' '(' PARAMETROS_DECLARACION? ')' VARS? '{' BLOQUE? '}'
 TIPO_RETORNO ::= TIPO | 'void'
-PARAMETROS ::= EXPRESION (',' EXPRESION)*
+PARAMETROS_DECLARACION ::= TIPO 'id' (',' TIPO 'id')*
 ESTATUTO ::= ASIGNACION | LLAMADA | RETORNO | LECTURA | ESCRITURA | CARGA_DATOS | DECISION | REPETICION
 ASIGNACION ::= ID_COMPLETO '=' EXPRESION ';'
-LLAMADA_VOID ::= 'nombre_modulo' '(' EXPRESION* ')' ';'
 RETORNO ::= 'regresa' '(' EXP ')' ';'
 LECTURA ::= 'lee' '(' LISTA_ID ')' ';'
 ESCRITURA ::= 'escribe' '(' (EXPRESION | CTE_S )+ ')' ';'
@@ -43,6 +43,6 @@ EXP ::= TERMINO ( ( '+' | '-' ) TERMINO )*
 TERMINO ::= FACTOR ( ('*' | '/') FACTOR )*
 FACTOR ::= ( '(' EXPRESION ')' )  | ( ('+' | '-')? VAR_CTE)
 
-LLAMADA ::= id '(' FUNC_USE_PARAMS ')'
-FUNC_USE_PARAMS ::= (TIPO 'id' ',')*
+LLAMADA ::= id '(' PARAMETROS? ')' ';'
+PARAMETROS ::= EXPRESION (',' EXPRESION)*
 CTE_STRING ::= ID | CTE_STRING
