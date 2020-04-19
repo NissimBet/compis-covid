@@ -53,7 +53,7 @@ tokens = [
     'CTE_CHAR',
 ] + list(reserved.values())
 
-literals = '+-*/=<>(){}:;,'
+literals = '+-*/=<>(){}:;,[]'
 
 # Regular expression rules for simple tokens
 t_DIFF = r'<>'

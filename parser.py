@@ -53,6 +53,7 @@ def p_vars_2(p):
 # lista_id : (id ,)+
 def p_lista_id(p):
     '''lista_id     : id_completo lista_id_1'''
+    pass
 
 
 def p_lista_id_1(p):
@@ -76,8 +77,7 @@ def p_id_completo_1(p):
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    '''dimension    : '[' num_var ']' 
-                    | dimension_1 '''
+    '''dimension    : '[' num_var ']' dimension_1 '''
     pass
 
 
@@ -404,7 +404,7 @@ parser = yacc.yacc(start="programa")
 
 data = '''
 program donpato;
-var float:numero;
+var float:numero[0][0];
 main() {
     numeroPi = 3.1;
 	if (numeroPi < hi) then {
