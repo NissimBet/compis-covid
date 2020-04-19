@@ -41,6 +41,7 @@ def p_vars(p):
 
 def p_vars_1(p):
     '''vars_1       : tipo ':' lista_id ';' vars_2 '''
+    print("vars_1", p[1], p[3], p[5])
     pass
 
 
@@ -53,24 +54,39 @@ def p_vars_2(p):
 # lista_id : (id ,)+
 def p_lista_id(p):
     '''lista_id     : id_completo lista_id_1'''
+    # print("lists_id ", [p[1], p[2]])
+    if p[2] is not None:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = [p[1]]
     pass
 
 
 def p_lista_id_1(p):
-    '''lista_id_1   : ',' lista_id_1 
+    '''lista_id_1   : ',' id_completo lista_id_1
                     | epsilon'''
+    if len(p) >2:
+        # print("lista_id_1", p[2], p[3])
+        if p[3] is not None:
+            p[0] = [p[2]] + p[3]
+        else:
+            p[0] = [p[2]]
     pass
 
 
 # id dimension?
 def p_id_completo(p):
     '''id_completo      : ID id_completo_1'''
+    # print("Id Completo",p[1], p[2])
+    p[0] = p[1], p[2]
     pass
 
 
 def p_id_completo_1(p):
     '''id_completo_1    : dimension 
                         | epsilon'''
+    # print("Id_completo_1 ", p[1])
+    p[0] = p[1]
     pass
 
 
@@ -78,12 +94,17 @@ def p_id_completo_1(p):
 # [ num_var ] {0, 2}
 def p_dimension(p):
     '''dimension    : '[' num_var ']' dimension_1 '''
+    # print("dimension", p[1:4])
+    p[0] = (p[2], p[4])
     pass
 
 
 def p_dimension_1(p):
     '''dimension_1  : '[' num_var ']' 
                     | epsilon '''
+    # print("dimension x2", p[1:4])
+    if len(p) > 2:
+        p[0] = p[2]
     pass
 
 
@@ -93,6 +114,7 @@ def p_tipo(p):
             | STRING
             | CHAR
             | DATAFRAME'''
+    p[0] = p[1]
     pass
 
 
@@ -203,6 +225,7 @@ def p_main_1(p):
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
     '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
+    print(p[3])
     pass
 
 
@@ -252,6 +275,8 @@ def p_num_var(p):
     ''' num_var     : ID 
                     | CTE_I 
                     | CTE_F '''
+    print("num var", p[1])
+    p[0] = p[1]
     pass
 
 
@@ -267,16 +292,19 @@ def p_var_cte(p):
                     | CTE_F 
                     | CTE_STRING 
                     | CTE_CHAR '''
+    print("Var_Cte", p[1])
 
 
 def p_var_cte_1(p):
     '''var_cte_1    : ID var_cte_2'''
+    print("id?", p[1], p[2])
     pass
 
 
 def p_var_cte_2(p):
     '''var_cte_2    : func_call_1
                     | epsilon'''
+    print("func_call?", p[1])
     pass
 
 # ID ( EXPRESION* ) ;
@@ -301,17 +329,13 @@ def p_func_call_2(p):
 
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
 def p_expression(p):
-    ''' expression      : expression_1 expression_2 '''
+    ''' expression      : exp expression_1 '''
+    print("Expression ", p[1], p[2])
     pass
 
 
 def p_expression_1(p):
-    '''expression_1     : exp  '''
-    pass
-
-
-def p_expression_2(p):
-    '''expression_2     : comparison_ops expression_1 
+    '''expression_1     : comparison_ops exp
                         | epsilon'''
     pass
 
@@ -327,6 +351,7 @@ def p_comparison_ops(p):
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
     '''exp      : termino exp_1 '''
+    print("Exp", p[1])
     pass
 
 
@@ -345,6 +370,7 @@ def p_exp_2(p):
 # FACTOR ( ( '*' | '/' ) FACTOR )*
 def p_termino(p):
     '''termino      : factor termino_1 '''
+    print("Termino", p[1])
     pass
 
 
@@ -363,6 +389,8 @@ def p_termino_2(p):
 def p_factor(p):
     '''factor       : '(' expression ')'
                     | factor_1 var_cte '''
+    if(p[2]):
+        print("Factor", p[2])
     pass
 
 
@@ -404,7 +432,9 @@ parser = yacc.yacc(start="programa")
 
 data = '''
 program donpato;
-var float:numero[0][0];
+var float:numero[0][0], mat[1], wat, dude;
+    int: data, custom, suma;
+    char: a;
 main() {
     numeroPi = 3.1;
 	if (numeroPi < hi) then {
