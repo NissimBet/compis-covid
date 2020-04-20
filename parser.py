@@ -8,11 +8,20 @@
 # ------------------------------------------------------------
 
 import logging
-import ply.yacc as yacc
+from typing import List, Any, Dict
 
+import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
 from lexer import tokens, literals
 
+from Stack import Stack
+from DataUtils import FunctionTable, Variable, ParsingContext, VariableTable
+
+function_table = FunctionTable()
+variable_table = VariableTable()
+
+global_context = ParsingContext()
+global_context.set_function("global")
 
 # program id ; VARS? function* main
 def p_programa(p):
@@ -24,6 +33,7 @@ def p_programa(p):
 def p_programa_1(p):
     '''programa_1   : vars programa_2
                     | programa_2 '''
+    print("Programa ", p[1])
     pass
 
 
@@ -36,12 +46,28 @@ def p_programa_2(p):
 # var (tipo : lista_id ;)+
 def p_vars(p):
     '''vars         : VAR vars_1 '''
+    # type = var_type_queue.get()
+    # var = variable_stack.pop()
+    # var = variable_stack.pop()
+    # while not variable_stack.is_empty():
+    #     if var is None:
+    #         type = var_type_queue.get()
+    #         var = variable_stack.pop()
+    #         continue
+    #     table.declare_variable(func_name=global_context.function,
+    #                            var=Variable(type, var[0]))
+    #     var = variable_stack.pop()
     pass
 
 
+def p_set_var_type(p):
+    '''set_var_type : '''
+    global_context.set_type(p[-1])
+
+
 def p_vars_1(p):
-    '''vars_1       : tipo ':' lista_id ';' vars_2 '''
-    print("vars_1", p[1], p[3], p[5])
+    '''vars_1       : tipo set_var_type ':' lista_id ';' vars_2 '''
+    # print("vars_1", p[1], p[4], p[6])
     pass
 
 
@@ -55,6 +81,8 @@ def p_vars_2(p):
 def p_lista_id(p):
     '''lista_id     : id_completo lista_id_1'''
     # print("lists_id ", [p[1], p[2]])
+    # table.declare_variable(func_name=global_context.function,
+    #                        var=Variable(global_context.var_type, p[1][0]))
     if p[2] is not None:
         p[0] = [p[1]] + p[2]
     else:
@@ -65,7 +93,9 @@ def p_lista_id(p):
 def p_lista_id_1(p):
     '''lista_id_1   : ',' id_completo lista_id_1
                     | epsilon'''
-    if len(p) >2:
+    if len(p) > 2:
+        # table.declare_variable(func_name=global_context.function,
+        #                        var=Variable(global_context.var_type, p[2][0]))
         # print("lista_id_1", p[2], p[3])
         if p[3] is not None:
             p[0] = [p[2]] + p[3]
@@ -118,9 +148,16 @@ def p_tipo(p):
     pass
 
 
+def p_declare_func(p):
+    '''declare_func : '''
+    global_context.set_function(p[-1])
+    function_table.declare_function(func_name=p[-1], return_type=global_context.var_type)
+
+
 # function tipo_retorno ID ( parameters? ) vars? { bloque? }
 def p_function(p):
-    '''function     : FUNCTION tipo_retorno ID  '(' function_1 ')' function_2 '{' bloque '}' '''
+    '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
+    print("Function", p[3])
     pass
 
 
@@ -139,6 +176,8 @@ def p_function_2(p):
 def p_tipo_retorno(p):
     '''tipo_retorno : tipo 
                     | VOID '''
+    p[0] = p[1]
+    global_context.set_type(p[1])
     pass
 
 
@@ -170,12 +209,16 @@ def p_statement(p):
 # ID_COMPLETO '=' EXPRESsION ';'
 def p_assignment(p):
     '''assignment   : id_completo '=' expression ';' '''
+    print("Assign", p[1])
+    # TODO buscar id en tabla de variables
+    # find id_completo
+    # match type of expression and id_completo
     pass
 
 
 # return ( EXP ) ;
 def p_return(p):
-    '''return   : RETURN '(' exp ')' '''
+    '''return   : RETURN '(' exp ')' ';' '''
     pass
 
 
@@ -225,7 +268,7 @@ def p_main_1(p):
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
     '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
-    print(p[3])
+    # print(p[3])
     pass
 
 
@@ -292,20 +335,22 @@ def p_var_cte(p):
                     | CTE_F 
                     | CTE_STRING 
                     | CTE_CHAR '''
-    print("Var_Cte", p[1])
+    # print("Var_Cte", p[1])
+    pass
 
 
 def p_var_cte_1(p):
     '''var_cte_1    : ID var_cte_2'''
-    print("id?", p[1], p[2])
+    # print("id?", p[1], p[2])
     pass
 
 
 def p_var_cte_2(p):
     '''var_cte_2    : func_call_1
                     | epsilon'''
-    print("func_call?", p[1])
+    # print("func_call?", p[1])
     pass
+
 
 # ID ( EXPRESION* ) ;
 
@@ -330,7 +375,7 @@ def p_func_call_2(p):
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
 def p_expression(p):
     ''' expression      : exp expression_1 '''
-    print("Expression ", p[1], p[2])
+    # print("Expression ", p[1], p[2])
     pass
 
 
@@ -351,7 +396,7 @@ def p_comparison_ops(p):
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
     '''exp      : termino exp_1 '''
-    print("Exp", p[1])
+    # print("Exp", p[1])
     pass
 
 
@@ -370,7 +415,7 @@ def p_exp_2(p):
 # FACTOR ( ( '*' | '/' ) FACTOR )*
 def p_termino(p):
     '''termino      : factor termino_1 '''
-    print("Termino", p[1])
+    # print("Termino", p[1])
     pass
 
 
@@ -389,8 +434,8 @@ def p_termino_2(p):
 def p_factor(p):
     '''factor       : '(' expression ')'
                     | factor_1 var_cte '''
-    if(p[2]):
-        print("Factor", p[2])
+    # if (p[2]):
+    #     print("Factor", p[2])
     pass
 
 
@@ -427,7 +472,6 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc(start="programa")
 
-
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
 data = '''
@@ -435,6 +479,19 @@ program donpato;
 var float:numero[0][0], mat[1], wat, dude;
     int: data, custom, suma;
     char: a;
+    string: hi;
+    
+function void hello() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+function void there() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+    
 main() {
     numeroPi = 3.1;
 	if (numeroPi < hi) then {
@@ -467,11 +524,13 @@ main() {
 
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    filemode="w",
-    filename="parselog.txt")
+        level=logging.DEBUG,
+        filemode="w",
+        filename="parselog.txt")
 
 if (parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA'):
     print("Sintaxis aceptada")
 else:
     print("error de sintaxis")
+
+print(function_table.table.items())

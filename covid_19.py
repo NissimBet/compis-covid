@@ -33,7 +33,7 @@ def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
     # identificadores inician con letras seguidos por caracteres
     if t.value in reserved.keys():
-        t.type = reserved.get(t.value, 'ID')
+        t.return_type = reserved.get(t.value, 'ID')
     return t
 
 # gramatica
