@@ -47,17 +47,6 @@ def p_programa_2(p):
 # var (tipo : lista_id ;)+
 def p_vars(p):
     '''vars         : VAR vars_1 '''
-    # type = var_type_queue.get()
-    # var = variable_stack.pop()
-    # var = variable_stack.pop()
-    # while not variable_stack.is_empty():
-    #     if var is None:
-    #         type = var_type_queue.get()
-    #         var = variable_stack.pop()
-    #         continue
-    #     table.declare_variable(func_name=global_context.function,
-    #                            var=Variable(type, var[0]))
-    #     var = variable_stack.pop()
     pass
 
 
@@ -71,6 +60,9 @@ def p_vars_1(p):
     # print("vars_1", p[1], p[4], p[6])
     pass
 
+def p_vars_1_error(p):
+    '''vars_1       : tipo set_var_type ':' lista_id error ';' vars_2 '''
+    print("Error de sintaxis en la declaración de variables. Línea ", p.lineno(5), ", Posición", p.lexpos(5))
 
 def p_vars_2(p):
     '''vars_2       : vars_1 
