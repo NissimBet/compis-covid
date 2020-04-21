@@ -17,284 +17,1785 @@ DEBUG:root:Action : Shift and goto state 18
 DEBUG:root:State  : 18
 DEBUG:root:Stack  : PROGRAM ID ; VAR FLOAT . LexToken(:,':',3,27)
 INFO:root:Action : Reduce rule [tipo -> FLOAT] with ['float'] and goto state 16
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+INFO:root:Result : <str @ 0x7f2ebb3dabb0> ('float')
 DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
 DEBUG:root:Stack  : PROGRAM ID ; VAR tipo . LexToken(:,':',3,27)
-DEBUG:root:Action : Shift and goto state 27
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 27
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : . LexToken(ID,'numero',3,28)
-DEBUG:root:Action : Shift and goto state 32
-DEBUG:root:State  : 32
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : ID . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 43
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : ID epsilon . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 41
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 41
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : ID id_completo_1 . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numero',None] and goto state 31
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 31
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : id_completo . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 40
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 40
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : id_completo epsilon . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 38
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 38
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : id_completo lista_id_1 . LexToken(;,';',3,34)
-INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [None,None] and goto state 30
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type . LexToken(:,':',3,27)
+DEBUG:root:Action : Shift and goto state 30
 DEBUG:root:State  : 30
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : lista_id . LexToken(;,';',3,34)
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : . LexToken(ID,'numero',3,28)
 DEBUG:root:Action : Shift and goto state 37
 DEBUG:root:State  : 37
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : lista_id ; . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 63
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 63
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : lista_id ; epsilon . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [vars_2 -> epsilon] with [None] and goto state 61
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 61
-DEBUG:root:Stack  : PROGRAM ID ; VAR tipo : lista_id ; vars_2 . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [vars_1 -> tipo : lista_id ; vars_2] with [None,':',None,';',None] and goto state 15
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 15
-DEBUG:root:Stack  : PROGRAM ID ; VAR vars_1 . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [vars -> VAR vars_1] with ['var',None] and goto state 6
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 6
-DEBUG:root:Stack  : PROGRAM ID ; vars . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 10
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 10
-DEBUG:root:Defaulted state 10: Reduce using 5
-DEBUG:root:Stack  : PROGRAM ID ; vars epsilon . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [programa_2 -> epsilon] with [None] and goto state 14
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 14
-DEBUG:root:Defaulted state 14: Reduce using 2
-DEBUG:root:Stack  : PROGRAM ID ; vars programa_2 . LexToken(MAIN,'main',4,36)
-INFO:root:Action : Reduce rule [programa_1 -> vars programa_2] with [None,None] and goto state 5
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 5
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 . LexToken(MAIN,'main',4,36)
-DEBUG:root:Action : Shift and goto state 13
-DEBUG:root:State  : 13
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN . LexToken((,'(',4,40)
-DEBUG:root:Action : Shift and goto state 26
-DEBUG:root:State  : 26
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( . LexToken(),')',4,41)
-DEBUG:root:Action : Shift and goto state 29
-DEBUG:root:State  : 29
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) . LexToken({,'{',4,43)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 36
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID . LexToken([,'[',3,34)
+DEBUG:root:Action : Shift and goto state 47
+DEBUG:root:State  : 47
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ . LexToken(CTE_I,0,3,35)
+DEBUG:root:Action : Shift and goto state 81
+DEBUG:root:State  : 81
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ CTE_I . LexToken(],']',3,36)
+INFO:root:Action : Reduce rule [num_var -> CTE_I] with [0] and goto state 79
+INFO:root:Result : <int @ 0xb09180> (0)
+DEBUG:root:State  : 79
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var . LexToken(],']',3,36)
+DEBUG:root:Action : Shift and goto state 97
+DEBUG:root:State  : 97
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] . LexToken([,'[',3,37)
+DEBUG:root:Action : Shift and goto state 127
+DEBUG:root:State  : 127
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] [ . LexToken(CTE_I,0,3,38)
+DEBUG:root:Action : Shift and goto state 81
+DEBUG:root:State  : 81
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] [ CTE_I . LexToken(],']',3,39)
+INFO:root:Action : Reduce rule [num_var -> CTE_I] with [0] and goto state 171
+INFO:root:Result : <int @ 0xb09180> (0)
+DEBUG:root:State  : 171
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] [ num_var . LexToken(],']',3,39)
+DEBUG:root:Action : Shift and goto state 191
+DEBUG:root:State  : 191
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] [ num_var ] . LexToken(,,',',3,40)
+INFO:root:Action : Reduce rule [dimension_1 -> [ num_var ]] with ['[',0,']'] and goto state 128
+INFO:root:Result : <int @ 0xb09180> (0)
+DEBUG:root:State  : 128
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID [ num_var ] dimension_1 . LexToken(,,',',3,40)
+INFO:root:Action : Reduce rule [dimension -> [ num_var ] dimension_1] with ['[',0,']',0] and goto state 45
+INFO:root:Result : <tuple @ 0x7f2ebb40cc40> ((0, 0))
+DEBUG:root:State  : 45
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID dimension . LexToken(,,',',3,40)
+INFO:root:Action : Reduce rule [id_completo_1 -> dimension] with [(0, 0)] and goto state 44
+INFO:root:Result : <tuple @ 0x7f2ebb40cc40> ((0, 0))
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : ID id_completo_1 . LexToken(,,',',3,40)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numero',(0, 0)] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('numero', (0, 0)))
 DEBUG:root:State  : 36
-DEBUG:root:Defaulted state 36: Reduce using 57
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) epsilon . LexToken({,'{',4,43)
-INFO:root:Action : Reduce rule [main_1 -> epsilon] with [None] and goto state 34
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 34
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 . LexToken({,'{',4,43)
-DEBUG:root:Action : Shift and goto state 60
-DEBUG:root:State  : 60
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { . LexToken(ID,'numeroPi',5,49)
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo . LexToken(,,',',3,40)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , . LexToken(ID,'mat',3,42)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID . LexToken([,'[',3,45)
+DEBUG:root:Action : Shift and goto state 47
+DEBUG:root:State  : 47
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ . LexToken(CTE_I,1,3,46)
+DEBUG:root:Action : Shift and goto state 81
+DEBUG:root:State  : 81
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ CTE_I . LexToken(],']',3,47)
+INFO:root:Action : Reduce rule [num_var -> CTE_I] with [1] and goto state 79
+INFO:root:Result : <int @ 0xb091a0> (1)
+DEBUG:root:State  : 79
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ num_var . LexToken(],']',3,47)
+DEBUG:root:Action : Shift and goto state 97
+DEBUG:root:State  : 97
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ num_var ] . LexToken(,,',',3,48)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 129
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 129
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ num_var ] epsilon . LexToken(,,',',3,48)
+INFO:root:Action : Reduce rule [dimension_1 -> epsilon] with [None] and goto state 128
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 128
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID [ num_var ] dimension_1 . LexToken(,,',',3,48)
+INFO:root:Action : Reduce rule [dimension -> [ num_var ] dimension_1] with ['[',1,']',None] and goto state 45
+INFO:root:Result : <tuple @ 0x7f2ebb40cb00> ((1, None))
+DEBUG:root:State  : 45
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID dimension . LexToken(,,',',3,48)
+INFO:root:Action : Reduce rule [id_completo_1 -> dimension] with [(1, None)] and goto state 44
+INFO:root:Result : <tuple @ 0x7f2ebb40cb00> ((1, None))
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , ID id_completo_1 . LexToken(,,',',3,48)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['mat',(1, None)] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40ca40> (('mat', (1, None)))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo . LexToken(,,',',3,48)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , . LexToken(ID,'wat',3,50)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , ID . LexToken(,,',',3,53)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , ID epsilon . LexToken(,,',',3,53)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , ID id_completo_1 . LexToken(,,',',3,53)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['wat',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40c940> (('wat', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo . LexToken(,,',',3,53)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , . LexToken(ID,'dude',3,55)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , ID . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , ID epsilon . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , ID id_completo_1 . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['dude',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40c840> (('dude', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , id_completo . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , id_completo epsilon . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 96
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo , id_completo lista_id_1 . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',('dude', None),None] and goto state 96
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('dude', None)])
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo , id_completo lista_id_1 . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',('wat', None),<list @ 0x7f2ebb3e7940>] and goto state 96
+INFO:root:Result : <list @ 0x7f2ebb3e7380> ([('wat', None), ('dude', None)])
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo , id_completo lista_id_1 . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',<tuple @ 0x7f2ebb40ca40>,<list @ 0x7f2ebb3e7380>] and goto state 41
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('mat', (1, None)), ('wat', None), ('du ...)
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',3,59)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [<tuple @ 0x7f2ebb40cb80>,<list @ 0x7f2ebb3e7940>] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7380> ([('numero', (0, 0)), ('mat', (1, None)), ...)
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id . LexToken(;,';',3,59)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; . LexToken(INT,'int',4,65)
+DEBUG:root:Action : Shift and goto state 17
+DEBUG:root:State  : 17
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; INT . LexToken(:,':',4,68)
+INFO:root:Action : Reduce rule [tipo -> INT] with ['int'] and goto state 16
+INFO:root:Result : <str @ 0x7f2ebb3dad30> ('int')
+DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo . LexToken(:,':',4,68)
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 27
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type . LexToken(:,':',4,68)
+DEBUG:root:Action : Shift and goto state 30
+DEBUG:root:State  : 30
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : . LexToken(ID,'data',4,70)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : ID . LexToken(,,',',4,74)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : ID epsilon . LexToken(,,',',4,74)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : ID id_completo_1 . LexToken(,,',',4,74)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['data',None] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40c740> (('data', None))
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo . LexToken(,,',',4,74)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , . LexToken(ID,'custom',4,76)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , ID . LexToken(,,',',4,82)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , ID epsilon . LexToken(,,',',4,82)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , ID id_completo_1 . LexToken(,,',',4,82)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['custom',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40c640> (('custom', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo . LexToken(,,',',4,82)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , . LexToken(ID,'suma',4,84)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , ID . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , ID epsilon . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , ID id_completo_1 . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['suma',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40c540> (('suma', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , id_completo . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , id_completo epsilon . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 96
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo , id_completo lista_id_1 . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',('suma', None),None] and goto state 96
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('suma', None)])
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo , id_completo lista_id_1 . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',<tuple @ 0x7f2ebb40c640>,<list @ 0x7f2ebb3e7940>] and goto state 41
+INFO:root:Result : <list @ 0x7f2ebb3e6d40> ([('custom', None), ('suma', None)])
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',4,88)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [('data', None),<list @ 0x7f2ebb3e6d40>] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('data', None), ('custom', None), ('sum ...)
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id . LexToken(;,';',4,88)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; . LexToken(CHAR,'char',5,94)
+DEBUG:root:Action : Shift and goto state 20
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; CHAR . LexToken(:,':',5,98)
+INFO:root:Action : Reduce rule [tipo -> CHAR] with ['char'] and goto state 16
+INFO:root:Result : <str @ 0x7f2ebb3ca3b0> ('char')
+DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo . LexToken(:,':',5,98)
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 27
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type . LexToken(:,':',5,98)
+DEBUG:root:Action : Shift and goto state 30
+DEBUG:root:State  : 30
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : . LexToken(ID,'a',5,100)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID epsilon . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID id_completo_1 . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['a',None] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40c440> (('a', None))
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo epsilon . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',5,101)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [('a', None),None] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7b80> ([('a', None)])
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id . LexToken(;,';',5,101)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; . LexToken(STRING,'string',6,107)
+DEBUG:root:Action : Shift and goto state 19
+DEBUG:root:State  : 19
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; STRING . LexToken(:,':',6,113)
+INFO:root:Action : Reduce rule [tipo -> STRING] with ['string'] and goto state 16
+INFO:root:Result : <str @ 0x7f2ebb3ca070> ('string')
+DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo . LexToken(:,':',6,113)
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 27
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type . LexToken(:,':',6,113)
+DEBUG:root:Action : Shift and goto state 30
+DEBUG:root:State  : 30
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : . LexToken(ID,'hi',6,115)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID epsilon . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : ID id_completo_1 . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['hi',None] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40c340> (('hi', None))
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo epsilon . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',6,117)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [('hi', None),None] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7fc0> ([('hi', None)])
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id . LexToken(;,';',6,117)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 77
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 77
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; epsilon . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_2 -> epsilon] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; vars_2 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['string',None,':',[('hi', None)],';',None] and goto state 76
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 76
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; vars_1 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_2 -> vars_1] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; vars_2 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['char',None,':',[('a', None)],';',None] and goto state 76
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 76
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; vars_1 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_2 -> vars_1] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; tipo set_var_type : lista_id ; vars_2 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['int',None,':',<list @ 0x7f2ebb3e7940>,';',None] and goto state 76
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 76
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; vars_1 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_2 -> vars_1] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; VAR tipo set_var_type : lista_id ; vars_2 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['float',None,':',<list @ 0x7f2ebb3e7380>,';',None] and goto state 15
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : PROGRAM ID ; VAR vars_1 . LexToken(FUNCTION,'function',8,124)
+INFO:root:Action : Reduce rule [vars -> VAR vars_1] with ['var',None] and goto state 6
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : PROGRAM ID ; vars . LexToken(FUNCTION,'function',8,124)
+DEBUG:root:Action : Shift and goto state 11
+DEBUG:root:State  : 11
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION . LexToken(VOID,'void',8,133)
+DEBUG:root:Action : Shift and goto state 25
+DEBUG:root:State  : 25
+DEBUG:root:Defaulted state 25: Reduce using 32
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION VOID . None
+INFO:root:Action : Reduce rule [tipo_retorno -> VOID] with ['void'] and goto state 23
+INFO:root:Result : <str @ 0x7f2ebb3dabb0> ('void')
+DEBUG:root:State  : 23
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno . LexToken(ID,'hello',8,138)
+DEBUG:root:Action : Shift and goto state 28
+DEBUG:root:State  : 28
+DEBUG:root:Defaulted state 28: Reduce using 25
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID . None
+INFO:root:Action : Reduce rule [declare_func -> <empty>] with [] and goto state 31
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 31
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func . LexToken((,'(',8,143)
+DEBUG:root:Action : Shift and goto state 38
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( . LexToken(),')',8,144)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 50
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 50
+DEBUG:root:Defaulted state 50: Reduce using 28
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( epsilon . LexToken(),')',8,144)
+INFO:root:Action : Reduce rule [function_1 -> epsilon] with [None] and goto state 48
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 . LexToken(),')',8,144)
+DEBUG:root:Action : Shift and goto state 83
+DEBUG:root:State  : 83
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) . LexToken(VAR,'var',9,151)
+DEBUG:root:Action : Shift and goto state 8
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR . LexToken(STRING,'string',9,155)
+DEBUG:root:Action : Shift and goto state 19
+DEBUG:root:State  : 19
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR STRING . LexToken(:,':',9,161)
+INFO:root:Action : Reduce rule [tipo -> STRING] with ['string'] and goto state 16
+INFO:root:Result : <str @ 0x7f2ebb3da3f0> ('string')
+DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo . LexToken(:,':',9,161)
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 27
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type . LexToken(:,':',9,161)
+DEBUG:root:Action : Shift and goto state 30
+DEBUG:root:State  : 30
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : . LexToken(ID,'hello',9,163)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID . LexToken(,,',',9,168)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID epsilon . LexToken(,,',',9,168)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID id_completo_1 . LexToken(,,',',9,168)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['hello',None] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('hello', None))
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo . LexToken(,,',',9,168)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , . LexToken(ID,'world',9,170)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID epsilon . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID id_completo_1 . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['world',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40cc40> (('world', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo epsilon . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 96
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo lista_id_1 . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',('world', None),None] and goto state 41
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('world', None)])
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',9,175)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [('hello', None),<list @ 0x7f2ebb3e7940>] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7b80> ([('hello', None), ('world', None)])
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id . LexToken(;,';',9,175)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; . LexToken({,'{',10,181)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 77
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 77
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; epsilon . LexToken({,'{',10,181)
+INFO:root:Action : Reduce rule [vars_2 -> epsilon] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; vars_2 . LexToken({,'{',10,181)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['string',None,':',<list @ 0x7f2ebb3e7b80>,';',None] and goto state 15
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR vars_1 . LexToken({,'{',10,181)
+INFO:root:Action : Reduce rule [vars -> VAR vars_1] with ['var',None] and goto state 99
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 99
+DEBUG:root:Defaulted state 99: Reduce using 29
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) vars . LexToken({,'{',10,181)
+INFO:root:Action : Reduce rule [function_2 -> vars] with [None] and goto state 98
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 98
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 . LexToken({,'{',10,181)
+DEBUG:root:Action : Shift and goto state 130
+DEBUG:root:State  : 130
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { . LexToken(RETURN,'return',11,191)
+DEBUG:root:Action : Shift and goto state 66
+DEBUG:root:State  : 66
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN . LexToken((,'(',11,198)
+DEBUG:root:Action : Shift and goto state 89
+DEBUG:root:State  : 89
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( . LexToken(ID,'hello',11,199)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( epsilon . LexToken(ID,'hello',11,199)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 . LexToken(ID,'hello',11,199)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID . LexToken(+,'+',11,205)
 DEBUG:root:Action : Shift and goto state 110
 DEBUG:root:State  : 110
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID . LexToken(=,'=',5,58)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 43
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID epsilon . LexToken(=,'=',5,58)
-INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 41
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 41
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID id_completo_1 . LexToken(=,'=',5,58)
-INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numeroPi',None] and goto state 109
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID + . LexToken(ID,'world',11,207)
+INFO:root:Action : Reduce rule [factor_1 -> +] with ['+'] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 109
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo . LexToken(=,'=',5,58)
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 . LexToken(ID,'world',11,207)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 180
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 180
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte_2 -> epsilon] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID var_cte_2 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['world',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 var_cte_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 var_cte . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor termino_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino exp_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp expression_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 114
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 114
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 161
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 161
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [func_call_2 -> epsilon] with [None] and goto state 159
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 159
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression func_call_2 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [func_call_1 -> expression func_call_2] with [None,None] and goto state 179
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 179
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID func_call_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte_2 -> func_call_1] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID var_cte_2 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['hello',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 var_cte_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 var_cte . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor termino_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino epsilon . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino exp_1 . LexToken(),')',11,212)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 116
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 116
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp . LexToken(),')',11,212)
+DEBUG:root:Action : Shift and goto state 162
+DEBUG:root:State  : 162
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp ) . LexToken(;,';',11,213)
+DEBUG:root:Action : Shift and goto state 183
+DEBUG:root:State  : 183
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp ) ; . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [return -> RETURN ( exp ) ;] with ['return','(',None,')',';'] and goto state 58
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 58
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { return . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [statement -> return] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 55
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement epsilon . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement bloque_1 . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 53
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque_1 . LexToken(},'}',12,219)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 172
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 172
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque . LexToken(},'}',12,219)
+DEBUG:root:Action : Shift and goto state 192
+DEBUG:root:State  : 192
+DEBUG:root:Stack  : PROGRAM ID ; vars FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque } . LexToken(FUNCTION,'function',13,221)
+INFO:root:Action : Reduce rule [function -> FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque }] with ['function','void','hello',None,'(',None,')',None,'{',None,'}'] and goto state 9
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 9
+DEBUG:root:Stack  : PROGRAM ID ; vars function . LexToken(FUNCTION,'function',13,221)
+DEBUG:root:Action : Shift and goto state 11
+DEBUG:root:State  : 11
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION . LexToken(VOID,'void',13,230)
+DEBUG:root:Action : Shift and goto state 25
+DEBUG:root:State  : 25
+DEBUG:root:Defaulted state 25: Reduce using 32
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION VOID . None
+INFO:root:Action : Reduce rule [tipo_retorno -> VOID] with ['void'] and goto state 23
+INFO:root:Result : <str @ 0x7f2ebb3da7b0> ('void')
+DEBUG:root:State  : 23
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno . LexToken(ID,'there',13,235)
+DEBUG:root:Action : Shift and goto state 28
+DEBUG:root:State  : 28
+DEBUG:root:Defaulted state 28: Reduce using 25
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID . None
+INFO:root:Action : Reduce rule [declare_func -> <empty>] with [] and goto state 31
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 31
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func . LexToken((,'(',13,240)
+DEBUG:root:Action : Shift and goto state 38
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( . LexToken(),')',13,241)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 50
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 50
+DEBUG:root:Defaulted state 50: Reduce using 28
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( epsilon . LexToken(),')',13,241)
+INFO:root:Action : Reduce rule [function_1 -> epsilon] with [None] and goto state 48
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 . LexToken(),')',13,241)
+DEBUG:root:Action : Shift and goto state 83
+DEBUG:root:State  : 83
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) . LexToken(VAR,'var',14,248)
+DEBUG:root:Action : Shift and goto state 8
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR . LexToken(STRING,'string',14,252)
+DEBUG:root:Action : Shift and goto state 19
+DEBUG:root:State  : 19
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR STRING . LexToken(:,':',14,258)
+INFO:root:Action : Reduce rule [tipo -> STRING] with ['string'] and goto state 16
+INFO:root:Result : <str @ 0x7f2ebb3da570> ('string')
+DEBUG:root:State  : 16
+DEBUG:root:Defaulted state 16: Reduce using 7
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo . LexToken(:,':',14,258)
+INFO:root:Action : Reduce rule [set_var_type -> <empty>] with [] and goto state 27
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 27
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type . LexToken(:,':',14,258)
+DEBUG:root:Action : Shift and goto state 30
+DEBUG:root:State  : 30
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : . LexToken(ID,'hello',14,260)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID . LexToken(,,',',14,265)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID epsilon . LexToken(,,',',14,265)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : ID id_completo_1 . LexToken(,,',',14,265)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['hello',None] and goto state 36
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('hello', None))
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo . LexToken(,,',',14,265)
+DEBUG:root:Action : Shift and goto state 42
+DEBUG:root:State  : 42
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , . LexToken(ID,'world',14,267)
+DEBUG:root:Action : Shift and goto state 37
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID epsilon . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , ID id_completo_1 . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['world',None] and goto state 78
+INFO:root:Result : <tuple @ 0x7f2ebb40cc40> (('world', None))
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 43
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo epsilon . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [lista_id_1 -> epsilon] with [None] and goto state 96
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 96
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo , id_completo lista_id_1 . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [lista_id_1 -> , id_completo lista_id_1] with [',',('world', None),None] and goto state 41
+INFO:root:Result : <list @ 0x7f2ebb3e7940> ([('world', None)])
+DEBUG:root:State  : 41
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : id_completo lista_id_1 . LexToken(;,';',14,272)
+INFO:root:Action : Reduce rule [lista_id -> id_completo lista_id_1] with [('hello', None),<list @ 0x7f2ebb3e7940>] and goto state 35
+INFO:root:Result : <list @ 0x7f2ebb3e7fc0> ([('hello', None), ('world', None)])
+DEBUG:root:State  : 35
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id . LexToken(;,';',14,272)
+DEBUG:root:Action : Shift and goto state 40
+DEBUG:root:State  : 40
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; . LexToken({,'{',15,278)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 77
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 77
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; epsilon . LexToken({,'{',15,278)
+INFO:root:Action : Reduce rule [vars_2 -> epsilon] with [None] and goto state 75
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR tipo set_var_type : lista_id ; vars_2 . LexToken({,'{',15,278)
+INFO:root:Action : Reduce rule [vars_1 -> tipo set_var_type : lista_id ; vars_2] with ['string',None,':',<list @ 0x7f2ebb3e7fc0>,';',None] and goto state 15
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) VAR vars_1 . LexToken({,'{',15,278)
+INFO:root:Action : Reduce rule [vars -> VAR vars_1] with ['var',None] and goto state 99
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 99
+DEBUG:root:Defaulted state 99: Reduce using 29
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) vars . LexToken({,'{',15,278)
+INFO:root:Action : Reduce rule [function_2 -> vars] with [None] and goto state 98
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 98
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 . LexToken({,'{',15,278)
+DEBUG:root:Action : Shift and goto state 130
+DEBUG:root:State  : 130
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { . LexToken(RETURN,'return',16,288)
+DEBUG:root:Action : Shift and goto state 66
+DEBUG:root:State  : 66
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN . LexToken((,'(',16,295)
+DEBUG:root:Action : Shift and goto state 89
+DEBUG:root:State  : 89
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( . LexToken(ID,'hello',16,296)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( epsilon . LexToken(ID,'hello',16,296)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 . LexToken(ID,'hello',16,296)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID . LexToken(+,'+',16,302)
+DEBUG:root:Action : Shift and goto state 110
+DEBUG:root:State  : 110
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID + . LexToken(ID,'world',16,304)
+INFO:root:Action : Reduce rule [factor_1 -> +] with ['+'] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 . LexToken(ID,'world',16,304)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 180
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 180
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte_2 -> epsilon] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 ID var_cte_2 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['world',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 var_cte_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor_1 var_cte . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID factor termino_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID termino exp_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID exp expression_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 114
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 114
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 161
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 161
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [func_call_2 -> epsilon] with [None] and goto state 159
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 159
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID expression func_call_2 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [func_call_1 -> expression func_call_2] with [None,None] and goto state 179
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 179
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID func_call_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte_2 -> func_call_1] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 ID var_cte_2 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['hello',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 var_cte_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor_1 var_cte . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( factor termino_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino epsilon . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( termino exp_1 . LexToken(),')',16,309)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 116
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 116
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp . LexToken(),')',16,309)
+DEBUG:root:Action : Shift and goto state 162
+DEBUG:root:State  : 162
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp ) . LexToken(;,';',16,310)
+DEBUG:root:Action : Shift and goto state 183
+DEBUG:root:State  : 183
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { RETURN ( exp ) ; . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [return -> RETURN ( exp ) ;] with ['return','(',None,')',';'] and goto state 58
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 58
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { return . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [statement -> return] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 55
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement epsilon . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { statement bloque_1 . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 53
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque_1 . LexToken(},'}',17,316)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 172
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 172
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque . LexToken(},'}',17,316)
+DEBUG:root:Action : Shift and goto state 192
+DEBUG:root:State  : 192
+DEBUG:root:Stack  : PROGRAM ID ; vars function FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque } . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [function -> FUNCTION tipo_retorno ID declare_func ( function_1 ) function_2 { bloque }] with ['function','void','there',None,'(',None,')',None,'{',None,'}'] and goto state 9
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 9
+DEBUG:root:Stack  : PROGRAM ID ; vars function function . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 10
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 10
+DEBUG:root:Defaulted state 10: Reduce using 5
+DEBUG:root:Stack  : PROGRAM ID ; vars function function epsilon . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [programa_2 -> epsilon] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 22
+DEBUG:root:Defaulted state 22: Reduce using 4
+DEBUG:root:Stack  : PROGRAM ID ; vars function function programa_2 . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [programa_2 -> function programa_2] with [None,None] and goto state 22
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 22
+DEBUG:root:Defaulted state 22: Reduce using 4
+DEBUG:root:Stack  : PROGRAM ID ; vars function programa_2 . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [programa_2 -> function programa_2] with [None,None] and goto state 14
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 14
+DEBUG:root:Defaulted state 14: Reduce using 2
+DEBUG:root:Stack  : PROGRAM ID ; vars programa_2 . LexToken(MAIN,'main',19,323)
+INFO:root:Action : Reduce rule [programa_1 -> vars programa_2] with [None,None] and goto state 5
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 . LexToken(MAIN,'main',19,323)
+DEBUG:root:Action : Shift and goto state 13
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN . LexToken((,'(',19,327)
+DEBUG:root:Action : Shift and goto state 26
+DEBUG:root:State  : 26
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( . LexToken(),')',19,328)
+DEBUG:root:Action : Shift and goto state 29
+DEBUG:root:State  : 29
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) . LexToken({,'{',19,330)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 34
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 34
+DEBUG:root:Defaulted state 34: Reduce using 56
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) epsilon . LexToken({,'{',19,330)
+INFO:root:Action : Reduce rule [main_1 -> epsilon] with [None] and goto state 32
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 32
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 . LexToken({,'{',19,330)
+DEBUG:root:Action : Shift and goto state 39
+DEBUG:root:State  : 39
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { . LexToken(ID,'numeroPi',20,336)
+DEBUG:root:Action : Shift and goto state 65
+DEBUG:root:State  : 65
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID . LexToken(=,'=',20,345)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID epsilon . LexToken(=,'=',20,345)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { ID id_completo_1 . LexToken(=,'=',20,345)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numeroPi',None] and goto state 64
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('numeroPi', None))
+DEBUG:root:State  : 64
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo . LexToken(=,'=',20,345)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = . LexToken(CTE_F,3.1,20,347)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = epsilon . LexToken(CTE_F,3.1,20,347)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 . LexToken(CTE_F,3.1,20,347)
+DEBUG:root:Action : Shift and goto state 154
+DEBUG:root:State  : 154
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 CTE_F . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [var_cte -> CTE_F] with [3.1] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 var_cte . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor epsilon . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor termino_1 . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino epsilon . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino exp_1 . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = exp . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = exp epsilon . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = exp expression_1 . LexToken(;,';',20,350)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 104
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 104
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression . LexToken(;,';',20,350)
+DEBUG:root:Action : Shift and goto state 132
+DEBUG:root:State  : 132
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression ; . LexToken(IF,'if',21,353)
+INFO:root:Action : Reduce rule [assignment -> id_completo = expression ;] with [<tuple @ 0x7f2ebb40cb80>,'=',None,';'] and goto state 56
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 56
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { assignment . LexToken(IF,'if',21,353)
+INFO:root:Action : Reduce rule [statement -> assignment] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement . LexToken(IF,'if',21,353)
+DEBUG:root:Action : Shift and goto state 70
+DEBUG:root:State  : 70
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF . LexToken((,'(',21,356)
+DEBUG:root:Action : Shift and goto state 93
+DEBUG:root:State  : 93
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( . LexToken(ID,'numeroPi',21,357)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( epsilon . LexToken(ID,'numeroPi',21,357)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 . LexToken(ID,'numeroPi',21,357)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 ID . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 180
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 180
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 ID epsilon . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [var_cte_2 -> epsilon] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 ID var_cte_2 . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['numeroPi',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 var_cte_1 . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor_1 var_cte . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor epsilon . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( factor termino_1 . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( termino . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( termino epsilon . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( termino exp_1 . LexToken(<,'<',21,366)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp . LexToken(<,'<',21,366)
 DEBUG:root:Action : Shift and goto state 136
 DEBUG:root:State  : 136
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = . LexToken(CTE_F,3.1,5,60)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 71
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 71
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = epsilon . LexToken(CTE_F,3.1,5,60)
-INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 57
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 57
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 . LexToken(CTE_F,3.1,5,60)
-DEBUG:root:Action : Shift and goto state 96
-DEBUG:root:State  : 96
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 CTE_F . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [var_cte -> CTE_F] with [3.1] and goto state 93
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 93
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor_1 var_cte . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 56
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp < . LexToken(ID,'hi',21,368)
+INFO:root:Action : Reduce rule [comparison_ops -> <] with ['<'] and goto state 134
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 134
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops . LexToken(ID,'hi',21,368)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops epsilon . LexToken(ID,'hi',21,368)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 . LexToken(ID,'hi',21,368)
+DEBUG:root:Action : Shift and goto state 157
+DEBUG:root:State  : 157
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 ID . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 180
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 180
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 ID epsilon . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [var_cte_2 -> epsilon] with [None] and goto state 178
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 178
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 ID var_cte_2 . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [var_cte_1 -> ID var_cte_2] with ['hi',None] and goto state 152
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 152
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 var_cte_1 . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [var_cte -> var_cte_1] with [None] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor_1 var_cte . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor epsilon . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops factor termino_1 . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops termino . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops termino epsilon . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops termino exp_1 . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 174
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 174
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp comparison_ops exp . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [expression_1 -> comparison_ops exp] with [None,None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( exp expression_1 . LexToken(),')',21,370)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 124
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 124
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression . LexToken(),')',21,370)
+DEBUG:root:Action : Shift and goto state 168
+DEBUG:root:State  : 168
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) . LexToken(THEN,'then',21,372)
+DEBUG:root:Action : Shift and goto state 188
+DEBUG:root:State  : 188
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN . LexToken({,'{',21,377)
+DEBUG:root:Action : Shift and goto state 199
+DEBUG:root:State  : 199
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { . LexToken(ID,'numeroPi',22,381)
+DEBUG:root:Action : Shift and goto state 65
+DEBUG:root:State  : 65
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { ID . LexToken(=,'=',22,390)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { ID epsilon . LexToken(=,'=',22,390)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { ID id_completo_1 . LexToken(=,'=',22,390)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numeroPi',None] and goto state 64
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('numeroPi', None))
+DEBUG:root:State  : 64
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo . LexToken(=,'=',22,390)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = . LexToken(CTE_F,3.14159,22,392)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = epsilon . LexToken(CTE_F,3.14159,22,392)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor_1 . LexToken(CTE_F,3.14159,22,392)
+DEBUG:root:Action : Shift and goto state 154
+DEBUG:root:State  : 154
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor_1 CTE_F . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [var_cte -> CTE_F] with [3.14159] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor_1 var_cte . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor epsilon . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = factor termino_1 . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = termino . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = termino epsilon . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = termino exp_1 . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = exp . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = exp epsilon . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = exp expression_1 . LexToken(;,';',22,399)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 104
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 104
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = expression . LexToken(;,';',22,399)
+DEBUG:root:Action : Shift and goto state 132
+DEBUG:root:State  : 132
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { id_completo = expression ; . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [assignment -> id_completo = expression ;] with [<tuple @ 0x7f2ebb40cb80>,'=',None,';'] and goto state 56
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 56
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 90
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 90
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor epsilon . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 88
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 88
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = factor termino_1 . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 55
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { assignment . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [statement -> assignment] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { statement . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 55
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 85
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 85
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino epsilon . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 83
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 83
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = termino exp_1 . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 53
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { statement epsilon . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { statement bloque_1 . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 53
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = exp . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [expression_1 -> exp] with [None] and goto state 52
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { bloque_1 . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 204
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 204
+DEBUG:root:Defaulted state 204: Reduce using 58
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { bloque . LexToken(},'}',23,402)
+INFO:root:Action : Reduce rule [condition_1 -> bloque] with [None] and goto state 203
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 203
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 . LexToken(},'}',23,402)
+DEBUG:root:Action : Shift and goto state 211
+DEBUG:root:State  : 211
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } . LexToken(ELSE,'else',24,408)
+DEBUG:root:Action : Shift and goto state 216
+DEBUG:root:State  : 216
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE . LexToken({,'{',25,417)
+DEBUG:root:Action : Shift and goto state 222
+DEBUG:root:State  : 222
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { . LexToken(ID,'print',26,421)
+DEBUG:root:Action : Shift and goto state 65
+DEBUG:root:State  : 65
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID . LexToken((,'(',26,426)
+DEBUG:root:Action : Shift and goto state 88
+DEBUG:root:State  : 88
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( . LexToken(CTE_STRING,'"Coronavirus will destroy math"',26,427)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 115
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 115
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( epsilon . LexToken(CTE_STRING,'"Coronavirus will destroy math"',26,427)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor_1 . LexToken(CTE_STRING,'"Coronavirus will destroy math"',26,427)
+DEBUG:root:Action : Shift and goto state 155
+DEBUG:root:State  : 155
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor_1 CTE_STRING . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [var_cte -> CTE_STRING] with [<str @ 0x7f2ebb448260>] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor_1 var_cte . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor epsilon . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( factor termino_1 . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( termino . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( termino epsilon . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( termino exp_1 . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( exp . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( exp epsilon . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( exp expression_1 . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 114
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 114
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( expression . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 161
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 161
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( expression epsilon . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [func_call_2 -> epsilon] with [None] and goto state 159
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 159
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( expression func_call_2 . LexToken(),')',26,458)
+INFO:root:Action : Reduce rule [func_call_1 -> expression func_call_2] with [None,None] and goto state 113
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 113
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( func_call_1 . LexToken(),')',26,458)
+DEBUG:root:Action : Shift and goto state 158
+DEBUG:root:State  : 158
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( func_call_1 ) . LexToken(;,';',26,459)
+DEBUG:root:Action : Shift and goto state 181
+DEBUG:root:State  : 181
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { ID ( func_call_1 ) ; . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [func_call -> ID ( func_call_1 ) ;] with ['print','(',None,')',';'] and goto state 57
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 57
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { func_call . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [statement -> func_call] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { statement . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 55
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { statement epsilon . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { statement bloque_1 . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 53
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { bloque_1 . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 204
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 204
+DEBUG:root:Defaulted state 204: Reduce using 58
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { bloque . LexToken(},'}',27,462)
+INFO:root:Action : Reduce rule [condition_1 -> bloque] with [None] and goto state 225
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 225
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { condition_1 . LexToken(},'}',27,462)
+DEBUG:root:Action : Shift and goto state 226
+DEBUG:root:State  : 226
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } ELSE { condition_1 } . LexToken(IF,'if',28,468)
+INFO:root:Action : Reduce rule [condition_2 -> ELSE { condition_1 }] with ['else','{',None,'}'] and goto state 215
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 215
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( expression ) THEN { condition_1 } condition_2 . LexToken(IF,'if',28,468)
+INFO:root:Action : Reduce rule [condition -> IF ( expression ) THEN { condition_1 } condition_2] with ['if','(',None,')','then','{',None,'}',None] and goto state 62
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 62
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement condition . LexToken(IF,'if',28,468)
+INFO:root:Action : Reduce rule [statement -> condition] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement . LexToken(IF,'if',28,468)
+DEBUG:root:Action : Shift and goto state 70
+DEBUG:root:State  : 70
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF . LexToken((,'(',28,471)
+DEBUG:root:Action : Shift and goto state 93
+DEBUG:root:State  : 93
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( . LexToken(CTE_I,3,28,472)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( epsilon . LexToken(CTE_I,3,28,472)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor_1 . LexToken(CTE_I,3,28,472)
+DEBUG:root:Action : Shift and goto state 153
+DEBUG:root:State  : 153
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor_1 CTE_I . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [var_cte -> CTE_I] with [3] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor_1 var_cte . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor epsilon . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( factor termino_1 . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( termino . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( termino epsilon . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( termino exp_1 . LexToken(>,'>',28,474)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp . LexToken(>,'>',28,474)
+DEBUG:root:Action : Shift and goto state 137
+DEBUG:root:State  : 137
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp > . LexToken(CTE_I,2,28,476)
+INFO:root:Action : Reduce rule [comparison_ops -> >] with ['>'] and goto state 134
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 134
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops . LexToken(CTE_I,2,28,476)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops epsilon . LexToken(CTE_I,2,28,476)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor_1 . LexToken(CTE_I,2,28,476)
+DEBUG:root:Action : Shift and goto state 153
+DEBUG:root:State  : 153
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor_1 CTE_I . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [var_cte -> CTE_I] with [2] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor_1 var_cte . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor epsilon . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops factor termino_1 . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops termino . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops termino epsilon . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops termino exp_1 . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 174
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 174
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp comparison_ops exp . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [expression_1 -> comparison_ops exp] with [None,None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( exp expression_1 . LexToken(),')',28,477)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 124
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 124
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression . LexToken(),')',28,477)
+DEBUG:root:Action : Shift and goto state 168
+DEBUG:root:State  : 168
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) . LexToken(THEN,'then',28,479)
+DEBUG:root:Action : Shift and goto state 188
+DEBUG:root:State  : 188
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN . LexToken({,'{',28,484)
+DEBUG:root:Action : Shift and goto state 199
+DEBUG:root:State  : 199
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { . LexToken(ID,'numero',29,494)
+DEBUG:root:Action : Shift and goto state 65
+DEBUG:root:State  : 65
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { ID . LexToken(=,'=',29,501)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 46
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { ID epsilon . LexToken(=,'=',29,501)
+INFO:root:Action : Reduce rule [id_completo_1 -> epsilon] with [None] and goto state 44
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { ID id_completo_1 . LexToken(=,'=',29,501)
+INFO:root:Action : Reduce rule [id_completo -> ID id_completo_1] with ['numero',None] and goto state 64
+INFO:root:Result : <tuple @ 0x7f2ebb40cb80> (('numero', None))
+DEBUG:root:State  : 64
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo . LexToken(=,'=',29,501)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = . LexToken(CTE_F,5.5,29,503)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 112
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = epsilon . LexToken(CTE_F,5.5,29,503)
+INFO:root:Action : Reduce rule [factor_1 -> epsilon] with [None] and goto state 109
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor_1 . LexToken(CTE_F,5.5,29,503)
+DEBUG:root:Action : Shift and goto state 154
+DEBUG:root:State  : 154
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor_1 CTE_F . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [var_cte -> CTE_F] with [5.5] and goto state 151
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 151
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor_1 var_cte . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [factor -> factor_1 var_cte] with [None,None] and goto state 107
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 107
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 147
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 147
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor epsilon . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [termino_1 -> epsilon] with [None] and goto state 145
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 145
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = factor termino_1 . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [termino -> factor termino_1] with [None,None] and goto state 106
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 106
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = termino . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 142
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 142
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = termino epsilon . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [exp_1 -> epsilon] with [None] and goto state 140
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 140
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = termino exp_1 . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [exp -> termino exp_1] with [None,None] and goto state 105
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = exp . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 135
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 135
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = exp epsilon . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [expression_1 -> epsilon] with [None] and goto state 133
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 133
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = exp expression_1 . LexToken(;,';',29,506)
+INFO:root:Action : Reduce rule [expression -> exp expression_1] with [None,None] and goto state 104
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 104
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = expression . LexToken(;,';',29,506)
+DEBUG:root:Action : Shift and goto state 132
+DEBUG:root:State  : 132
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { id_completo = expression ; . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [assignment -> id_completo = expression ;] with [<tuple @ 0x7f2ebb40cb80>,'=',None,';'] and goto state 56
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 56
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { assignment . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [statement -> assignment] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { statement . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 55
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { statement epsilon . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { statement bloque_1 . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 53
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { bloque_1 . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 204
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 204
+DEBUG:root:Defaulted state 204: Reduce using 58
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { bloque . LexToken(},'}',30,512)
+INFO:root:Action : Reduce rule [condition_1 -> bloque] with [None] and goto state 203
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 203
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { condition_1 . LexToken(},'}',30,512)
+DEBUG:root:Action : Shift and goto state 211
+DEBUG:root:State  : 211
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { condition_1 } . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 217
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 217
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { condition_1 } epsilon . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [condition_2 -> epsilon] with [None] and goto state 215
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 215
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement IF ( expression ) THEN { condition_1 } condition_2 . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [condition -> IF ( expression ) THEN { condition_1 } condition_2] with ['if','(',None,')','then','{',None,'}',None] and goto state 62
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 62
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement condition . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [statement -> condition] with [None] and goto state 54
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement statement . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 55
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 55
+DEBUG:root:Defaulted state 55: Reduce using 112
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement statement epsilon . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [bloque_1 -> epsilon] with [None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement statement bloque_1 . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement statement bloque_1 . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 86
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 86
+DEBUG:root:Defaulted state 86: Reduce using 111
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement bloque_1 . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [bloque_1 -> statement bloque_1] with [None,None] and goto state 53
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 53
+DEBUG:root:Defaulted state 53: Reduce using 110
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { bloque_1 . LexToken(},'}',31,514)
+INFO:root:Action : Reduce rule [bloque -> bloque_1] with [None] and goto state 52
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
 DEBUG:root:State  : 52
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression_1 . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [epsilon -> <empty>] with [] and goto state 78
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 78
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression_1 epsilon . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [expression_2 -> epsilon] with [None] and goto state 76
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 76
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression_1 expression_2 . LexToken(;,';',5,63)
-INFO:root:Action : Reduce rule [expression -> expression_1 expression_2] with [None,None] and goto state 150
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 150
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression . LexToken(;,';',5,63)
-DEBUG:root:Action : Shift and goto state 166
-DEBUG:root:State  : 166
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { id_completo = expression ; . LexToken(IF,'if',6,66)
-INFO:root:Action : Reduce rule [assignment -> id_completo = expression ;] with [None,'=',None,';'] and goto state 101
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 101
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { assignment . LexToken(IF,'if',6,66)
-INFO:root:Action : Reduce rule [statement -> assignment] with [None] and goto state 100
-INFO:root:Result : <NoneType @ 0x7fff63975880> (None)
-DEBUG:root:State  : 100
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement . LexToken(IF,'if',6,66)
-DEBUG:root:Action : Shift and goto state 115
-DEBUG:root:State  : 115
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF . LexToken((,'(',6,69)
-DEBUG:root:Action : Shift and goto state 141
-DEBUG:root:State  : 141
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( . LexToken(ID,'numeroPi',6,70)
-DEBUG:root:Action : Shift and goto state 46
-DEBUG:root:State  : 46
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( ID . LexToken(<,'<',6,79)
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( ID . LexToken(<,'<',6,79)
-DEBUG:root:State  : 46
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( ID . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( ID . error
-DEBUG:root:State  : 141
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF ( . error
-DEBUG:root:State  : 115
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement IF . error
-DEBUG:root:State  : 100
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { statement . error
-DEBUG:root:State  : 60
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { . error
-DEBUG:root:State  : 34
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) main_1 . error
-DEBUG:root:State  : 29
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( ) . error
-DEBUG:root:State  : 26
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN ( . error
-DEBUG:root:State  : 13
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 MAIN . error
-DEBUG:root:State  : 5
-DEBUG:root:Stack  : PROGRAM ID ; programa_1 . error
-ERROR:root:Error  : PROGRAM ID ; programa_1 . error
-DEBUG:root:State  : 4
-DEBUG:root:Stack  : PROGRAM ID ; . error
-ERROR:root:Error  : PROGRAM ID ; . error
-DEBUG:root:State  : 3
-DEBUG:root:Stack  : PROGRAM ID . error
-ERROR:root:Error  : PROGRAM ID . error
-DEBUG:root:State  : 2
-DEBUG:root:Stack  : PROGRAM . error
-ERROR:root:Error  : PROGRAM . error
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . error
-ERROR:root:Error  : . error
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(ID,'hi',6,81)
-ERROR:root:Error  : . LexToken(ID,'hi',6,81)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(),')',6,83)
-ERROR:root:Error  : . LexToken(),')',6,83)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken({,'{',6,85)
-ERROR:root:Error  : . LexToken({,'{',6,85)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(ID,'numeroPi',7,89)
-ERROR:root:Error  : . LexToken(ID,'numeroPi',7,89)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(=,'=',7,98)
-ERROR:root:Error  : . LexToken(=,'=',7,98)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(CTE_F,3.14159,7,100)
-ERROR:root:Error  : . LexToken(CTE_F,3.14159,7,100)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(;,';',7,107)
-ERROR:root:Error  : . LexToken(;,';',7,107)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(},'}',8,110)
-ERROR:root:Error  : . LexToken(},'}',8,110)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(ELSE,'else',9,116)
-ERROR:root:Error  : . LexToken(ELSE,'else',9,116)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken({,'{',10,125)
-ERROR:root:Error  : . LexToken({,'{',10,125)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(ID,'print',11,129)
-ERROR:root:Error  : . LexToken(ID,'print',11,129)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken((,'(',11,134)
-ERROR:root:Error  : . LexToken((,'(',11,134)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(CTE_STRING,'"Coronavirus will destroy math"',11,135)
-ERROR:root:Error  : . LexToken(CTE_STRING,'"Coronavirus will destroy math"',11,135)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(),')',11,166)
-ERROR:root:Error  : . LexToken(),')',11,166)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(;,';',11,167)
-ERROR:root:Error  : . LexToken(;,';',11,167)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(},'}',12,170)
-ERROR:root:Error  : . LexToken(},'}',12,170)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . LexToken(},'}',13,172)
-ERROR:root:Error  : . LexToken(},'}',13,172)
-DEBUG:root:State  : 0
-DEBUG:root:Stack  : . $end
-ERROR:root:Error  : . $end
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { bloque . LexToken(},'}',31,514)
+DEBUG:root:Action : Shift and goto state 85
+DEBUG:root:State  : 85
+DEBUG:root:Defaulted state 85: Reduce using 54
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 MAIN ( ) main_1 { bloque } . None
+INFO:root:Action : Reduce rule [main -> MAIN ( ) main_1 { bloque }] with ['main','(',')',None,'{',None,'}'] and goto state 12
+INFO:root:Result : <NoneType @ 0xace7e0> (None)
+DEBUG:root:State  : 12
+DEBUG:root:Defaulted state 12: Reduce using 1
+DEBUG:root:Stack  : PROGRAM ID ; programa_1 main . None
+INFO:root:Action : Reduce rule [programa -> PROGRAM ID ; programa_1 main] with ['program','donpato',';',None,None] and goto state 1
+INFO:root:Result : <str @ 0x7f2ebb8709f0> ('COMPILA')
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : programa . $end
+INFO:root:Done   : Returning <str @ 0x7f2ebb8709f0> ('COMPILA')
+INFO:root:PLY: PARSE DEBUG END

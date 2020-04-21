@@ -8,11 +8,21 @@
 # ------------------------------------------------------------
 
 import logging
-import ply.yacc as yacc
+from typing import List, Any, Dict
 
+import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
 from lexer import tokens, literals
 
+from Stack import Stack
+from DataUtils import FunctionTable, Variable, ParsingContext, VariableTable
+
+function_table = FunctionTable()
+variable_table = VariableTable()
+
+global_context = ParsingContext()
+global_context.set_function("global")
+function_table.declare_function('global', 'void')
 
 # program id ; VARS? function* main
 def p_programa(p):
@@ -24,6 +34,7 @@ def p_programa(p):
 def p_programa_1(p):
     '''programa_1   : vars programa_2
                     | programa_2 '''
+    print("Programa ", p[1])
     pass
 
 
@@ -39,51 +50,87 @@ def p_vars(p):
     pass
 
 
+def p_set_var_type(p):
+    '''set_var_type : '''
+    global_context.set_type(p[-1])
+
+
 def p_vars_1(p):
-    '''vars_1       : tipo ':' lista_id ';' vars_2 '''
+    '''vars_1       : tipo set_var_type ':' lista_id ';' vars_2 '''
+    # print("vars_1", p[1], p[4], p[6])
     pass
 
+def p_vars_1_error(p):
+    '''vars_1       : tipo set_var_type ':' lista_id error ';' vars_2 '''
+    print("Error de sintaxis en la declaración de variables. Línea ", p.lineno(5), ", Posición", p.lexpos(5))
 
 def p_vars_2(p):
     '''vars_2       : vars_1 
                     | epsilon '''
     pass
 
+def p_declare_var(p):
+    '''declare_var  : '''
+    function_table.declare_variable(global_context.function, Variable(global_context.var_type, p[-1][0], p[-1][1]))
+
 
 # lista_id : (id ,)+
 def p_lista_id(p):
-    '''lista_id     : id_completo lista_id_1'''
-
+    '''lista_id     : id_completo declare_var lista_id_1'''
+    # print("lists_id ", [p[1], p[2]])
+    # table.declare_variable(func_name=global_context.function,
+    #                        var=Variable(global_context.var_type, p[1][0]))
+    if p[2] is not None:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = [p[1]]
+    pass
 
 def p_lista_id_1(p):
-    '''lista_id_1   : ',' lista_id_1 
+    '''lista_id_1   : ',' id_completo declare_var lista_id_1
                     | epsilon'''
+    if len(p) > 2:
+        # table.declare_variable(func_name=global_context.function,
+        #                        var=Variable(global_context.var_type, p[2][0]))
+        # print("lista_id_1", p[2], p[3])
+        if p[3] is not None:
+            p[0] = [p[2]] + p[3]
+        else:
+            p[0] = [p[2]]
     pass
 
 
 # id dimension?
 def p_id_completo(p):
     '''id_completo      : ID id_completo_1'''
+    # print("Id Completo",p[1], p[2])
+    p[0] = p[1], p[2]
     pass
 
 
 def p_id_completo_1(p):
     '''id_completo_1    : dimension 
                         | epsilon'''
+    # print("Id_completo_1 ", p[1])
+    p[0] = p[1]
     pass
 
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    '''dimension    : '[' num_var ']' 
-                    | dimension_1 '''
+    '''dimension    : '[' num_var ']' dimension_1 '''
+    # print("dimension", p[1:4])
+    p[0] = (p[2], p[4])
     pass
 
 
 def p_dimension_1(p):
     '''dimension_1  : '[' num_var ']' 
                     | epsilon '''
+    # print("dimension x2", p[1:4])
+    if len(p) > 2:
+        p[0] = p[2]
     pass
 
 
@@ -93,13 +140,20 @@ def p_tipo(p):
             | STRING
             | CHAR
             | DATAFRAME'''
+    p[0] = p[1]
     pass
 
 
-# TODO definir bloque
+def p_declare_func(p):
+    '''declare_func : '''
+    global_context.set_function(p[-1])
+    function_table.declare_function(func_name=p[-1], return_type=global_context.var_type)
+
+
 # function tipo_retorno ID ( parameters? ) vars? { bloque? }
 def p_function(p):
-    '''function     : FUNCTION tipo_retorno ID  '(' function_1 ')' function_2 '{' bloque '}' '''
+    '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
+    print("Function", p[3])
     pass
 
 
@@ -118,19 +172,24 @@ def p_function_2(p):
 def p_tipo_retorno(p):
     '''tipo_retorno : tipo 
                     | VOID '''
+    p[0] = p[1]
+    global_context.set_type(p[1])
     pass
 
 
-# expression ( ',' expression )*
+# TIPO 'id' (',' TIPO 'id')*
 def p_parameters(p):
-    '''parameters       : expression parameters_1 '''
-    pass
+    '''parameters       : tipo ID parameters_1
+                        | epsilon'''
+    if len(p) > 2:
+        function_table.add_parameter(global_context.function, Variable(p[1], p[2]))
 
 
 def p_parameters_1(p):
-    '''parameters_1     : ',' expression 
+    '''parameters_1     : ',' tipo ID parameters_1
                         | epsilon'''
-    pass
+    if len(p) > 2:
+        function_table.add_parameter(global_context.function, Variable(p[2], p[3]))
 
 
 def p_statement(p):
@@ -148,24 +207,16 @@ def p_statement(p):
 # ID_COMPLETO '=' EXPRESsION ';'
 def p_assignment(p):
     '''assignment   : id_completo '=' expression ';' '''
-    pass
-
-
-# ID ( EXPRESION* ) ;
-def p_void_func_call(p):
-    '''void_func_call    : ID '(' void_func_call_1 ')' ';' '''
-    pass
-
-
-def p_void_func_call_1(p):
-    '''void_func_call_1  : expression void_func_call_1 
-                        | epsilon '''
+    print("Assign", p[1])
+    # TODO buscar id en tabla de variables
+    # find id_completo
+    # match type of expression and id_completo
     pass
 
 
 # return ( EXP ) ;
 def p_return(p):
-    '''return   : RETURN '(' exp ')' '''
+    '''return   : RETURN '(' exp ')' ';' '''
     pass
 
 
@@ -215,6 +266,7 @@ def p_main_1(p):
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
     '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
+    # print(p[3])
     pass
 
 
@@ -264,6 +316,8 @@ def p_num_var(p):
     ''' num_var     : ID 
                     | CTE_I 
                     | CTE_F '''
+    print("num var", p[1])
+    p[0] = p[1]
     pass
 
 
@@ -274,27 +328,57 @@ def p_string_var(p):
 
 
 def p_var_cte(p):
-    '''var_cte      : ID 
+    '''var_cte      : var_cte_1
                     | CTE_I 
                     | CTE_F 
                     | CTE_STRING 
                     | CTE_CHAR '''
+    # print("Var_Cte", p[1])
+    pass
+
+
+def p_var_cte_1(p):
+    '''var_cte_1    : ID var_cte_2'''
+    # print("id?", p[1], p[2])
+    pass
+
+
+def p_var_cte_2(p):
+    '''var_cte_2    : func_call_1
+                    | epsilon'''
+    # print("func_call?", p[1])
+    pass
+
+
+# ID ( EXPRESION* ) ;
+
+
+def p_func_call(p):
+    '''func_call    : ID '(' func_call_1 ')' ';' '''
+    pass
+
+
+def p_func_call_1(p):
+    '''func_call_1  : expression func_call_2
+                    | epsilon '''
+    pass
+
+
+def p_func_call_2(p):
+    '''func_call_2  : ',' expression func_call_2
+                    | epsilon '''
+    pass
 
 
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
 def p_expression(p):
-    ''' expression      : expression_1 expression_2 '''
+    ''' expression      : exp expression_1 '''
+    # print("Expression ", p[1], p[2])
     pass
 
 
 def p_expression_1(p):
-    '''expression_1     : exp 
-                        | func_call '''
-    pass
-
-
-def p_expression_2(p):
-    '''expression_2     : comparison_ops expression_1 
+    '''expression_1     : comparison_ops exp
                         | epsilon'''
     pass
 
@@ -307,27 +391,10 @@ def p_comparison_ops(p):
     pass
 
 
-# id (  ( TIPO id , )* )
-def p_func_call(p):
-    '''func_call    : ID '(' func_call_1 ')' '''
-    pass
-
-
-def p_func_call_1(p):
-    '''func_call_1  : tipo ID func_call_2 
-                    | epsilon '''
-    pass
-
-
-def p_func_call_2(p):
-    '''func_call_2  : ',' tipo ID func_call_2 
-                    | epsilon '''
-    pass
-
-
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
     '''exp      : termino exp_1 '''
+    # print("Exp", p[1])
     pass
 
 
@@ -346,6 +413,7 @@ def p_exp_2(p):
 # FACTOR ( ( '*' | '/' ) FACTOR )*
 def p_termino(p):
     '''termino      : factor termino_1 '''
+    # print("Termino", p[1])
     pass
 
 
@@ -364,6 +432,8 @@ def p_termino_2(p):
 def p_factor(p):
     '''factor       : '(' expression ')'
                     | factor_1 var_cte '''
+    # if (p[2]):
+    #     print("Factor", p[2])
     pass
 
 
@@ -400,16 +470,38 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc(start="programa")
 
-
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
 data = '''
 program donpato;
-var float:numero;
+var float:numero[0][0], mat[1], wat, dude;
+    int: data, custom, suma;
+    char: a;
+    string: hi;
+    
+function void hello(int time, float day) 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+function void there() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+    
 main() {
-   if (3 > 2) then {
-       numero = 5.5;
-   }
+    numeroPi = 3.1;
+	if (numeroPi < hi) then {
+		numeroPi = 3.14159;
+	}
+    else
+    {
+		print("Coronavirus will destroy math");
+	}
+    if (3 > 2) then {
+        numero = 5.5;
+    }
 }
 '''
 
@@ -430,11 +522,14 @@ main() {
 
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    filemode="w",
-    filename="parselog.txt")
+        level=logging.DEBUG,
+        filemode="w",
+        filename="parselog.txt")
 
 if (parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA'):
     print("Sintaxis aceptada")
 else:
     print("error de sintaxis")
+
+for k, v in function_table.table.items():
+    print(v.__str__())

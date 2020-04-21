@@ -53,7 +53,7 @@ tokens = [
     'CTE_CHAR',
 ] + list(reserved.values())
 
-literals = '+-*/=<>(){}:;,'
+literals = '+-*/=<>(){}:;,[]'
 
 # Regular expression rules for simple tokens
 t_DIFF = r'<>'
@@ -61,33 +61,29 @@ t_EQUAL = r'=='
 t_CTE_STRING = r'\".*\"'
 t_CTE_CHAR = r'\'.\''
 
+
 # Expression rule to detect and convert floating point numbers
-
-
 def t_CTE_F(t):
     r'(\d+[.])\d+'
     t.value = float(t.value)
     return t
 
+
 # A regular expression rule with some action code
-
-
 def t_CTE_I(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
+
 # Expression rule to match possible id names
-
-
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
     t.type = reserved.get(t.value, 'ID')  # Check for reserved words
     return t
 
+
 # Define a rule so we can track line numbers
-
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -96,9 +92,8 @@ def t_newline(t):
 # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
 
+
 # Error handling rule
-
-
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -108,21 +103,38 @@ lex.lex()
 
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
-# data = '''
-# program donpato;
-# var numero:float;
-# {
-#     numeroPi = 3.1;
-# 	if (numeroPi < 3.14) {
-# 		numeroPi = 3.14159;
-# 	}
-#     else
-#     {
-# 		print("Coronavirus will destroy math");
-# 	};
-# }
-# '''
-
+data = '''
+program donpato;
+var float:numero[0][0], mat[1], wat, dude;
+    int: data, custom, suma;
+    char: a;
+    string: hi;
+    
+function void hello() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+function void there() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+    
+main() {
+    numeroPi = 3.1;
+	if (numeroPi < hi) then {
+		numeroPi = 3.14159;
+	}
+    else
+    {
+		print("Coronavirus will destroy math");
+	}
+    if (3 > 2) then {
+        numero = 5.5;
+    }
+}
+'''
 # # Give the lexer some input
 # lex.input(data)
 
