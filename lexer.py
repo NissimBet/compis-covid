@@ -103,21 +103,38 @@ lex.lex()
 
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
-# data = '''
-# program donpato;
-# var numero:float;
-# {
-#     numeroPi = 3.1;
-# 	if (numeroPi < 3.14) {
-# 		numeroPi = 3.14159;
-# 	}
-#     else
-#     {
-# 		print("Coronavirus will destroy math");
-# 	};
-# }
-# '''
-
+data = '''
+program donpato;
+var float:numero[0][0], mat[1], wat, dude;
+    int: data, custom, suma;
+    char: a;
+    string: hi;
+    
+function void hello() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+function void there() 
+    var string: hello, world;
+    {
+        return (hello + world);
+    }
+    
+main() {
+    numeroPi = 3.1;
+	if (numeroPi < hi) then {
+		numeroPi = 3.14159;
+	}
+    else
+    {
+		print("Coronavirus will destroy math");
+	}
+    if (3 > 2) then {
+        numero = 5.5;
+    }
+}
+'''
 # # Give the lexer some input
 # lex.input(data)
 
