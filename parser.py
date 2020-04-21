@@ -22,6 +22,7 @@ variable_table = VariableTable()
 
 global_context = ParsingContext()
 global_context.set_function("global")
+function_table.declare_function('global', 'void')
 
 # program id ; VARS? function* main
 def p_programa(p):
@@ -76,10 +77,14 @@ def p_vars_2(p):
                     | epsilon '''
     pass
 
+def p_declare_var(p):
+    '''declare_var  : '''
+    function_table.declare_variable(global_context.function, Variable(global_context.var_type, p[-1][0], p[-1][1]))
+
 
 # lista_id : (id ,)+
 def p_lista_id(p):
-    '''lista_id     : id_completo lista_id_1'''
+    '''lista_id     : id_completo declare_var lista_id_1'''
     # print("lists_id ", [p[1], p[2]])
     # table.declare_variable(func_name=global_context.function,
     #                        var=Variable(global_context.var_type, p[1][0]))
@@ -89,9 +94,8 @@ def p_lista_id(p):
         p[0] = [p[1]]
     pass
 
-
 def p_lista_id_1(p):
-    '''lista_id_1   : ',' id_completo lista_id_1
+    '''lista_id_1   : ',' id_completo declare_var lista_id_1
                     | epsilon'''
     if len(p) > 2:
         # table.declare_variable(func_name=global_context.function,
@@ -185,13 +189,15 @@ def p_tipo_retorno(p):
 def p_parameters(p):
     '''parameters       : tipo ID parameters_1
                         | epsilon'''
-    pass
+    if len(p) > 2:
+        function_table.add_parameter(global_context.function, Variable(p[1], p[2]))
 
 
 def p_parameters_1(p):
-    '''parameters_1     : ',' tipo ID
+    '''parameters_1     : ',' tipo ID parameters_1
                         | epsilon'''
-    pass
+    if len(p) > 2:
+        function_table.add_parameter(global_context.function, Variable(p[2], p[3]))
 
 
 def p_statement(p):
@@ -481,7 +487,7 @@ var float:numero[0][0], mat[1], wat, dude;
     char: a;
     string: hi;
     
-function void hello() 
+function void hello(int time, float day) 
     var string: hello, world;
     {
         return (hello + world);
@@ -533,4 +539,5 @@ if (parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA'):
 else:
     print("error de sintaxis")
 
-print(function_table.table.items())
+for k, v in function_table.table.items():
+    print(v.__str__())
