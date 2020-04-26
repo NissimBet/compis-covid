@@ -115,6 +115,11 @@ def p_id_completo_1(p):
     p[0] = p[1]
     pass
 
+def p_id_completo_1_error(p):
+    '''id_completo_1    : error '''
+    print("Syntax error while declaring variable dimensions.")
+    pass
+
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
@@ -211,6 +216,11 @@ def p_assignment(p):
     # TODO buscar id en tabla de variables
     # find id_completo
     # match type of expression and id_completo
+    pass
+
+def p_assignment_error(p):
+    '''assignment   : id_completo '=' error ';' '''
+    print("Syntax error in assignment expression")
     pass
 
 
