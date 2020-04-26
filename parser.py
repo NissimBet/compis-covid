@@ -36,7 +36,7 @@ def p_programa(p):
 def p_programa_1(p):
     '''programa_1   : vars programa_2
                     | programa_2 '''
-    print("Programa ", p[1])
+    # print("Programa ", p[1])
     pass
 
 
@@ -76,8 +76,9 @@ def p_vars_2(p):
 
 def p_declare_var(p):
     '''declare_var  : '''
-    function_table.declare_variable(global_context.function.top(),
-                                    Variable(global_context.var_type, p[-1][0], p[-1][1]))
+    if not function_table.declare_variable(global_context.function.top(),
+                                    Variable(global_context.var_type, p[-1][0], p[-1][1])):
+        print(f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. Variable "{p[-1][0]}" ya esta declarada en este contexto')
 
 
 # lista_id : (id ,)+
@@ -159,14 +160,17 @@ def p_tipo(p):
 
 def p_declare_func(p):
     '''declare_func : '''
-    global_context.set_function(p[-1])
-    function_table.declare_function(func_name=p[-1], return_type=global_context.var_type)
+    if not function_table.declare_function(func_name=p[-1], return_type=global_context.var_type):
+        print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
+    else:
+        global_context.set_function(p[-1])
+
 
 
 # function tipo_retorno ID ( parameters? ) vars? { bloque? }
 def p_function(p):
     '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
-    print("Function", p[3])
+    # print("Function", p[3])
     global_context.function.pop()
     pass
 
@@ -221,7 +225,7 @@ def p_statement(p):
 # ID_COMPLETO '=' EXPRESsION ';'
 def p_assignment(p):
     '''assignment   : id_completo '=' expression ';' '''
-    print("Assign", p[1])
+    # print("Assign", p[1])
     # TODO buscar id en tabla de variables
     # find id_completo
     # match type of expression and id_completo
@@ -342,7 +346,7 @@ def p_num_var(p):
     ''' num_var     : ID 
                     | CTE_I 
                     | CTE_F '''
-    print("num var", p[1])
+    # print("num var", p[1])
     p[0] = p[1]
     pass
 
@@ -536,7 +540,7 @@ function void there()
     {
         return (hello + world);
     }
-    
+        
 main() {
     numeroPi = 3.1;
 	if (numeroPi < hi) then {

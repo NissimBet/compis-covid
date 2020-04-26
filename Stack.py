@@ -21,4 +21,3 @@ class Stack(object):
 
     def __str__(self):
         return f'Stack [{[item for item in self.__data]}]'
-

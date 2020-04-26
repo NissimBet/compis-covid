@@ -22,13 +22,13 @@ class VariableTable(object):
     def __init__(self):
         self.table = {}
 
-    def declare_variable(self, var: Variable):
+    def declare_variable(self, var: Variable) -> bool:
         if var.name not in self.table:
             self.table[var.name] = var
             return True
         return False
 
-    def is_variable_defined(self, name: str):
+    def is_variable_defined(self, name: str) -> bool:
         return name in self.table
 
 
