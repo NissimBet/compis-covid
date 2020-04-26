@@ -17,4 +17,8 @@ class Stack(object):
     def top(self):
         if self.is_empty():
             return None
-        return self.__data[0]
+        return self.__data[-1]
+
+    def __str__(self):
+        return f'Stack [{[item for item in self.__data]}]'
+

@@ -15,14 +15,16 @@ import ply.yacc as yacc
 from lexer import tokens, literals
 
 from Stack import Stack
-from DataUtils import FunctionTable, Variable, ParsingContext, VariableTable
+from DataUtils import ParsingContext
+from Variable import Variable, VariableTable
+from Function import FunctionTable
 
 function_table = FunctionTable()
-variable_table = VariableTable()
-
 global_context = ParsingContext()
+
 global_context.set_function("global")
 function_table.declare_function('global', 'void')
+
 
 # program id ; VARS? function* main
 def p_programa(p):
@@ -60,18 +62,22 @@ def p_vars_1(p):
     # print("vars_1", p[1], p[4], p[6])
     pass
 
+
 def p_vars_1_error(p):
     '''vars_1       : tipo set_var_type ':' lista_id error ';' vars_2 '''
     print("Error de sintaxis en la declaración de variables. Línea ", p.lineno(5), ", Posición", p.lexpos(5))
+
 
 def p_vars_2(p):
     '''vars_2       : vars_1 
                     | epsilon '''
     pass
 
+
 def p_declare_var(p):
     '''declare_var  : '''
-    function_table.declare_variable(global_context.function, Variable(global_context.var_type, p[-1][0], p[-1][1]))
+    function_table.declare_variable(global_context.function.top(),
+                                    Variable(global_context.var_type, p[-1][0], p[-1][1]))
 
 
 # lista_id : (id ,)+
@@ -85,6 +91,7 @@ def p_lista_id(p):
     else:
         p[0] = [p[1]]
     pass
+
 
 def p_lista_id_1(p):
     '''lista_id_1   : ',' id_completo declare_var lista_id_1
@@ -114,6 +121,7 @@ def p_id_completo_1(p):
     # print("Id_completo_1 ", p[1])
     p[0] = p[1]
     pass
+
 
 def p_id_completo_1_error(p):
     '''id_completo_1    : error '''
@@ -159,6 +167,7 @@ def p_declare_func(p):
 def p_function(p):
     '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
     print("Function", p[3])
+    global_context.function.pop()
     pass
 
 
@@ -187,14 +196,14 @@ def p_parameters(p):
     '''parameters       : tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
-        function_table.add_parameter(global_context.function, Variable(p[1], p[2]))
+        function_table.add_parameter(global_context.function.top(), Variable(p[1], p[2]))
 
 
 def p_parameters_1(p):
     '''parameters_1     : ',' tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
-        function_table.add_parameter(global_context.function, Variable(p[2], p[3]))
+        function_table.add_parameter(global_context.function.top(), Variable(p[2], p[3]))
 
 
 def p_statement(p):
@@ -217,6 +226,7 @@ def p_assignment(p):
     # find id_completo
     # match type of expression and id_completo
     pass
+
 
 def p_assignment_error(p):
     '''assignment   : id_completo '=' error ';' '''
@@ -260,8 +270,14 @@ def p_load(p):
     pass
 
 
+def p_declare_main(p):
+    '''declare_main : '''
+    global_context.set_function('main')
+    function_table.declare_function('main', 'void')
+
+
 def p_main(p):
-    '''main     : MAIN '(' ')' main_1 '{' bloque '}'  '''
+    '''main     : MAIN declare_main '(' ')' main_1 '{' bloque '}'  '''
     pass
 
 
@@ -367,6 +383,7 @@ def p_stat_methods(p):
     '''
     pass
 
+
 def p_stat_methods_1(p):
     '''stat_methods_1 : MEAN
                         | MODE
@@ -380,6 +397,7 @@ def p_stat_methods_1(p):
     '''
     print('Stats Method:', p[1])
     pass
+
 
 def p_func_call(p):
     '''func_call    : ID '(' func_call_1 ')' ';'
@@ -487,7 +505,6 @@ def p_bloque_1(p):
 def p_epsilon(p):
     '''epsilon :'''
     pass
-
 
 
 # Error rule for syntax errors
