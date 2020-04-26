@@ -352,9 +352,28 @@ def p_var_cte_2(p):
 
 # ID ( EXPRESION* ) ;
 
+def p_stat_methods(p):
+    '''stat_methods : stat_methods_1 '(' func_call_1 ')' ';'
+    '''
+    pass
+
+def p_stat_methods_1(p):
+    '''stat_methods_1 : MEAN
+                        | MODE
+                        | VARIANCE
+                        | NORMAL
+                        | GAMMA
+                        | GRAPH
+                        | NORMAL_GRAPH
+                        | COV
+                        | SCATTER  
+    '''
+    print('Stats Method:', p[1])
+    pass
 
 def p_func_call(p):
-    '''func_call    : ID '(' func_call_1 ')' ';' '''
+    '''func_call    : ID '(' func_call_1 ')' ';'
+                    | stat_methods '''
     pass
 
 
@@ -460,6 +479,7 @@ def p_epsilon(p):
     pass
 
 
+
 # Error rule for syntax errors
 def p_error(p):
     print("Syntax error in input!")
@@ -501,6 +521,9 @@ main() {
 	}
     if (3 > 2) then {
         numero = 5.5;
+    }
+    else {
+        scatter(numeroPi);
     }
 }
 '''

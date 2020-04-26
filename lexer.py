@@ -39,7 +39,21 @@ reserved = {
     'string': 'STRING',
     'char': 'CHAR',
     'void': 'VOID',
-    'dataFrame': 'DATAFRAME'
+    'dataFrame': 'DATAFRAME',
+
+    # Métodos Estadísticos
+    'getMean': 'MEAN',
+    'getMode': 'MODE',
+    'variance': 'VARIANCE',
+    'getNormal': 'NORMAL',
+    'getGamma': 'GAMMA',
+        # Graficar variables simples
+    'graphBar': 'GRAPH',
+    'normalGraph': 'NORMAL_GRAPH',
+        # Correlación entre dos variables
+    'getCovariance': 'COV',
+        # Correlación gráfica entre dos variables
+    'scatter': 'SCATTER'
 }
 
 # List of token names.   This is always required
@@ -133,6 +147,7 @@ main() {
     if (3 > 2) then {
         numero = 5.5;
     }
+    scatter(numero)
 }
 '''
 # # Give the lexer some input
