@@ -40,6 +40,7 @@ reserved = {
     'char': 'CHAR',
     'void': 'VOID',
     'dataFrame': 'DATAFRAME',
+    'bool': "BOOL",
 
     # Métodos Estadísticos
     'getMean': 'MEAN',

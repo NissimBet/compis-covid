@@ -12,6 +12,7 @@ from typing import List, Any, Dict
 
 import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
+from CuboSemantico import CuboSemantico
 from lexer import tokens, literals
 
 from Stack import Stack
@@ -136,7 +137,6 @@ def p_dimension(p):
     '''dimension    : '[' num_var ']' dimension_1 '''
     # print("dimension", p[1:4])
     p[0] = (p[2], p[4])
-    pass
 
 
 def p_dimension_1(p):
@@ -145,7 +145,6 @@ def p_dimension_1(p):
     # print("dimension x2", p[1:4])
     if len(p) > 2:
         p[0] = p[2]
-    pass
 
 
 def p_tipo(p):
@@ -153,9 +152,9 @@ def p_tipo(p):
             | FLOAT
             | STRING
             | CHAR
+            | BOOL
             | DATAFRAME'''
     p[0] = p[1]
-    pass
 
 
 def p_declare_func(p):
@@ -172,7 +171,6 @@ def p_function(p):
     '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
     # print("Function", p[3])
     global_context.function.pop()
-    pass
 
 
 def p_function_1(p):
@@ -192,7 +190,6 @@ def p_tipo_retorno(p):
                     | VOID '''
     p[0] = p[1]
     global_context.set_type(p[1])
-    pass
 
 
 # TIPO 'id' (',' TIPO 'id')*
@@ -200,14 +197,17 @@ def p_parameters(p):
     '''parameters       : tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
-        function_table.add_parameter(global_context.function.top(), Variable(p[1], p[2]))
+        if not function_table.add_parameter(global_context.function.top(), Variable(p[1], p[2])):
+            print(f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
 
 
 def p_parameters_1(p):
     '''parameters_1     : ',' tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
-        function_table.add_parameter(global_context.function.top(), Variable(p[2], p[3]))
+        if not function_table.add_parameter(global_context.function.top(), Variable(p[2], p[3])):
+            print(
+                f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
 
 
 def p_statement(p):
@@ -221,26 +221,27 @@ def p_statement(p):
                     | loop '''
     pass
 
+def p_check_variable(p):
+    '''check_variable   : '''
+    if not function_table.is_variable_declared(global_context.function.top(), p[-1][0]):
+        print(f'Error de Sintaxis. Error de asignacion en linea {p.lineno(-1)}. Variable no declarada {p[-1][0]}')
 
 # ID_COMPLETO '=' EXPRESsION ';'
 def p_assignment(p):
-    '''assignment   : id_completo '=' expression ';' '''
-    # print("Assign", p[1])
-    # TODO buscar id en tabla de variables
-    # find id_completo
-    # match type of expression and id_completo
-    pass
+    '''assignment   : id_completo check_variable '=' expression ';' '''
+    print(f"Assign to {p[1][0]}, {p[4]}")
 
 
 def p_assignment_error(p):
-    '''assignment   : id_completo '=' error ';' '''
-    print("Syntax error in assignment expression")
+    '''assignment   : id_completo check_variable '=' error ';' '''
+    print(f"Error de Sintaxis. Linea {p.lineno(4)}. Asignacion incompleta")
     pass
 
 
 # return ( EXP ) ;
 def p_return(p):
     '''return   : RETURN '(' exp ')' ';' '''
+    print(f"Retorno de funcion {global_context.function.top()}, tipo {p[3]}")
     pass
 
 
@@ -439,6 +440,7 @@ def p_comparison_ops(p):
                         | '>' 
                         | DIFF 
                         | EQUAL '''
+    print(p[1])
     pass
 
 
@@ -529,9 +531,10 @@ var float:numero[0][0], mat[1], wat, dude;
     int: data, custom, suma;
     char: a;
     string: hi;
+    bool: ahora;
     
 function void hello(int time, float day) 
-    var string: hello, world;
+    var string: hello, world, hi;
     {
         return (hello + world);
     }
@@ -541,7 +544,7 @@ function void there()
         return (hello + world);
     }
         
-main() {
+main() var int: numeroPi; {
     numeroPi = 3.1;
 	if (numeroPi < hi) then {
 		numeroPi = 3.14159;
@@ -587,3 +590,9 @@ else:
 
 for k, v in function_table.table.items():
     print(v.__str__())
+
+
+SemCube = CuboSemantico()
+print(SemCube.cubo)
+
+# testing the semantic cube
