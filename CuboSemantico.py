@@ -31,10 +31,10 @@ allowedOps = {
     '*' : [{"float", "int"}, {"float"}, {"int"}],
     '/' : [{"float", "int"}, {"float"}, {"int"}],
     '=' : [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-    '<' : [{"bool"}],
-    '>' : [{"bool"}],
-    "<>": [{"bool"}],
-    "==": [{"bool"}],
+    '<' : [{"float", "int"}],
+    '>' : [{"float", "int"}],
+    "<>": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
+    "==": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
 }
 
 
@@ -51,7 +51,14 @@ allowedOps = {
 
 class CuboSemantico:
     def __init__(self):
-        self.cubo = [
-            [[{type1: {type2: {ops: {type1, type2} in allowedOps[ops]}}} for type1 in dataTypes] for type2 in dataTypes]
-            for ops
-            in operators]
+        self.cubo = {}
+        # self.cubo = [
+        #     {type1: {type2: {ops: {type1, type2} in allowedOps[ops]}}} for type1 in dataTypes for type2 in dataTypes
+        #     for ops
+        #     in operators]
+        for type1 in dataTypes:
+            self.cubo[type1] = {}
+            for type2 in dataTypes:
+                self.cubo[type1][type2] = {}
+                for op in operators:
+                    self.cubo[type1][type2][op] = {type1, type2} in allowedOps[op]

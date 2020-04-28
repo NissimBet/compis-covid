@@ -595,4 +595,6 @@ for k, v in function_table.table.items():
 SemCube = CuboSemantico()
 print(SemCube.cubo)
 
-# testing the semantic cube
+for type1, k1 in SemCube.cubo.items():
+    for  type2, k2 in k1.items():
+        print(type1, type2, k2)
