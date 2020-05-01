@@ -7,34 +7,36 @@
 
 */
 
-PROGRAMA  ::= 'program' 'id' ';' VARS? FUNCION* PRINCIPAL
+PROGRAMA  ::= 'program' 'ID' ';' VARS? FUNCTION* MAIN
 VARS ::= 'var' (TIPO ':' LISTA_ID ';')+
 LISTA_ID ::= ID_COMPLETO (',' ID_COMPLETO)*
-ID_COMPLETO ::='id' DIMENSION? 
+ID_COMPLETO ::='ID' DIMENSION?
 DIMENSION ::= ('[' VAR_CTE ']' ('[' VAR_CTE ']')? )?
-TIPO ::= 'int' | 'float' | 'string' | 'char' | 'Dataframe'
-FUNCION ::= 'function' TIPO_RETORNO 'ID' '(' PARAMETROS_DECLARACION? ')' VARS? '{' BLOQUE? '}'
+TIPO ::= 'int' | 'float' | 'string' | 'char' | 'bool' | 'Dataframe'
+FUNCTION ::= 'function' TIPO_RETORNO 'ID' '(' PARAMETERS? ')' VARS? '{' BLOQUE? '}'
 TIPO_RETORNO ::= TIPO | 'void'
-PARAMETROS_DECLARACION ::= TIPO 'id' (',' TIPO 'id')*
-ESTATUTO ::= ASIGNACION | LLAMADA | RETORNO | LECTURA | ESCRITURA | CARGA_DATOS | DECISION | REPETICION
-ASIGNACION ::= ID_COMPLETO '=' EXPRESION ';'
-LLAMADA_VOID ::= 'module_name' '(' EXPRESION* ')' ';'
-RETORNO ::= 'return' '(' EXP ')' ';'
-LECTURA ::= 'read' '(' LISTA_ID ')' ';'
-ESCRITURA ::= 'write' '(' (EXPRESION | CTE_S )+ ')' ';'
-CARGA_DATOS ::= 'load' '(' 'id' ',' 'file_path' ',' VAR_CTE ',' VAR_CTE ')' ';'
+PARAMETERS ::= TIPO 'ID' (',' TIPO 'ID')*
+STATEMENT ::= ((ASSIGNMENT | FUNC_CALL | RETURN | READ | WRITE | LOAD | LOOP) ';') | CONDITION
+ASSIGNMENT ::= ID_COMPLETO '=' EXPRESSION
+RETURN ::= 'return' '(' EXP ')'
+READ ::= 'read' '(' LISTA_ID ')'
+WRITE ::= 'write' '(' (EXPRESSION | CTE_S )+ ')'
+LOAD ::= 'load' '(' 'ID' ',' STRING_VAR ',' STRING_VAR ',' NUM_VAR ')'
 MAIN ::= 'main' '(' ')' VARS '{' BLOQUE '}' 
-DECISION ::= 'if' '(' EXPRESION ')' 'then' '{' ESTATUTO* '}' ( 'else' '{' ESTATUTO* '}' )?
-REPETICION ::= CONDICIONAL | NO_CONDICIONAL
-CONDICIONAL ::= 'while' '(' EXPRESION ')' 'do' '{' ESTATUTO* '}'
-NO_CONDICIONAL ::= 'from' ID_COMPLETO '=' EXP 'to' EXP 'do' '{' ESTATUTO* '}'
-VAR_CTE ::= 'id' | 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_S'
-EXPRESION ::= ( EXP | LLAMADA) ( COMPARISON_OPS ( EXP | LLAMADA ) )?
-COMPARISON_OPS ::= '<' | '>' | DIFF | EQUAL
+CONDITION ::= 'if' '(' EXPRESSION ')' 'then' '{' BLOQUE '}' ( 'else' '{' BLOQUE '}' )?
+LOOP ::= CONDITIONAL_LOOP | NO_CONDITION_LOOP
+CONDITIONAL_LOOP ::= 'while' '(' EXPRESSION ')' 'do' '{' BLOQUE '}'
+NO_CONDITION_LOOP ::= 'from' ID_COMPLETO '=' EXP 'to' EXP 'do' '{' BLOOQUE '}'
+NUM_VAR ::= 'ID' | 'CTE_I' | 'CTE_F'
+STRING_VAR ::= 'ID' | 'CTE_STRING'
+VAR ::= 'ID' ( ( '(' FUNC_CALL ')' ) | DIMENSION | EPSILON )
+VAR_CTE ::= 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_STRING' | VAR_BOOL
+VAR_BOOL ::= 'true' | 'false'
+STAT_METHODS ::= ( 'MEAN' | 'MODE' | 'VARIANCE' | 'NORMAL' | 'GAMMA' | 'GRAPH' | 'NORMAL_GRAPH' | 'COV' | 'SCATTER' ) '(' FUNC_CALL ')'
+FUNC_CALL ::= 'ID' '(' (EXPRESSION (',' EXPRESSION)* )? ')'
+EXPRESSION ::= ( EXP ) ( COMPARISON_OPS ( EXP ) )?
+COMPARISON_OPS ::= '<' | '>' | '<>' | '=='
 EXP ::= TERMINO ( ( '+' | '-' ) TERMINO )*
 TERMINO ::= FACTOR ( ('*' | '/') FACTOR )*
-FACTOR ::= ( '(' EXPRESION ')' )  | ( ('+' | '-')? VAR_CTE)
-
-LLAMADA ::= id '(' PARAMETROS? ')' ';'
-PARAMETROS ::= EXPRESION (',' EXPRESION)*
-CTE_STRING ::= ID | CTE_STRING
+FACTOR ::= ( '(' EXPRESSION ')' )  | ( ('+' | '-')? ( VAR_CTE | VAR ) )
+BLOQUE ::= (STATEMENT | BLOQUE)?
