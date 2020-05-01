@@ -26,6 +26,8 @@ global_context = ParsingContext()
 global_context.set_function("global")
 function_table.declare_function('global', 'void')
 
+semantic_cube = CuboSemantico()
+
 
 # program id ; VARS? function* main
 def p_programa(p):
@@ -485,8 +487,8 @@ def p_termino_2(p):
 def p_factor(p):
     '''factor       : '(' expression ')'
                     | factor_1 var_cte '''
-    # if (p[2]):
-    #     print("Factor", p[2])
+    # if p[2]:
+    print(p[1], p[2])
     pass
 
 
@@ -591,7 +593,4 @@ else:
 for k, v in function_table.table.items():
     print(v.__str__())
 
-
-SemCube = CuboSemantico()
-
-SemCube.display()
+semantic_cube.display()
