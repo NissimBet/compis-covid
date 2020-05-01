@@ -1,13 +1,21 @@
-from enum import Enum, unique, auto
+from enum import Enum, unique
 
 
 class Quadruple:
     @unique
     class OperationType(Enum):
-        ADD = auto()
-        SUBTRACT = auto()
-        DIVIDE = auto()
-        MULTIPLY = auto()
+        ADD = "SUM"
+        SUBTRACT = "SUB"
+        DIVIDE = "DIV"
+        MULTIPLY = "MULT"
+        ASSIGN = "ASG"
+        GOTO = "GOTO"
+        GOTO_TRUE = "GOTOV"
+        GOTO_FALSE = "GOTOF"
+        LESS_THAN = "LT"
+        GREATER_THAN = "GT"
+        EQUALS = "EQ"
+        EMPTY = "-"
 
     def __init__(self, operation: OperationType, first_direction: str, second_direction: str, result: str):
         self.operation = operation

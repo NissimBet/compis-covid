@@ -16,6 +16,7 @@ from CuboSemantico import CuboSemantico
 from lexer import tokens, literals
 
 from Stack import Stack
+from Queue import Queue
 from DataUtils import ParsingContext
 from Variable import Variable, VariableTable
 from Function import FunctionTable
@@ -28,7 +29,11 @@ function_table.declare_function('global', 'void')
 
 semantic_cube = CuboSemantico()
 
-
+### ESTO ES PARA PROBAR LAS EXPS
+operandos = Stack()
+operadores = Stack()
+vector_polaco = Queue()
+###
 # program id ; VARS? function* main
 def p_programa(p):
     '''programa     : PROGRAM ID ';' programa_1 main'''
@@ -230,7 +235,7 @@ def p_statement_1(p):
                     | write
                     | load
                     | loop'''
-
+    #vector_polaco.empty()
 
 def p_check_variable(p):
     '''check_variable   : '''
@@ -378,14 +383,14 @@ def p_string_var(p):
 def p_var(p):
     '''var      : ID var_1'''
     p[0] = p[1]
-    print("id?", p[1])
+    # print("id?", p[1])
 
 
 def p_var_1(p):
     '''var_1    : '(' func_call_1 ')'
                 | dimension
                 | epsilon'''
-    print("VAR", p[1])
+    # print("VAR", p[1])
 
 
 def p_var_cte(p):
@@ -472,9 +477,15 @@ def p_comparison_ops(p):
     p[0] = p[1]
 
 
+def p_exp_vp(p):
+    '''exp_vp   : '''
+    if operadores.top() == '+' or operadores.top() == '-':
+        op = operadores.pop()
+        vector_polaco.push(op)
+
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
-    '''exp      : termino exp_1 '''
+    '''exp      : termino exp_vp exp_1 '''
     if p[2]:
         p[0] = p[1]
     else:
@@ -483,7 +494,7 @@ def p_exp(p):
 
 
 def p_exp1(p):
-    '''exp_1    : exp_2 termino exp_1
+    '''exp_1    : exp_2 termino exp_vp exp_1
                 | epsilon'''
     if len(p) > 2:
         # TODO hacer multiplicacion o division
@@ -496,11 +507,18 @@ def p_exp_2(p):
     '''exp_2    : '+' 
                 | '-' '''
     p[0] = p[1]
+    operadores.push(p[1])
 
+
+def p_termino_vp(p):
+    '''termino_vp    : '''
+    if operadores.top() == '*' or operadores.top() == '/':
+        op = operadores.pop()
+        vector_polaco.push(op)
 
 # FACTOR ( ( '*' | '/' ) FACTOR )*
 def p_termino(p):
-    '''termino      : factor termino_1 '''
+    '''termino      : factor termino_vp termino_1 '''
     # print("Termino", p[1])
     if p[2]:
         p[0] = p[1]
@@ -510,7 +528,7 @@ def p_termino(p):
 
 
 def p_termino_1(p):
-    '''termino_1    : termino_2 factor termino_1 
+    '''termino_1    : termino_2 factor termino_vp termino_1
                     | epsilon '''
     if len(p) > 2:
         # TODO hacer multiplicacion o division
@@ -523,10 +541,19 @@ def p_termino_2(p):
     '''termino_2    : '*' 
                     | '/' '''
     p[0] = p[1]
+    operadores.push(p[1])
 
+
+def p_remove_false_bottom(p):
+    '''remove_false_bottom  : '''
+    operadores.remove_separator()
+
+def p_add_false_bottom(p):
+    '''add_false_bottom     : '''
+    operadores.add_separator()
 
 def p_factor(p):
-    '''factor       : '(' expression ')'
+    '''factor       : '(' add_false_bottom expression remove_false_bottom ')'
                     | factor_1 factor_2'''
     if len(p) == 3:
         # if p[1] == '+':
@@ -534,6 +561,8 @@ def p_factor(p):
         # elif p[1] == '-':
         #     p[0] = -p[2]
         p[0] = p[2]
+        vector_polaco.push(p[2])
+
     else:
         p[0] = p[2]
 
@@ -545,10 +574,16 @@ def p_factor_1(p):
     p[0] = p[1]
 
 
+def p_factor_var_check(p):
+    '''factor_var_check : '''
+    if not function_table.is_variable_declared(global_context.function.top(), p[-1]):
+        print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
+
 def p_factor_2(p):
     '''factor_2     : var_cte
-                    | var'''
+                    | var factor_var_check'''
     p[0] = p[1]
+
 
 
 def p_bloque(p):
@@ -574,45 +609,54 @@ parser = yacc.yacc(start="programa")
 
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
-data = '''
-program donpato;
-var float:numero[0][0], mat[1], wat, dude;
-    int: data, custom, suma;
-    char: a;
-    string: hi;
-    bool: ahora;
+# data = '''
+# program donpato;
+# var float:numero[0][0], mat[1], wat, dude;
+#     int: data, custom, suma;
+#     char: a;
+#     string: hi;
+#     bool: ahora;
+#
+# function void hello(int time, float day)
+#     var string: hello, world, hi;
+#     {
+#         return (hello + world);
+#     }
+# function void there()
+#     var string: hello, world;
+#     {
+#         return (hello + world);
+#     }
+#
+# main() var int: numeroPi; {
+#     numeroPi = 3.1;
+# 	if (numeroPi < hi) then {
+# 		numeroPi = 3.14159;
+# 	}
+#     else
+#     {
+# 		print("Coronavirus will destroy math");
+# 	}
+#     if (3 > 2) then {
+#         numero = 5.5;
+#         numeroPi = "12312";
+#         numero = true;
+#     }
+#     else {
+#         scatter(numeroPi);
+#         numeroPi = 12 + there();
+#     }
+# }
+# '''
+
+data = """
+program test;
+var int: a;
+main () var int: x; {
     
-function void hello(int time, float day) 
-    var string: hello, world, hi;
-    {
-        return (hello + world);
-    }
-function void there() 
-    var string: hello, world;
-    {
-        return (hello + world);
-    }
-        
-main() var int: numeroPi; {
-    numeroPi = 3.1;
-	if (numeroPi < hi) then {
-		numeroPi = 3.14159;
-	}
-    else
-    {
-		print("Coronavirus will destroy math");
-	}
-    if (3 > 2) then {
-        numero = 5.5;
-        numeroPi = "12312";
-        numero = true;
-    }
-    else {
-        scatter(numeroPi);
-        numeroPi = 12 + there();
-    }
+    x = (a + c) * d / d;
 }
-'''
+"""
 
 # data = '''
 # program donpato;
@@ -644,3 +688,4 @@ for k, v in function_table.table.items():
     print(v.__str__())
 
 # semantic_cube.display()
+print(vector_polaco.__str__())
