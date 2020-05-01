@@ -57,6 +57,7 @@ def p_vars(p):
 
 def p_set_var_type(p):
     '''set_var_type : '''
+    # TODO push el tipo de variable a stack
     global_context.set_type(p[-1])
 
 
@@ -79,17 +80,17 @@ def p_vars_2(p):
 
 def p_declare_var(p):
     '''declare_var  : '''
+    # TODO tomar prestado el tipo de variable ultimo en el scope
+    # TODO tomar prestado el nombre de la ultima funcion en el scope
     if not function_table.declare_variable(global_context.function.top(),
-                                    Variable(global_context.var_type, p[-1][0], p[-1][1])):
-        print(f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. Variable "{p[-1][0]}" ya esta declarada en este contexto')
+                                           Variable(global_context.var_type, p[-1][0], p[-1][1])):
+        print(
+            f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. Variable "{p[-1][0]}" ya esta declarada en este contexto')
 
 
-# lista_id : (id ,)+
+# lista_id : id (, id)*
 def p_lista_id(p):
     '''lista_id     : id_completo declare_var lista_id_1'''
-    # print("lists_id ", [p[1], p[2]])
-    # table.declare_variable(func_name=global_context.function,
-    #                        var=Variable(global_context.var_type, p[1][0]))
     if p[2] is not None:
         p[0] = [p[1]] + p[2]
     else:
@@ -101,9 +102,6 @@ def p_lista_id_1(p):
     '''lista_id_1   : ',' id_completo declare_var lista_id_1
                     | epsilon'''
     if len(p) > 2:
-        # table.declare_variable(func_name=global_context.function,
-        #                        var=Variable(global_context.var_type, p[2][0]))
-        # print("lista_id_1", p[2], p[3])
         if p[3] is not None:
             p[0] = [p[2]] + p[3]
         else:
@@ -161,17 +159,19 @@ def p_tipo(p):
 
 def p_declare_func(p):
     '''declare_func : '''
+    # TODO tomar prestado el tipo de la ultima funcion en el scope
     if not function_table.declare_function(func_name=p[-1], return_type=global_context.var_type):
         print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
     else:
+        # TODO agregar la funcion al scope
         global_context.set_function(p[-1])
 
 
-
-# function tipo_retorno ID ( parameters? ) vars? { bloque? }
+# function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(p):
-    '''function     : FUNCTION tipo_retorno ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
+    '''function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' '''
     # print("Function", p[3])
+    # TODO quitar la funcion del scope
     global_context.function.pop()
 
 
@@ -187,10 +187,11 @@ def p_function_2(p):
     pass
 
 
-def p_tipo_retorno(p):
-    '''tipo_retorno : tipo 
+def p_return_type(p):
+    '''return_type  : tipo
                     | VOID '''
     p[0] = p[1]
+    # TODO poner el tipo de retorno de la funcion
     global_context.set_type(p[1])
 
 
@@ -199,63 +200,74 @@ def p_parameters(p):
     '''parameters       : tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
+        # TODO tomar prestado el nombre de la funcion ultima en el contexto
         if not function_table.add_parameter(global_context.function.top(), Variable(p[1], p[2])):
-            print(f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
+            print(
+                f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
 
 
 def p_parameters_1(p):
     '''parameters_1     : ',' tipo ID parameters_1
                         | epsilon'''
     if len(p) > 2:
+        # TODO tomar prestado el nombre de la funcion ultima en el contexto
         if not function_table.add_parameter(global_context.function.top(), Variable(p[2], p[3])):
             print(
-                f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
+                    f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
 
 
 def p_statement(p):
-    '''statement    : assignment 
-                    | func_call 
-                    | return 
-                    | read 
-                    | write 
-                    | load 
-                    | condition 
-                    | loop '''
+    '''statement    : condition
+                    | statement_1 ';' '''
     pass
+
+
+def p_statement_1(p):
+    '''statement_1  : assignment
+                    | func_call
+                    | return
+                    | read
+                    | write
+                    | load
+                    | loop'''
+
 
 def p_check_variable(p):
     '''check_variable   : '''
+    # TODO tomar prestado el nombre de la funcion ultima en el contexto
     if not function_table.is_variable_declared(global_context.function.top(), p[-1][0]):
         print(f'Error de Sintaxis. Error de asignacion en linea {p.lineno(-1)}. Variable no declarada {p[-1][0]}')
 
-# ID_COMPLETO '=' EXPRESsION ';'
+
+# ID_COMPLETO '=' EXPRESsION
 def p_assignment(p):
-    '''assignment   : id_completo check_variable '=' expression ';' '''
+    '''assignment   : id_completo check_variable '=' expression '''
     print(f"Assign to {p[1][0]}, {p[4]}")
 
 
 def p_assignment_error(p):
-    '''assignment   : id_completo check_variable '=' error ';' '''
+    '''assignment   : id_completo check_variable '=' error '''
     print(f"Error de Sintaxis. Linea {p.lineno(4)}. Asignacion incompleta")
     pass
 
 
-# return ( EXP ) ;
+# return ( EXP )
 def p_return(p):
-    '''return   : RETURN '(' exp ')' ';' '''
+    '''return   : RETURN '(' exp ')' '''
+    # TODO tomar prestado el nombre de la funcion ultima en el contexto
     print(f"Retorno de funcion {global_context.function.top()}, tipo {p[3]}")
     pass
 
 
-# read ( LISTA_ID ) ;
+# read ( LISTA_ID )
 def p_read(p):
-    '''read     : READ '(' lista_id ')' ';' '''
+    '''read     : READ '(' lista_id ')' '''
     pass
 
 
-# write '(' ( EXPRESION | string_var )+ ')' ;
+# write '(' ( EXPRESION | string_var )+ ')'
 def p_write(p):
-    '''write    :  WRITE '(' write_1 write_2 ')' ';' '''
+    '''write    :  WRITE '(' write_1 write_2 ')' '''
     pass
 
 
@@ -271,14 +283,15 @@ def p_write_2(p):
     pass
 
 
-# CargaArchivo ( id , ruta_acceso , num_var , num_var ) ;
+# load ( id , ruta_acceso , num_var , num_var )
 def p_load(p):
-    '''load     : LOAD '(' ID ',' string_var ',' string_var ',' num_var ')' ';' '''
+    '''load     : LOAD '(' ID ',' string_var ',' string_var ',' num_var ')' '''
     pass
 
 
 def p_declare_main(p):
     '''declare_main : '''
+    # TODO declarar main
     global_context.set_function('main')
     function_table.declare_function('main', 'void')
 
@@ -294,11 +307,14 @@ def p_main_1(p):
     pass
 
 
-# TODO Revisar que los if-statements, cierren correctamente. Revisar clase de ceballos al inicio del semestre
-# TODO Hacer else if
+def p_check_expression(p):
+    '''check_expression : '''
+    print(f'Resultado de expresion es {p[-1]}. Lineno {p.lineno(-1)}')
+
+
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
-    '''condition    : IF '(' expression ')' THEN '{' condition_1 '}' condition_2 '''
+    '''condition    : IF '(' expression check_expression ')' THEN '{' condition_1 '}' condition_2 '''
     # print(p[3])
     pass
 
@@ -351,48 +367,53 @@ def p_num_var(p):
                     | CTE_F '''
     # print("num var", p[1])
     p[0] = p[1]
-    pass
 
 
 def p_string_var(p):
     ''' string_var  : ID 
                     | CTE_STRING '''
-    pass
+    p[0] = p[1]
+
+
+def p_var(p):
+    '''var      : ID var_1'''
+    p[0] = p[1]
+    print("id?", p[1])
+
+
+def p_var_1(p):
+    '''var_1    : '(' func_call_1 ')'
+                | dimension
+                | epsilon'''
+    print("VAR", p[1])
 
 
 def p_var_cte(p):
-    '''var_cte      : var_cte_1
-                    | CTE_I 
+    '''var_cte      : CTE_I
                     | CTE_F 
                     | CTE_STRING 
-                    | CTE_CHAR '''
-    # print("Var_Cte", p[1])
-    pass
+                    | CTE_CHAR
+                    | var_bool '''
+    print("Var_Cte", p.lineno(1), p[1])
+    p[0] = p[1]
 
 
-def p_var_cte_1(p):
-    '''var_cte_1    : ID var_cte_2'''
-    # print("id?", p[1], p[2])
-    pass
-
-
-def p_var_cte_2(p):
-    '''var_cte_2    : func_call_1
-                    | epsilon'''
-    # print("func_call?", p[1])
-    pass
+def p_var_bool(p):
+    '''var_bool     : TRUE
+                    | FALSE'''
+    p[0] = p[1]
 
 
 # ID ( EXPRESION* ) ;
 
 def p_stat_methods(p):
-    '''stat_methods : stat_methods_1 '(' func_call_1 ')' ';'
+    '''stat_methods : stat_methods_1 '(' func_call_1 ')'
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_stat_methods_1(p):
-    '''stat_methods_1 : MEAN
+    '''stat_methods_1   : MEAN
                         | MODE
                         | VARIANCE
                         | NORMAL
@@ -400,16 +421,16 @@ def p_stat_methods_1(p):
                         | GRAPH
                         | NORMAL_GRAPH
                         | COV
-                        | SCATTER  
+                        | SCATTER
     '''
     print('Stats Method:', p[1])
-    pass
+    p[0] = p[1]
 
 
 def p_func_call(p):
-    '''func_call    : ID '(' func_call_1 ')' ';'
+    '''func_call    : ID '(' func_call_1 ')'
                     | stat_methods '''
-    pass
+    p[0] = p[1]
 
 
 def p_func_call_1(p):
@@ -427,14 +448,20 @@ def p_func_call_2(p):
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
 def p_expression(p):
     ''' expression      : exp expression_1 '''
-    # print("Expression ", p[1], p[2])
-    pass
+    if p[2]:
+        # TODO hacer la comparacion
+        p[0] = p[2][1]
+    else:
+        p[0] = p[1]
 
 
 def p_expression_1(p):
     '''expression_1     : comparison_ops exp
                         | epsilon'''
-    pass
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
 
 
 def p_comparison_ops(p):
@@ -442,71 +469,91 @@ def p_comparison_ops(p):
                         | '>' 
                         | DIFF 
                         | EQUAL '''
-    print(p[1])
-    pass
+    p[0] = p[1]
 
 
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
     '''exp      : termino exp_1 '''
-    # print("Exp", p[1])
-    pass
+    if p[2]:
+        p[0] = p[1]
+    else:
+        # TODO hacer multiplicacion
+        p[0] = p[1]
 
 
 def p_exp1(p):
     '''exp_1    : exp_2 termino exp_1
                 | epsilon'''
-    pass
+    if len(p) > 2:
+        # TODO hacer multiplicacion o division
+        p[0] = p[2]
+    else:
+        p[0] = None
 
 
 def p_exp_2(p):
     '''exp_2    : '+' 
                 | '-' '''
-    pass
+    p[0] = p[1]
 
 
 # FACTOR ( ( '*' | '/' ) FACTOR )*
 def p_termino(p):
     '''termino      : factor termino_1 '''
     # print("Termino", p[1])
-    pass
+    if p[2]:
+        p[0] = p[1]
+    else:
+        # TODO hacer multiplicacion
+        p[0] = p[1]
 
 
 def p_termino_1(p):
     '''termino_1    : termino_2 factor termino_1 
                     | epsilon '''
-    pass
+    if len(p) > 2:
+        # TODO hacer multiplicacion o division
+        p[0] = p[2]
+    else:
+        p[0] = None
 
 
 def p_termino_2(p):
     '''termino_2    : '*' 
                     | '/' '''
-    pass
+    p[0] = p[1]
 
 
 def p_factor(p):
     '''factor       : '(' expression ')'
-                    | factor_1 var_cte '''
-    # if p[2]:
-    print(p[1], p[2])
-    pass
+                    | factor_1 factor_2'''
+    if len(p) == 3:
+        # if p[1] == '+':
+        #     p[0] = p[2]
+        # elif p[1] == '-':
+        #     p[0] = -p[2]
+        p[0] = p[2]
+    else:
+        p[0] = p[2]
 
 
 def p_factor_1(p):
     '''factor_1     : '+' 
                     | '-' 
                     | epsilon '''
-    pass
+    p[0] = p[1]
+
+
+def p_factor_2(p):
+    '''factor_2     : var_cte
+                    | var'''
+    p[0] = p[1]
 
 
 def p_bloque(p):
-    '''bloque   : bloque_1'''
-    pass
-
-
-def p_bloque_1(p):
-    '''bloque_1     : statement bloque_1 
-                    | epsilon '''
+    '''bloque   : statement bloque
+                | epsilon'''
     pass
 
 
@@ -557,9 +604,12 @@ main() var int: numeroPi; {
 	}
     if (3 > 2) then {
         numero = 5.5;
+        numeroPi = "12312";
+        numero = true;
     }
     else {
         scatter(numeroPi);
+        numeroPi = 12 + there();
     }
 }
 '''
@@ -593,4 +643,4 @@ else:
 for k, v in function_table.table.items():
     print(v.__str__())
 
-semantic_cube.display()
+# semantic_cube.display()
