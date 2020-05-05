@@ -4,7 +4,7 @@ dataTypes = [
     'float',  # 1
     'string',  # 2
     'char',  # 3
-    'void',  # 4
+    #'void',  # 4
     'dataFrame',  # 5
     'bool',  # 6
 ]
@@ -12,56 +12,95 @@ dataTypes = [
 operators = [
     '+', '-', '*', '/', '=', '<', '>', "<>", "=="
 ]
-#
+
 # allowedOps = {
-#     "int": {
-#         "int": True,
-#         "float": True,
-#         'string': False,
-#         'char': False,
-#         'void': False,
-#         'dataFrame': False,
-#     }
+#     '+' : [{"float", "int"}, {"float"}, {"int"}],
+#     '-' : [{"float", "int"}, {"float"}, {"int"}],
+#     '*' : [{"float", "int"}, {"float"}, {"int"}],
+#     '/' : [{"float", "int"}, {"float"}, {"int"}],
+#     '=' : [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
+#     '<' : [{"float", "int"}, {"float"}, {"int"}],
+#     '>' : [{"float", "int"}, {"float"}, {"int"}],
+#     "<>": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
+#     "==": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
 # }
 
-
 allowedOps = {
-    '+' : [{"float", "int"}, {"float"}, {"int"}],
-    '-' : [{"float", "int"}, {"float"}, {"int"}],
-    '*' : [{"float", "int"}, {"float"}, {"int"}],
-    '/' : [{"float", "int"}, {"float"}, {"int"}],
-    '=' : [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-    '<' : [{"float", "int"}, {"float"}, {"int"}],
-    '>' : [{"float", "int"}, {"float"}, {"int"}],
-    "<>": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-    "==": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
+    '+' : [
+        ({"float", "int"}, "float"),
+        ({"float"}, "float"),
+        ({"int"}, "int")
+    ],
+    '-' : [
+        ({"float", "int"}, "float"),
+        ({"float"}, "float"),
+        ({"int"}, "int")
+    ],
+    '*' : [
+        ({"float", "int"}, "float"),
+        ({"float"}, "float"),
+        ({"int"}, "int")
+    ],
+    '/' : [
+        ({"float", "int"}, "float"),
+        ({"float"}, "float"),
+        ({"int"}, "int")
+
+    ],
+    '=' : [
+        ({"float", "int"}, "float"),
+        ({"float"}, "float"),
+        ({"int"}, "int"),
+        ({"string"}, "string"),
+        ({"char"}, "char"),
+        ({"dataFrame"}, "dataFrame"),
+        ({"bool"}, "bool")
+    ],
+    '<' : [
+        ({"float", "int"}, "bool"),
+        ({"float"}, "bool"),
+        ({"int"}, "bool")
+    ],
+    '>' : [
+        ({"float", "int"}, "bool"),
+        ({"float"}, "bool"),
+        ({"int"}, "bool")
+    ],
+    "<>": [
+        ({"float", "int"}, "bool"),
+        ({"float"}, "bool"),
+        ({"int"}, "bool"),
+        ({"string"}, "bool"),
+        ({"char"}, "bool"),
+        ({"dataFrame"}, "bool"),
+        ({"bool"}, "bool")
+    ],
+    "==": [
+        ({"float", "int"}, "bool"),
+        ({"float"}, "bool"),
+        ({"int"}, "bool"),
+        ({"string"}, "bool"),
+        ({"char"}, "bool"),
+        ({"dataFrame"}, "bool"),
+        ({"bool"}, "bool")
+    ],
 }
-
-
-# '+'
-# '-'
-# '*'
-# '/'
-# '='
-# '<'
-# '>'
-# "<>"
-# "=="
 
 
 class CuboSemantico:
     def __init__(self):
         self.cubo = {}
-        # self.cubo = [
-        #     {type1: {type2: {ops: {type1, type2} in allowedOps[ops]}}} for type1 in dataTypes for type2 in dataTypes
-        #     for ops
-        #     in operators]
         for type1 in dataTypes:
             self.cubo[type1] = {}
             for type2 in dataTypes:
                 self.cubo[type1][type2] = {}
                 for op in operators:
-                    self.cubo[type1][type2][op] = {type1, type2} in allowedOps[op]
+                    try:
+                        index = [pair[0] for pair in allowedOps[op]].index({type1, type2})
+                        value = allowedOps[op][index][1]
+                    except ValueError:
+                        value = None
+                    self.cubo[type1][type2][op] = value
 
     def display(self):
         for type1, k1 in self.cubo.items():

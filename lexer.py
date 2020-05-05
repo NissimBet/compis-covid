@@ -42,6 +42,10 @@ reserved = {
     'dataFrame': 'DATAFRAME',
     'bool': "BOOL",
 
+    # TODO Hay que implementar esto :-P
+    'true': "TRUE",
+    'false': "FALSE",
+
     # Métodos Estadísticos
     'getMean': 'MEAN',
     'getMode': 'MODE',
