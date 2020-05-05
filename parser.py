@@ -320,6 +320,7 @@ def p_check_expression(p):
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
     '''condition    : IF '(' expression check_expression ')' THEN '{' condition_1 '}' condition_2 '''
+    global_context.create_quad('GOTOF', '/', '/', 'LINE')
     # print(p[3])
     pass
 
@@ -345,6 +346,7 @@ def p_loop(p):
 # while ( EXPRESION ) do { bloque? }
 def p_conditional_loop(p):
     '''conditional_loop     : WHILE '(' expression ')' DO '{' conditional_loop_1 '}' '''
+    global_context.create_quad('GOTOF', '/', '/', 'LINE')
     pass
 
 
@@ -448,6 +450,8 @@ def p_func_call_2(p):
     '''func_call_2  : ',' expression func_call_2
                     | epsilon '''
     pass
+
+
 
 
 # ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
@@ -653,8 +657,11 @@ data = """
 program test;
 var int: a;
 main () var int: x; {
-    
+
     x = (a + c) * d / d;
+    if (b > 2) then {
+
+    }
 }
 """
 
@@ -689,3 +696,6 @@ for k, v in function_table.table.items():
 
 # semantic_cube.display()
 print(vector_polaco.__str__())
+
+# quads display
+print('Quad amount:', global_context.quad_counter)
