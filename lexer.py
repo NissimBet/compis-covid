@@ -11,66 +11,67 @@ import ply.lex as lex
 
 # Rule to match reserved words and identifiers
 reserved = {
-    'program': 'PROGRAM',
-    'function': 'FUNCTION',
+    'program'      : 'PROGRAM',
+    'function'     : 'FUNCTION',
 
-    'if': 'IF',
-    'then': 'THEN',
-    'else': 'ELSE',
+    'if'           : 'IF',
+    'then'         : 'THEN',
+    'else'         : 'ELSE',
 
-    'var': 'VAR',
-    'return': 'RETURN',
+    'var'          : 'VAR',
+    'return'       : 'RETURN',
 
-    'main': 'MAIN',
+    'main'         : 'MAIN',
 
-    'read': 'READ',
-    'write': 'WRITE',
-    'load': 'LOAD',
+    'read'         : 'READ',
+    'write'        : 'WRITE',
+    'load'         : 'LOAD',
 
     # loops
-    'while': 'WHILE',
-    'do': 'DO',
-    'from': 'FROM',
-    'to': 'TO',
+    'while'        : 'WHILE',
+    'do'           : 'DO',
+    'from'         : 'FROM',
+    'to'           : 'TO',
 
     # data types
-    'int': 'INT',
-    'float': 'FLOAT',
-    'string': 'STRING',
-    'char': 'CHAR',
-    'void': 'VOID',
-    'dataFrame': 'DATAFRAME',
-    'bool': "BOOL",
+    'int'          : 'INT',
+    'float'        : 'FLOAT',
+    'string'       : 'STRING',
+    'char'         : 'CHAR',
+    'void'         : 'VOID',
+    'dataFrame'    : 'DATAFRAME',
+    'bool'         : "BOOL",
 
     # TODO Hay que implementar esto :-P
-    'true': "TRUE",
-    'false': "FALSE",
+    'true'         : "TRUE",
+    'false'        : "FALSE",
 
     # Métodos Estadísticos
-    'getMean': 'MEAN',
-    'getMode': 'MODE',
-    'variance': 'VARIANCE',
-    'getNormal': 'NORMAL',
-    'getGamma': 'GAMMA',
-        # Graficar variables simples
-    'graphBar': 'GRAPH',
-    'normalGraph': 'NORMAL_GRAPH',
-        # Correlación entre dos variables
+    'getMean'      : 'MEAN',
+    'getMode'      : 'MODE',
+    'variance'     : 'VARIANCE',
+    'getNormal'    : 'NORMAL',
+    'getGamma'     : 'GAMMA',
+    # Graficar variables simples
+    'graphBar'     : 'GRAPH',
+    'normalGraph'  : 'NORMAL_GRAPH',
+    # Correlación entre dos variables
     'getCovariance': 'COV',
-        # Correlación gráfica entre dos variables
-    'scatter': 'SCATTER'
+    # Correlación gráfica entre dos variables
+    'scatter'      : 'SCATTER'
 }
 
 # List of token names.   This is always required
 tokens = [
-    'EQUAL',
-    'DIFF',
-    'CTE_F',
-    'CTE_I',
-    'ID',
-    'CTE_STRING',
-    'CTE_CHAR',
-] + list(reserved.values())
+             'EQUAL',
+             'DIFF',
+             'CTE_F',
+             'CTE_I',
+             'ID',
+             'CTE_STRING',
+             'CTE_CHAR',
+             'OR'
+         ] + list(reserved.values())
 
 literals = '+-*/=<>(){}:;,[]&'
 
@@ -80,6 +81,7 @@ t_EQUAL = r'=='
 t_CTE_STRING = r'\".*\"'
 t_CTE_CHAR = r'\'.\''
 t_OR = r'\|\|'
+
 
 # Expression rule to detect and convert floating point numbers
 def t_CTE_F(t):
