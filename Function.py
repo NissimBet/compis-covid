@@ -69,3 +69,12 @@ class FunctionTable(object):
                 # print(f"Error, variable {var_name} declared on function {func_name}")
                 return True
         return False
+
+    def get_variable(self, func_name: str, var_name: str) -> Variable:
+        if func_name in self.__table:
+            if self.__table[func_name].variables.is_variable_defined(var_name):
+                return self.__table[func_name].variables.get_variable(var_name)
+            if 'global' in self.__table and self.__table['global'].variables.is_variable_defined(var_name):
+                return self.__table['global'].variables.get_variable(var_name)
+        else:
+            return None

@@ -18,7 +18,7 @@ from lexer import tokens, literals
 
 from Stack import Stack
 from Queue import Queue
-from DataUtils import ParsingContext
+from DataUtils import ParsingContext, AVAIL
 from Variable import Variable, VariableTable
 from Function import FunctionTable
 
@@ -28,13 +28,13 @@ global_context = ParsingContext()
 global_context.set_function("global")
 function_table.declare_function('global', 'void')
 
-semantic_cube = CuboSemantico()
+AVAIL = AVAIL()
 
-### ESTO ES PARA PROBAR LAS EXPS
-operandos = Stack()
-operadores = Stack()
-vector_polaco = Queue()
-###
+
+def p_goto_main(p):
+    """goto_main    :"""
+    quad_index = global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
+    global_context.jumpStack.push(quad_index)
 
 
 # program id ; VARS? function* main
@@ -45,8 +45,8 @@ def p_programa(p):
 
 
 def p_programa_1(p):
-    """programa_1   : vars programa_2
-                    | programa_2 """
+    """programa_1   : vars goto_main programa_2
+                    | goto_main programa_2 """
     # print("Programa ", p[1])
     pass
 
@@ -93,7 +93,8 @@ def p_declare_var(p):
     if not function_table.declare_variable(global_context.function.top(),
                                            Variable(global_context.var_type, p[-1][0], p[-1][1])):
         print(
-                f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. Variable "{p[-1][0]}" ya esta declarada en este contexto')
+                f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
+                Variable "{p[-1][0]}" ya esta declarada en este contexto')
 
 
 # lista_id : id (, id)*
@@ -238,7 +239,6 @@ def p_statement_1(p):
                     | write
                     | load
                     | loop"""
-    # vector_polaco.empty()
 
 
 def p_check_variable(p):
@@ -250,7 +250,11 @@ def p_check_variable(p):
 
 # ID_COMPLETO '=' EXPRESsION
 def p_assignment(p):
-    """assignment   : id_completo check_variable '=' expression """
+    """assignment   : id_completo check_variable '=' logic_comp """
+    assigned = function_table.get_variable(global_context.function.top(),p[1][0])
+    operand_type = global_context.types.pop()
+    operand_name = global_context.operands.pop()
+    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.name)
     print(f"Assign to {p[1][0]}, {p[4]}")
 
 
@@ -281,7 +285,7 @@ def p_write(p):
 
 
 def p_write_1(p):
-    """write_1  : expression
+    """write_1  : logic_comp
                 | string_var """
     pass
 
@@ -303,6 +307,7 @@ def p_declare_main(p):
     # TODO declarar main
     global_context.set_function('main')
     function_table.declare_function('main', 'void')
+    global_context.fill_quad()
 
 
 def p_main(p):
@@ -316,15 +321,15 @@ def p_main_1(p):
     pass
 
 
-def p_check_expression(p):
-    """check_expression : """
+def p_logic_comp_check(p):
+    """logic_comp_check : """
     print(f'Resultado de expresion es {p[-1]}. Lineno {p.lineno(-1)}')
 
 
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
-    """condition    : IF '(' expression check_expression ')' THEN '{' condition_1 '}' condition_2 """
-    global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
+    """condition    : IF '(' logic_comp logic_comp_check ')' THEN '{' condition_1 '}' condition_2 """
+    # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
     # print(p[3])
     pass
 
@@ -349,8 +354,8 @@ def p_loop(p):
 
 # while ( EXPRESION ) do { bloque? }
 def p_conditional_loop(p):
-    """conditional_loop     : WHILE '(' expression ')' DO '{' conditional_loop_1 '}' """
-    global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
+    """conditional_loop     : WHILE '(' logic_comp ')' DO '{' conditional_loop_1 '}' """
+    # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
     pass
 
 
@@ -445,23 +450,55 @@ def p_func_call(p):
 
 
 def p_func_call_1(p):
-    """func_call_1  : expression func_call_2
+    """func_call_1  : logic_comp func_call_2
                     | epsilon """
     pass
 
 
 def p_func_call_2(p):
-    """func_call_2  : ',' expression func_call_2
+    """func_call_2  : ',' logic_comp func_call_2
                     | epsilon """
     pass
 
 
-# ( EXP | LLAMADA ) ( ( '>' | '<' | '==' | '<>' ) ( EXP | LLAMADA ) )?
+def p_logic_comp(p):
+    """logic_comp       : expression logic_comp_1"""
+    p[0] = p[1]
+
+
+def p_logic_comp_1(p):
+    """logic_comp_1     : logic_comp_ops expression logic_comp_1
+                        | epsilon"""
+    pass
+
+
+def p_logic_comp_ops(p):
+    """logic_comp_ops   : '&'
+                        | OR"""
+    pass
+
+
+# ( EXP ) ( ( '>' | '<' | '==' | '<>' ) ( EXP ) )?
 def p_expression(p):
     """ expression      : exp expression_1 """
     if p[2]:
         # TODO hacer la comparacion
         p[0] = p[2][1]
+        right_op = global_context.operands.pop()
+        right_type = global_context.types.pop()
+        left_op = global_context.operands.pop()
+        left_type = global_context.types.pop()
+        operator = global_context.operations.pop()
+        result_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
+        if result_type:
+            result = AVAIL.get_next()
+            if operator == ">": op_name = Quadruple.OperationType.GREATER_THAN
+            elif operator == "<": op_name = Quadruple.OperationType.LESS_THAN
+            elif operator == "<>": op_name = Quadruple.OperationType.NOT_EQUAL
+            else: op_name = Quadruple.OperationType.EQUALS
+            global_context.create_quad(op_name, left_op, right_op, result)
+            global_context.operands.push(result)
+            global_context.types.push(result_type)
     else:
         p[0] = p[1]
 
@@ -480,14 +517,28 @@ def p_comparison_ops(p):
                         | '>'
                         | DIFF
                         | EQUAL """
+    global_context.operations.push(p[1])
     p[0] = p[1]
 
 
 def p_exp_vp(p):
     """exp_vp   : """
-    if operadores.top() == '+' or operadores.top() == '-':
-        op = operadores.pop()
-        vector_polaco.push(op)
+    if global_context.operations.top() == '+' or global_context.operations.top() == '-':
+        right_operand = global_context.operands.pop()
+        right_type = global_context.types.pop()
+        left_operand = global_context.operands.pop()
+        left_type = global_context.types.pop()
+        operator = global_context.operations.pop()
+        resultant_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
+        if not resultant_type:
+            print(
+                f"Error semantico. Operacion entre tipos incompatible. {operator} no se puede entre {left_type} y {right_type}")
+        else:
+            result = AVAIL.get_next()
+            global_context.create_quad(Quadruple.OperationType.ADD if operator == "+" else Quadruple.OperationType.SUBTRACT, left_operand,
+                                       right_operand, result)
+            global_context.operands.push(result)
+            global_context.types.push(resultant_type)
 
 
 # TERMINO ( ( '+' | '-' ) TERMINO )*
@@ -514,14 +565,25 @@ def p_exp_2(p):
     """exp_2    : '+'
                 | '-' """
     p[0] = p[1]
-    operadores.push(p[1])
+    global_context.operations.push(p[1])
 
 
 def p_termino_vp(p):
     """termino_vp    : """
-    if operadores.top() == '*' or operadores.top() == '/':
-        op = operadores.pop()
-        vector_polaco.push(op)
+    if global_context.operations.top() == '*' or global_context.operations.top() == '/':
+        right_operand = global_context.operands.pop()
+        right_type = global_context.types.pop()
+        left_operand = global_context.operands.pop()
+        left_type = global_context.types.pop()
+        operator = global_context.operations.pop()
+        resultant_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
+        if not resultant_type:
+            print(f"Error semantico. Operacion entre tipos incompatible. {operator} no se puede entre {left_type} y {right_type}")
+        else:
+            result = AVAIL.get_next()
+            global_context.create_quad(Quadruple.OperationType.MULTIPLY if operator == "*" else Quadruple.OperationType.DIVIDE, left_operand, right_operand, result)
+            global_context.operands.push(result)
+            global_context.types.push(resultant_type)
 
 
 # FACTOR ( ( '*' | '/' ) FACTOR )*
@@ -549,21 +611,21 @@ def p_termino_2(p):
     """termino_2    : '*'
                     | '/' """
     p[0] = p[1]
-    operadores.push(p[1])
+    global_context.operations.push(p[1])
 
 
 def p_remove_false_bottom(p):
     """remove_false_bottom  : """
-    operadores.remove_separator()
+    global_context.operations.remove_separator()
 
 
 def p_add_false_bottom(p):
     """add_false_bottom     : """
-    operadores.add_separator()
+    global_context.operations.add_separator()
 
 
 def p_factor(p):
-    """factor       : '(' add_false_bottom expression remove_false_bottom ')'
+    """factor       : '(' add_false_bottom logic_comp remove_false_bottom ')'
                     | factor_1 factor_2"""
     if len(p) == 3:
         # if p[1] == '+':
@@ -571,10 +633,8 @@ def p_factor(p):
         # elif p[1] == '-':
         #     p[0] = -p[2]
         p[0] = p[2]
-        vector_polaco.push(p[2])
-
     else:
-        p[0] = p[2]
+        p[0] = p[3]
 
 
 def p_factor_1(p):
@@ -588,6 +648,10 @@ def p_factor_var_check(p):
     """factor_var_check : """
     if not function_table.is_variable_declared(global_context.function.top(), p[-1]):
         print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
+    else:
+        variable = function_table.get_variable(global_context.function.top(), p[-1])
+        global_context.types.push(variable.type)
+        global_context.operands.push(variable.name)
 
 
 def p_factor_2(p):
@@ -661,11 +725,11 @@ parser = yacc.yacc(start="programa")
 
 data = """
 program test;
-var int: a;
-main () var int: x; {
-
+var int: a ,b;
+main () var int: x, c, d; {
+    a = d + c;
     x = (a + c) * d / d;
-    if (b > 2) then {
+    if (b > a) then {
 
     }
 }
@@ -700,8 +764,10 @@ else:
 for k, v in function_table.table.items():
     print(v.__str__())
 
-# semantic_cube.display()
-print(vector_polaco.__str__())
+print(global_context.types)
+print(global_context.operands)
+print(global_context.operations)
 
 # quads display
-print('Quad amount:', global_context.quad_counter)
+for quad in global_context.quadruples:
+    print(quad)

@@ -31,6 +31,8 @@ class VariableTable(object):
     def is_variable_defined(self, name: str) -> bool:
         return name in self.table
 
+    def get_variable(self, name: str) -> Variable:
+        return self.table.get(name)
 
 
 

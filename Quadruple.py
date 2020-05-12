@@ -15,7 +15,7 @@ class Quadruple:
         LESS_THAN = "LT"
         GREATER_THAN = "GT"
         EQUALS = "EQ"
-        EMPTY = "-"
+        NOT_EQUAL = "NEQ"
 
     def __init__(self, operation: OperationType, first_direction: str, second_direction: str, result: str):
         self.operation = operation
