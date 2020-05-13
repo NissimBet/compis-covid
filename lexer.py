@@ -70,10 +70,12 @@ tokens = [
              'ID',
              'CTE_STRING',
              'CTE_CHAR',
-             'OR'
+             'OR',
+             'AND'
+             
          ] + list(reserved.values())
 
-literals = '+-*/=<>(){}:;,[]&'
+literals = '+-*/=<>(){}:;,[]'
 
 # Regular expression rules for simple tokens
 t_DIFF = r'<>'
@@ -81,6 +83,7 @@ t_EQUAL = r'=='
 t_CTE_STRING = r'\".*\"'
 t_CTE_CHAR = r'\'.\''
 t_OR = r'\|\|'
+t_AND = r'\&\&'
 
 
 # Expression rule to detect and convert floating point numbers
@@ -144,7 +147,7 @@ function void there()
     
 main() {
     numeroPi = 3.1;
-	if (numeroPi < hi) then {
+	if (numeroPi && 5 < hi) then {
 		numeroPi = 3.14159;
 	}
     else

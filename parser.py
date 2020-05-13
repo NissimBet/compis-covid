@@ -476,7 +476,7 @@ def p_logic_comp_1(p):
 
 
 def p_logic_comp_ops(p):
-    """logic_comp_ops   : '&'
+    """logic_comp_ops   : AND
                         | OR"""
     p[0] = p[1]
     global_context.operations.push(p[1])
@@ -700,7 +700,7 @@ main () var int: x, c, d; {
     a = d + -c;
     x = (a + c) * d / d;
     if (b > a) then {
-        t = f & f;
+        t = f && f;
     }
 }
 """
