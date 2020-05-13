@@ -10,8 +10,9 @@ dataTypes = [
 ]
 
 operators = [
-    '+', '-', '*', '/', '=', '<', '>', "<>", "=="
+    '+', '-', '*', '/', '=', '<', '>', "<>", "==", "&", "||"
 ]
+
 
 # allowedOps = {
 #     '+' : [{"float", "int"}, {"float"}, {"int"}],
@@ -84,6 +85,12 @@ allowedOps = {
         ({"dataFrame"}, "bool"),
         ({"bool"}, "bool")
     ],
+    "&": [
+        ({"bool"}, "bool")
+    ],
+    "||": [
+        ({"bool"}, "bool")
+    ]
 }
 
 

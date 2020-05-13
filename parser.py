@@ -18,17 +18,16 @@ from lexer import tokens, literals
 
 from Stack import Stack
 from Queue import Queue
-from DataUtils import ParsingContext, AVAIL
+from DataUtils import ParsingContext
 from Variable import Variable, VariableTable
 from Function import FunctionTable
+from AVAIL import avail
 
 function_table = FunctionTable()
 global_context = ParsingContext()
 
 global_context.set_function("global")
 function_table.declare_function('global', 'void')
-
-AVAIL = AVAIL()
 
 
 def p_goto_main(p):
@@ -421,7 +420,6 @@ def p_var_bool(p):
 
 
 # ID ( EXPRESION* ) ;
-
 def p_stat_methods(p):
     """stat_methods : stat_methods_1 '(' func_call_1 ')'
     """
@@ -461,13 +459,18 @@ def p_func_call_2(p):
     pass
 
 
+def p_logic_comp_cuad(p):
+    """logic_comp_cuad  : """
+    global_context.create_operation_quad(["&", "||"])
+
+
 def p_logic_comp(p):
-    """logic_comp       : expression logic_comp_1"""
+    """logic_comp       : expression logic_comp_cuad logic_comp_1"""
     p[0] = p[1]
 
 
 def p_logic_comp_1(p):
-    """logic_comp_1     : logic_comp_ops expression logic_comp_1
+    """logic_comp_1     : logic_comp_ops expression logic_comp_cuad logic_comp_1
                         | epsilon"""
     pass
 
@@ -475,6 +478,8 @@ def p_logic_comp_1(p):
 def p_logic_comp_ops(p):
     """logic_comp_ops   : '&'
                         | OR"""
+    p[0] = p[1]
+    global_context.operations.push(p[1])
     pass
 
 
@@ -484,21 +489,7 @@ def p_expression(p):
     if p[2]:
         # TODO hacer la comparacion
         p[0] = p[2][1]
-        right_op = global_context.operands.pop()
-        right_type = global_context.types.pop()
-        left_op = global_context.operands.pop()
-        left_type = global_context.types.pop()
-        operator = global_context.operations.pop()
-        result_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
-        if result_type:
-            result = AVAIL.get_next()
-            if operator == ">": op_name = Quadruple.OperationType.GREATER_THAN
-            elif operator == "<": op_name = Quadruple.OperationType.LESS_THAN
-            elif operator == "<>": op_name = Quadruple.OperationType.NOT_EQUAL
-            else: op_name = Quadruple.OperationType.EQUALS
-            global_context.create_quad(op_name, left_op, right_op, result)
-            global_context.operands.push(result)
-            global_context.types.push(result_type)
+        global_context.create_operation_quad([">", "<", "<>", "=="])
     else:
         p[0] = p[1]
 
@@ -521,29 +512,14 @@ def p_comparison_ops(p):
     p[0] = p[1]
 
 
-def p_exp_vp(p):
-    """exp_vp   : """
-    if global_context.operations.top() == '+' or global_context.operations.top() == '-':
-        right_operand = global_context.operands.pop()
-        right_type = global_context.types.pop()
-        left_operand = global_context.operands.pop()
-        left_type = global_context.types.pop()
-        operator = global_context.operations.pop()
-        resultant_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
-        if not resultant_type:
-            print(
-                f"Error semantico. Operacion entre tipos incompatible. {operator} no se puede entre {left_type} y {right_type}")
-        else:
-            result = AVAIL.get_next()
-            global_context.create_quad(Quadruple.OperationType.ADD if operator == "+" else Quadruple.OperationType.SUBTRACT, left_operand,
-                                       right_operand, result)
-            global_context.operands.push(result)
-            global_context.types.push(resultant_type)
+def p_exp_cuad(p):
+    """exp_cuad   : """
+    global_context.create_operation_quad(["+", "-"])
 
 
 # TERMINO ( ( '+' | '-' ) TERMINO )*
 def p_exp(p):
-    """exp      : termino exp_vp exp_1 """
+    """exp      : termino exp_cuad exp_1 """
     if p[2]:
         p[0] = p[1]
     else:
@@ -552,7 +528,7 @@ def p_exp(p):
 
 
 def p_exp1(p):
-    """exp_1    : exp_2 termino exp_vp exp_1
+    """exp_1    : exp_2 termino exp_cuad exp_1
                 | epsilon"""
     if len(p) > 2:
         # TODO hacer multiplicacion o division
@@ -570,20 +546,7 @@ def p_exp_2(p):
 
 def p_termino_vp(p):
     """termino_vp    : """
-    if global_context.operations.top() == '*' or global_context.operations.top() == '/':
-        right_operand = global_context.operands.pop()
-        right_type = global_context.types.pop()
-        left_operand = global_context.operands.pop()
-        left_type = global_context.types.pop()
-        operator = global_context.operations.pop()
-        resultant_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
-        if not resultant_type:
-            print(f"Error semantico. Operacion entre tipos incompatible. {operator} no se puede entre {left_type} y {right_type}")
-        else:
-            result = AVAIL.get_next()
-            global_context.create_quad(Quadruple.OperationType.MULTIPLY if operator == "*" else Quadruple.OperationType.DIVIDE, left_operand, right_operand, result)
-            global_context.operands.push(result)
-            global_context.types.push(resultant_type)
+    global_context.create_operation_quad(["*", "/"])
 
 
 # FACTOR ( ( '*' | '/' ) FACTOR )*
@@ -593,7 +556,6 @@ def p_termino(p):
     if p[2]:
         p[0] = p[1]
     else:
-        # TODO hacer multiplicacion
         p[0] = p[1]
 
 
@@ -601,7 +563,6 @@ def p_termino_1(p):
     """termino_1    : termino_2 factor termino_vp termino_1
                     | epsilon """
     if len(p) > 2:
-        # TODO hacer multiplicacion o division
         p[0] = p[2]
     else:
         p[0] = None
@@ -628,10 +589,18 @@ def p_factor(p):
     """factor       : '(' add_false_bottom logic_comp remove_false_bottom ')'
                     | factor_1 factor_2"""
     if len(p) == 3:
-        # if p[1] == '+':
-        #     p[0] = p[2]
-        # elif p[1] == '-':
-        #     p[0] = -p[2]
+        if p[1] == '+':
+            p[0] = p[2]
+        elif p[1] == '-':
+            global_context.operands.push(p[2])
+            global_context.types.push(function_table.get_variable(global_context.function.top(), p[2]).type)
+            global_context.operations.push("=")
+            global_context.operations.push("*")
+            global_context.operands.push('-1')
+            global_context.types.push("int")
+            global_context.create_operation_quad(['*'])
+            global_context.create_operation_quad(['='])
+            # p[0] = -p[2]
         p[0] = p[2]
     else:
         p[0] = p[3]
@@ -726,11 +695,12 @@ parser = yacc.yacc(start="programa")
 data = """
 program test;
 var int: a ,b;
+bool: t, f;
 main () var int: x, c, d; {
-    a = d + c;
+    a = d + -c;
     x = (a + c) * d / d;
     if (b > a) then {
-
+        t = f & f;
     }
 }
 """

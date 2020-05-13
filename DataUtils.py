@@ -3,6 +3,7 @@ from typing import List
 from CuboSemantico import CuboSemantico
 from Stack import Stack
 from Quadruple import Quadruple
+from AVAIL import avail
 
 
 class ParsingContext(object):
@@ -48,18 +49,24 @@ class ParsingContext(object):
         jump_index = self.jumpStack.pop()
         quad_index = self.quad_counter
         try:
-            self.quadruples[jump_index].result = quad_index
+            self.quadruples[jump_index].result = quad_index + 1
         except IndexError:
             print(f"Error accediendo indice {jump_index} de la lista de cuadruplos")
 
+    def create_operation_quad(self, operations: List[str]):
+        if not self.operations.top() in operations:
+            return
+        right_operand = self.operands.pop()
+        right_type = self.types.pop()
+        left_operand = self.operands.pop()
+        left_type = self.types.pop()
+        operator = self.operations.pop()
+        resultant_type = self.semantic_cube.cubo[left_type][right_type][operator]
+        if resultant_type:
+            result = avail.get_next()
+            self.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
+            self.operands.push(result)
+            self.types.push(resultant_type)
+
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)
-
-
-class AVAIL:
-    def __init__(self) -> None:
-        self.counter = 0
-
-    def get_next(self):
-        self.counter = self.counter + 1
-        return f"tempvar-{self.counter - 1}"

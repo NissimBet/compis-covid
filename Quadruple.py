@@ -1,4 +1,20 @@
 from enum import Enum, unique
+from typing import Union
+
+
+operator_names = {
+    '+': "SUM",
+    '-': "SUB",
+    '*': "MULT",
+    '/': "DIV",
+    '=': "ASG",
+    '<': "LT",
+    '>': "GT",
+    "<>": "NEQ",
+    "==": "EQ",
+    "&": "LAND",
+    "||": "LOR",
+}
 
 
 class Quadruple:
@@ -16,9 +32,17 @@ class Quadruple:
         GREATER_THAN = "GT"
         EQUALS = "EQ"
         NOT_EQUAL = "NEQ"
+        LOGIC_AND = "LAND"
+        LOGIC_OR = "LOR"
 
-    def __init__(self, operation: OperationType, first_direction: str, second_direction: str, result: str):
-        self.operation = operation
+    @staticmethod
+    def get_operator_name(name: str):
+        if name in operator_names:
+            return operator_names[name]
+        return None
+
+    def __init__(self, operation: Union[OperationType, str], first_direction: str, second_direction: str, result: str):
+        self.operation = operation.name if type(operation) is self.OperationType else operation
         self.first_direction = first_direction
         self.second_direction = second_direction
         self.result = result
