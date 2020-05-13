@@ -12,7 +12,7 @@ operator_names = {
     '>': "GT",
     "<>": "NEQ",
     "==": "EQ",
-    "&": "LAND",
+    "&&": "LAND",
     "||": "LOR",
 }
 

@@ -461,7 +461,7 @@ def p_func_call_2(p):
 
 def p_logic_comp_cuad(p):
     """logic_comp_cuad  : """
-    global_context.create_operation_quad(["&", "||"])
+    global_context.create_operation_quad(["&&", "||"])
 
 
 def p_logic_comp(p):
