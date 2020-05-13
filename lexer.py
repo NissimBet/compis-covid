@@ -73,7 +73,7 @@ tokens = [
              'OR'
          ] + list(reserved.values())
 
-literals = '+-*/=<>(){}:;,[]&'
+literals = '+-*/=<>(){}:;,[]'
 
 # Regular expression rules for simple tokens
 t_DIFF = r'<>'
@@ -81,6 +81,7 @@ t_EQUAL = r'=='
 t_CTE_STRING = r'\".*\"'
 t_CTE_CHAR = r'\'.\''
 t_OR = r'\|\|'
+
 
 
 # Expression rule to detect and convert floating point numbers
