@@ -15,6 +15,9 @@ import ply.yacc as yacc
 from CuboSemantico import CuboSemantico
 from Quadruple import Quadruple
 from lexer import tokens, literals
+# tokens = {
+#     sdas
+# }
 
 from Stack import Stack
 from Queue import Queue
@@ -473,7 +476,7 @@ def p_logic_comp_1(p):
 
 
 def p_logic_comp_ops(p):
-    """logic_comp_ops   : '&'
+    """logic_comp_ops   : AND
                         | OR"""
     pass
 
@@ -539,6 +542,7 @@ def p_exp_vp(p):
                                        right_operand, result)
             global_context.operands.push(result)
             global_context.types.push(resultant_type)
+            global_context.create_operation_cuad(["+", "-"])
 
 
 # TERMINO ( ( '+' | '-' ) TERMINO )*

@@ -72,6 +72,7 @@ tokens = [
              'CTE_CHAR',
              'OR',
              'AND'
+             
          ] + list(reserved.values())
 
 literals = '+-*/=<>(){}:;,[]'
