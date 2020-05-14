@@ -221,6 +221,7 @@ def p_parameters_1(p):
 
 def p_statement(p):
     """statement    : condition
+                    | loop
                     | statement_1 ';' """
     pass
 
@@ -231,8 +232,7 @@ def p_statement_1(p):
                     | return
                     | read
                     | write
-                    | load
-                    | loop"""
+                    | load"""
 
 
 def p_check_variable(p):
@@ -356,11 +356,35 @@ def p_loop(p):
     pass
 
 
+def p_check_loop(p):
+    """check_loop   : """
+    if not global_context.types.top() == "bool":
+        print(f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
+    else:
+        operand = global_context.operands.pop()
+        operand_type = global_context.types.pop()
+        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+        global_context.create_jump()
+
+
+def p_while_return(p):
+    """while_return     : """
+    global_context.create_jump()
+
+
 # while ( EXPRESION ) do { bloque? }
 def p_conditional_loop(p):
-    """conditional_loop     : WHILE '(' logic_comp ')' DO '{' conditional_loop_1 '}' """
+    """conditional_loop     : WHILE '(' while_return logic_comp check_loop ')' DO '{' conditional_loop_1 '}' """
     # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
-    pass
+    # quads display
+    print(global_context.jumpStack)
+    for q in range(len(global_context.quadruples)):
+        print(q, global_context.quadruples[q])
+
+    end = global_context.jumpStack.pop()
+    start = global_context.jumpStack.pop()
+    global_context.create_quad(Quadruple.OperationType.GOTO, "", "", start + 1)
+    global_context.fill_quad(end)
 
 
 def p_conditional_loop_1(p):
@@ -709,6 +733,10 @@ main () var int: x, c, d; {
         mean(f);
     } else {
         t = f || f;
+    }
+    
+    while (x > c) do {
+        t = b + a;
     }
 }
 """

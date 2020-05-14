@@ -48,9 +48,9 @@ class ParsingContext(object):
     def create_jump(self):
         self.jumpStack.push(self.quad_counter)
 
-    def fill_quad(self):
+    def fill_quad(self, end: int = -1):
         print(self.jumpStack.top(), self.quad_counter)
-        jump_index = self.jumpStack.pop()
+        jump_index = end if end != -1 else self.jumpStack.pop()
         quad_index = self.quad_counter
         try:
             self.quadruples[jump_index].result = quad_index + 1
@@ -71,6 +71,8 @@ class ParsingContext(object):
             self.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
             self.operands.push(result)
             self.types.push(resultant_type)
+        else:
+            print(f"Error de sintaxis. Type Error")
 
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)
