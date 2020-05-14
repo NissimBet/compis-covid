@@ -45,7 +45,11 @@ class ParsingContext(object):
         self.quadruples.append(Quadruple(operation, mem_location_1, mem_location_2, mem_result))
         return self.quad_counter
 
+    def create_jump(self):
+        self.jumpStack.push(self.quad_counter)
+
     def fill_quad(self):
+        print(self.jumpStack.top(), self.quad_counter)
         jump_index = self.jumpStack.pop()
         quad_index = self.quad_counter
         try:

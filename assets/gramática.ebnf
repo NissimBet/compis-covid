@@ -2,7 +2,7 @@
 	Gramatica para Lenguaje Covid19
 	Generada por Nissim Betesh y Alejandro Longoria
     
-    Generar diagramas de sintaxis en 
+    Generar diagramas de sintaxis en
     (https://www.bottlecaps.de/rr/ui)
 
 */
@@ -17,15 +17,15 @@ FUNCTION ::= 'function' TIPO_RETORNO 'ID' '(' PARAMETERS? ')' VARS? '{' BLOQUE? 
 TIPO_RETORNO ::= TIPO | 'void'
 PARAMETERS ::= TIPO 'ID' (',' TIPO 'ID')*
 STATEMENT ::= ((ASSIGNMENT | FUNC_CALL | RETURN | READ | WRITE | LOAD | LOOP) ';') | CONDITION
-ASSIGNMENT ::= ID_COMPLETO '=' EXPRESSION
+ASSIGNMENT ::= ID_COMPLETO '=' LOGIC_COMP
 RETURN ::= 'return' '(' EXP ')'
 READ ::= 'read' '(' LISTA_ID ')'
-WRITE ::= 'write' '(' (EXPRESSION | CTE_S )+ ')'
+WRITE ::= 'write' '(' (LOGIC_COMP | CTE_S )+ ')'
 LOAD ::= 'load' '(' 'ID' ',' STRING_VAR ',' STRING_VAR ',' NUM_VAR ')'
 MAIN ::= 'main' '(' ')' VARS '{' BLOQUE '}' 
-CONDITION ::= 'if' '(' EXPRESSION ')' 'then' '{' BLOQUE '}' ( 'else' '{' BLOQUE '}' )?
+CONDITION ::= 'if' '(' LOGIC_COMP ')' 'then' '{' BLOQUE '}' ( 'else' '{' BLOQUE '}' )?
 LOOP ::= CONDITIONAL_LOOP | NO_CONDITION_LOOP
-CONDITIONAL_LOOP ::= 'while' '(' EXPRESSION ')' 'do' '{' BLOQUE '}'
+CONDITIONAL_LOOP ::= 'while' '(' LOGIC_COMP ')' 'do' '{' BLOQUE '}'
 NO_CONDITION_LOOP ::= 'from' ID_COMPLETO '=' EXP 'to' EXP 'do' '{' BLOOQUE '}'
 NUM_VAR ::= 'ID' | 'CTE_I' | 'CTE_F'
 STRING_VAR ::= 'ID' | 'CTE_STRING'
@@ -33,10 +33,11 @@ VAR ::= 'ID' ( ( '(' FUNC_CALL ')' ) | DIMENSION | EPSILON )
 VAR_CTE ::= 'CTE_I' | 'CTE_F' | 'CTE_C' | 'CTE_STRING' | VAR_BOOL
 VAR_BOOL ::= 'true' | 'false'
 STAT_METHODS ::= ( 'MEAN' | 'MODE' | 'VARIANCE' | 'NORMAL' | 'GAMMA' | 'GRAPH' | 'NORMAL_GRAPH' | 'COV' | 'SCATTER' ) '(' FUNC_CALL ')'
-FUNC_CALL ::= 'ID' '(' (EXPRESSION (',' EXPRESSION)* )? ')'
-EXPRESSION ::= ( EXP ) ( COMPARISON_OPS ( EXP ) )?
+FUNC_CALL ::= 'ID' '(' (LOGIC_COMP (',' LOGIC_COMP)* )? ')'
+LOGIC_COMP ::= EXPRESSION ( ( '&&' | '||' ) ',' EXPRESSION)*
+EXPRESSION ::= EXP ( COMPARISON_OPS EXP )?
 COMPARISON_OPS ::= '<' | '>' | '<>' | '=='
 EXP ::= TERMINO ( ( '+' | '-' ) TERMINO )*
 TERMINO ::= FACTOR ( ('*' | '/') FACTOR )*
-FACTOR ::= ( '(' EXPRESSION ')' )  | ( ('+' | '-')? ( VAR_CTE | VAR ) )
+FACTOR ::= ( '(' LOGIC_COMP ')' )  | ( ('+' | '-')? ( VAR_CTE | VAR ) )
 BLOQUE ::= (STATEMENT | BLOQUE)?

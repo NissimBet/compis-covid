@@ -8,20 +8,15 @@
 # ------------------------------------------------------------
 
 import logging
-from typing import List, Any, Dict
 
 import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
-from CuboSemantico import CuboSemantico
 from Quadruple import Quadruple
 from lexer import tokens, literals
 
-from Stack import Stack
-from Queue import Queue
 from DataUtils import ParsingContext
 from Variable import Variable, VariableTable
 from Function import FunctionTable
-from AVAIL import avail
 
 function_table = FunctionTable()
 global_context = ParsingContext()
@@ -33,7 +28,7 @@ function_table.declare_function('global', 'void')
 def p_goto_main(p):
     """goto_main    :"""
     quad_index = global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
-    global_context.jumpStack.push(quad_index)
+    global_context.create_jump()
 
 
 # program id ; VARS? function* main
@@ -303,7 +298,6 @@ def p_load(p):
 
 def p_declare_main(p):
     """declare_main : """
-    # TODO declarar main
     global_context.set_function('main')
     function_table.declare_function('main', 'void')
     global_context.fill_quad()
@@ -322,15 +316,19 @@ def p_main_1(p):
 
 def p_logic_comp_check(p):
     """logic_comp_check : """
-    print(f'Resultado de expresion es {p[-1]}. Lineno {p.lineno(-1)}')
+    if not global_context.types.top() == "bool":
+        print(f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
+    else:
+        operand = global_context.operands.pop()
+        operand_type = global_context.types.pop()
+        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+        global_context.create_jump()
 
 
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
 def p_condition(p):
     """condition    : IF '(' logic_comp logic_comp_check ')' THEN '{' condition_1 '}' condition_2 """
-    # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
-    # print(p[3])
-    pass
+    global_context.fill_quad()
 
 
 def p_condition_1(p):
@@ -339,8 +337,15 @@ def p_condition_1(p):
     pass
 
 
+def p_go_else(p):
+    """go_else      : """
+    global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
+    global_context.fill_quad()
+    global_context.create_jump()
+
+
 def p_condition_2(p):
-    """condition_2  : ELSE '{' condition_1 '}'
+    """condition_2  : ELSE go_else '{' condition_1 '}'
                     | epsilon"""
     pass
 
@@ -699,8 +704,11 @@ bool: t, f;
 main () var int: x, c, d; {
     a = d + -c;
     x = (a + c) * d / d;
-    if (b > a) then {
+    if (b > c) then {
         t = f && f;
+        mean(f);
+    } else {
+        t = f || f;
     }
 }
 """
@@ -739,5 +747,5 @@ print(global_context.operands)
 print(global_context.operations)
 
 # quads display
-for quad in global_context.quadruples:
-    print(quad)
+for quad in range(len(global_context.quadruples)):
+    print(quad, global_context.quadruples[quad])
