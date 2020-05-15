@@ -16,7 +16,7 @@ TIPO ::= 'int' | 'float' | 'string' | 'char' | 'bool' | 'Dataframe'
 FUNCTION ::= 'function' TIPO_RETORNO 'ID' '(' PARAMETERS? ')' VARS? '{' BLOQUE? '}'
 TIPO_RETORNO ::= TIPO | 'void'
 PARAMETERS ::= TIPO 'ID' (',' TIPO 'ID')*
-STATEMENT ::= ((ASSIGNMENT | FUNC_CALL | RETURN | READ | WRITE | LOAD | LOOP) ';') | CONDITION
+STATEMENT ::= ((ASSIGNMENT | FUNC_CALL | RETURN | READ | WRITE | LOAD ) ';') | (CONDITION | LOOP)
 ASSIGNMENT ::= ID_COMPLETO '=' LOGIC_COMP
 RETURN ::= 'return' '(' EXP ')'
 READ ::= 'read' '(' LISTA_ID ')'

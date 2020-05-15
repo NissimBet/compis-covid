@@ -49,7 +49,6 @@ class ParsingContext(object):
         self.jumpStack.push(self.quad_counter)
 
     def fill_quad(self, end: int = -1):
-        print(self.jumpStack.top(), self.quad_counter)
         jump_index = end if end != -1 else self.jumpStack.pop()
         quad_index = self.quad_counter
         try:

@@ -377,10 +377,6 @@ def p_conditional_loop(p):
     """conditional_loop     : WHILE '(' while_return logic_comp check_loop ')' DO '{' conditional_loop_1 '}' """
     # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
     # quads display
-    print(global_context.jumpStack)
-    for q in range(len(global_context.quadruples)):
-        print(q, global_context.quadruples[q])
-
     end = global_context.jumpStack.pop()
     start = global_context.jumpStack.pop()
     global_context.create_quad(Quadruple.OperationType.GOTO, "", "", start + 1)
@@ -393,10 +389,40 @@ def p_conditional_loop_1(p):
     pass
 
 
+def p_for_check_id(p):
+    """for_check_id     : """
+    if function_table.is_variable_declared(global_context.function.top(), p[-1][0]):
+        var = function_table.get_variable(global_context.function.top(), p[-1][0])
+        global_context.operands.push(var.name)
+        global_context.types.push(var.type)
+    else:
+        print(f"Sintax Error. Variable {p[-1][0]} not declared in line {p.lineno(-1)}")
+
+
+def p_for_assign(p):
+    """for_assign   : """
+    global_context.operations.push("=")
+    global_context.create_operation_quad(["="])
+
+
+def p_for_compare(p):
+    """for_compare  : """
+    global_context.create_jump()
+    global_context.operations.push("<")
+    global_context.create_operation_quad(["<"])
+    operand = global_context.operands.pop()
+    op_type = global_context.types.pop()
+    global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+    global_context.create_jump()
+
+
 # desde ID_COMPLETO = EXP to EXP hacer { ESTATUTO* }
 def p_no_condition_loop(p):
-    """no_condition_loop    : FROM id_completo '=' exp TO exp DO '{' no_condition_loop_1 '}'  """
-    pass
+    """no_condition_loop    : FROM id_completo for_check_id '=' exp for_assign TO exp for_compare DO '{' no_condition_loop_1 '}'  """
+    end = global_context.jumpStack.pop()
+    start = global_context.jumpStack.pop()
+    global_context.create_quad(Quadruple.OperationType.GOTO, "", "", start + 1)
+    global_context.fill_quad(end)
 
 
 def p_no_condition_loop_1(p):
@@ -737,6 +763,10 @@ main () var int: x, c, d; {
     
     while (x > c) do {
         t = b + a;
+    }
+    
+    from a = a to b do {
+        b = x + c;
     }
 }
 """
