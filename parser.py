@@ -505,8 +505,10 @@ def p_func_call(p):
         global_context.create_quad(Quadruple.OperationType.GOTO, "", "", global_context.get_function().quad_number + 1)
     except IndexError:
         print("No se pudo crear el cuadruplo")
-    global_context.func_calls.pop()
-    global_context.param_counter.pop()
+    f_name = global_context.func_calls.pop()
+    f_params = global_context.param_counter.pop()
+    if len(global_context.function_table.function(f_name).parameters) != f_params:
+        print(f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
     p[0] = p[1]
 
 
@@ -520,7 +522,7 @@ def p_func_call_1(p):
             vtype = global_context.types.pop()
             var = global_context.operands.pop()
             if vtype == function.parameters[global_context.param_counter.top()].type:
-                pass
+                print(f"Parametro encontrado {var} en funcion {function.name}")
             else:
                 print(f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
         else:
@@ -533,7 +535,22 @@ def p_func_call_1(p):
 def p_func_call_2(p):
     """func_call_2  : ',' logic_comp func_call_2
                     | epsilon """
-    pass
+    if p[1]:
+        function_name = global_context.func_calls.top()
+        function = global_context.function_table.function(function_name)
+        if global_context.param_counter.top() < len(function.parameters):
+            vtype = global_context.types.pop()
+            var = global_context.operands.pop()
+            if vtype == function.parameters[global_context.param_counter.top()].type:
+                print(f"Parametro encontrado {var} en funcion {function.name}")
+            else:
+                print(
+                    f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+        else:
+            print(f"Error, too many parameters on function {function.name}")
+        c = global_context.param_counter.pop()
+        c += 1
+        global_context.param_counter.push(c)
 
 
 def p_logic_comp_cuad(p):
@@ -782,7 +799,10 @@ function int hello (float x, float y[1]) {
     
 }
 
-main () var int: x, c, d; {
+main () 
+var int: x, c, d;
+    float: xx, yy; 
+{
     a = d + -c;
     x = (a + c) * d / d;
     if (b > c) then {
@@ -796,7 +816,7 @@ main () var int: x, c, d; {
         t = b + a;
     }
     
-    hello(a);
+    hello(xx,yy);
     
     from a = a to b do {
         b = x + c;
