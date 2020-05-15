@@ -15,14 +15,13 @@ from Quadruple import Quadruple
 from lexer import tokens, literals
 
 from DataUtils import ParsingContext
-from Variable import Variable, VariableTable
-from Function import FunctionTable
+from Variable import Variable
 
-function_table = FunctionTable()
 global_context = ParsingContext()
+param_counter = 0
 
 global_context.set_function("global")
-function_table.declare_function('global', 'void')
+global_context.declare_function('global', 'void')
 
 
 def p_goto_main(p):
@@ -84,8 +83,7 @@ def p_declare_var(p):
     """declare_var  : """
     # TODO tomar prestado el tipo de variable ultimo en el scope
     # TODO tomar prestado el nombre de la ultima funcion en el scope
-    if not function_table.declare_variable(global_context.function.top(),
-                                           Variable(global_context.var_type, p[-1][0], p[-1][1])):
+    if not global_context.declare_variable(p[-1][0], p[-1][1]):
         print(
                 f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
                 Variable "{p[-1][0]}" ya esta declarada en este contexto')
@@ -163,10 +161,9 @@ def p_tipo(p):
 def p_declare_func(p):
     """declare_func : """
     # TODO tomar prestado el tipo de la ultima funcion en el scope
-    if not function_table.declare_function(func_name=p[-1], return_type=global_context.var_type):
+    if not global_context.declare_function(p[-1], None):
         print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
     else:
-        # TODO agregar la funcion al scope
         global_context.set_function(p[-1])
 
 
@@ -200,23 +197,25 @@ def p_return_type(p):
 
 # TIPO 'id' (',' TIPO 'id')*
 def p_parameters(p):
-    """parameters       : tipo ID parameters_1
+    """parameters       : tipo id_completo parameters_1
                         | epsilon"""
     if len(p) > 2:
-        # TODO tomar prestado el nombre de la funcion ultima en el contexto
-        if not function_table.add_parameter(global_context.function.top(), Variable(p[1], p[2])):
+        if not global_context.add_function_parameter(Variable(p[1], p[2][0], p[2][1])):
             print(
-                    f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
+                    f"Error de Sintaxis. Linea {p.lineno(2)}.\
+                    No se pudo declarar el parametro {p[2]}. \
+                    Ya esta declarado en el scope")
 
 
 def p_parameters_1(p):
-    """parameters_1     : ',' tipo ID parameters_1
+    """parameters_1     : ',' tipo id_completo parameters_1
                         | epsilon"""
     if len(p) > 2:
-        # TODO tomar prestado el nombre de la funcion ultima en el contexto
-        if not function_table.add_parameter(global_context.function.top(), Variable(p[2], p[3])):
+        if not global_context.add_function_parameter(Variable(p[2], p[3][0], p[3][1])):
             print(
-                    f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
+                    f"Error de Sintaxis. Linea {p.lineno(3)}. \
+                    No se pudo declarar el parametro {p[3]}. \
+                    Ya esta declarado en el scope")
 
 
 def p_statement(p):
@@ -237,15 +236,14 @@ def p_statement_1(p):
 
 def p_check_variable(p):
     """check_variable   : """
-    # TODO tomar prestado el nombre de la funcion ultima en el contexto
-    if not function_table.is_variable_declared(global_context.function.top(), p[-1][0]):
+    if not global_context.is_variable_declared(p[-1][0]):
         print(f'Error de Sintaxis. Error de asignacion en linea {p.lineno(-1)}. Variable no declarada {p[-1][0]}')
 
 
-# ID_COMPLETO '=' EXPRESsION
+# ID_COMPLETO '=' EXPRESSION
 def p_assignment(p):
     """assignment   : id_completo check_variable '=' logic_comp """
-    assigned = function_table.get_variable(global_context.function.top(),p[1][0])
+    assigned = global_context.get_variable(p[1][0])
     operand_type = global_context.types.pop()
     operand_name = global_context.operands.pop()
     global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.name)
@@ -255,7 +253,6 @@ def p_assignment(p):
 def p_assignment_error(p):
     """assignment   : id_completo check_variable '=' error """
     print(f"Error de Sintaxis. Linea {p.lineno(4)}. Asignacion incompleta")
-    pass
 
 
 # return ( EXP )
@@ -263,7 +260,11 @@ def p_return(p):
     """return   : RETURN '(' exp ')' """
     # TODO tomar prestado el nombre de la funcion ultima en el contexto
     print(f"Retorno de funcion {global_context.function.top()}, tipo {p[3]}")
-    pass
+    function = global_context.get_function()
+    exp_type = global_context.types.pop()
+    exp_val = global_context.operands.pop()
+    if exp_type != function.return_type:
+        print(f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
 
 
 # read ( LISTA_ID )
@@ -298,8 +299,7 @@ def p_load(p):
 
 def p_declare_main(p):
     """declare_main : """
-    global_context.set_function('main')
-    function_table.declare_function('main', 'void')
+    global_context.declare_function('main', 'void')
     global_context.fill_quad()
 
 
@@ -391,8 +391,8 @@ def p_conditional_loop_1(p):
 
 def p_for_check_id(p):
     """for_check_id     : """
-    if function_table.is_variable_declared(global_context.function.top(), p[-1][0]):
-        var = function_table.get_variable(global_context.function.top(), p[-1][0])
+    if global_context.is_variable_declared(p[-1][0]):
+        var = global_context.get_variable(p[-1][0])
         global_context.operands.push(var.name)
         global_context.types.push(var.type)
     else:
@@ -496,16 +496,36 @@ def p_stat_methods_1(p):
     p[0] = p[1]
 
 
+def p_called_func(p):
+    """called_func  : """
+    f_name = p[-1]
+    if global_context.get_function():
+        pass
+    else:
+        print(f"Syntax Error, function not defined {f_name}")
+
+
 def p_func_call(p):
-    """func_call    : ID '(' func_call_1 ')'
+    """func_call    : ID called_func '(' func_call_1 ')'
                     | stat_methods """
+    try:
+        global_context.create_quad(Quadruple.OperationType.GOTO, "", "", global_context.get_function().quad_number + 1)
+    except IndexError:
+        print("No se pudo crear el cuadruplo")
     p[0] = p[1]
 
 
 def p_func_call_1(p):
     """func_call_1  : logic_comp func_call_2
                     | epsilon """
-    pass
+    # global param_counter
+    # if p[1]:
+    #     function = function_table.function(global_context.function.top())
+    #     if param_counter < len(function.parameters):
+    #         pass
+    #     else:
+    #         print("Error, too many parameters")
+    #     param_counter += 1
 
 
 def p_func_call_2(p):
@@ -648,7 +668,7 @@ def p_factor(p):
             p[0] = p[2]
         elif p[1] == '-':
             global_context.operands.push(p[2])
-            global_context.types.push(function_table.get_variable(global_context.function.top(), p[2]).type)
+            global_context.types.push(global_context.get_variable(p[2]).type)
             global_context.operations.push("=")
             global_context.operations.push("*")
             global_context.operands.push('-1')
@@ -670,10 +690,10 @@ def p_factor_1(p):
 
 def p_factor_var_check(p):
     """factor_var_check : """
-    if not function_table.is_variable_declared(global_context.function.top(), p[-1]):
+    if not global_context.is_variable_declared(p[-1]):
         print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
     else:
-        variable = function_table.get_variable(global_context.function.top(), p[-1])
+        variable = global_context.get_variable(p[-1])
         global_context.types.push(variable.type)
         global_context.operands.push(variable.name)
 
@@ -751,6 +771,15 @@ data = """
 program test;
 var int: a ,b;
 bool: t, f;
+
+function int hello (float x, float y[1]) {
+    a = 1;
+    b = 2;
+    t = true;
+    f = false;
+    
+}
+
 main () var int: x, c, d; {
     a = d + -c;
     x = (a + c) * d / d;
@@ -765,9 +794,14 @@ main () var int: x, c, d; {
         t = b + a;
     }
     
+    hello(a);
+    
     from a = a to b do {
         b = x + c;
     }
+    
+    
+    return (a);
 }
 """
 
@@ -797,7 +831,7 @@ if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
 else:
     print("error de sintaxis")
 
-for k, v in function_table.table.items():
+for k, v in global_context.function_table.table.items():
     print(v.__str__())
 
 print(global_context.types)

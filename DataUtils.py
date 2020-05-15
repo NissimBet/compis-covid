@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Tuple, Union, Optional
 
 from CuboSemantico import CuboSemantico
+from Function import FunctionTable
 from Stack import Stack
 from Quadruple import Quadruple
 from AVAIL import avail
+from Variable import Variable
 
 
 class ParsingContext(object):
@@ -21,6 +23,8 @@ class ParsingContext(object):
 
     semantic_cube: CuboSemantico()
 
+    function_table: FunctionTable()
+
     def __init__(self):
         self.function = Stack()
         self.var_type = ''
@@ -30,10 +34,24 @@ class ParsingContext(object):
         self.operations = Stack()
         self.types = Stack()
         self.semantic_cube = CuboSemantico()
+        self.function_table = FunctionTable()
 
     @property
     def quad_counter(self):
         return len(self.quadruples) - 1
+
+    def add_function_parameter(self, var: Variable) -> bool:
+        if self.function_table.add_parameter(self.function.top(), var):
+            return True
+        return False
+
+    def declare_function(self, f_name: str, f_type: Optional[str]) -> bool:
+        if f_name not in self.function_table.table:
+            quad = self.quad_counter
+            self.function_table.declare_function(f_name, f_type if f_type else self.var_type, quad)
+            self.set_function(f_name)
+            return True
+        return False
 
     def set_type(self, var_type: str):
         self.var_type = var_type
@@ -72,6 +90,21 @@ class ParsingContext(object):
             self.types.push(resultant_type)
         else:
             print(f"Error de sintaxis. Type Error")
+
+    def declare_variable(self, var_name: str, dimensions: Tuple[int, int]) -> bool:
+        if not self.function_table.declare_variable(self.function.top(),
+                                                    Variable(self.var_type, var_name, dimensions)):
+            return False
+        return True
+
+    def is_variable_declared(self, var_name: str):
+        return self.function_table.is_variable_declared(self.function.top(), var_name)
+
+    def get_variable(self, var_name: str):
+        return self.function_table.get_variable(self.function.top(), var_name)
+
+    def get_function(self):
+        return self.function_table.function(self.function.top())
 
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)

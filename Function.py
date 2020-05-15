@@ -8,13 +8,15 @@ class Function(object):
     return_type: str
     parameters: List[Variable]
     variables: VariableTable
+    quad_number: int
 
     def __init__(self, name: str,
-                 return_type: str):
+                 return_type: str, quad_number: int = 0):
         self.name = name
         self.return_type = return_type
         self.parameters = []
         self.variables = VariableTable()
+        self.quad_number = quad_number
 
     def add_variable(self, var: Variable) -> bool:
         if var in self.parameters or self.variables.is_variable_defined(var.name):
@@ -41,10 +43,11 @@ class FunctionTable(object):
     def table(self):
         return self.__table
 
-    def declare_function(self, func_name: str, return_type: any) -> bool:
+    def declare_function(self, func_name: str, return_type: any, quad_num: int = 0) -> bool:
         if func_name not in self.__table:
             self.__table[func_name] = Function(name=func_name,
-                                               return_type=return_type)
+                                               return_type=return_type,
+                                               quad_number=quad_num)
             # print("Declared Function", func_name)
             return True
         return False
@@ -78,3 +81,6 @@ class FunctionTable(object):
                 return self.__table['global'].variables.get_variable(var_name)
         else:
             return None
+
+    def function(self, func_name: str):
+        return self.__table.get(func_name, None);
