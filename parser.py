@@ -18,7 +18,6 @@ from DataUtils import ParsingContext
 from Variable import Variable
 
 global_context = ParsingContext()
-param_counter = 0
 
 global_context.set_function("global")
 global_context.declare_function('global', 'void')
@@ -247,7 +246,7 @@ def p_assignment(p):
     operand_type = global_context.types.pop()
     operand_name = global_context.operands.pop()
     global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.name)
-    print(f"Assign to {p[1][0]}, {p[4]}")
+    # print(f"Assign to {p[1][0]}, {p[4]}")
 
 
 def p_assignment_error(p):
@@ -464,7 +463,7 @@ def p_var_cte(p):
                     | CTE_STRING
                     | CTE_CHAR
                     | var_bool """
-    print("Var_Cte", p.lineno(1), p[1])
+    # print("Var_Cte", p.lineno(1), p[1])
     p[0] = p[1]
 
 
@@ -475,57 +474,60 @@ def p_var_bool(p):
 
 
 # ID ( EXPRESION* ) ;
-def p_stat_methods(p):
-    """stat_methods : stat_methods_1 '(' func_call_1 ')'
+def p_std_methods(p):
+    """std_methods : MEAN
+                    | MODE
+                    | VARIANCE
+                    | NORMAL
+                    | GAMMA
+                    | GRAPH
+                    | NORMAL_GRAPH
+                    | COV
+                    | SCATTER
+                    | ID
     """
-    p[0] = p[1]
-
-
-def p_stat_methods_1(p):
-    """stat_methods_1   : MEAN
-                        | MODE
-                        | VARIANCE
-                        | NORMAL
-                        | GAMMA
-                        | GRAPH
-                        | NORMAL_GRAPH
-                        | COV
-                        | SCATTER
-    """
-    print('Stats Method:', p[1])
     p[0] = p[1]
 
 
 def p_called_func(p):
     """called_func  : """
     f_name = p[-1]
-    if global_context.get_function():
-        pass
+    if f_name in global_context.function_table.table:
+        global_context.func_calls.push(f_name)
+        global_context.param_counter.push(0)
     else:
         print(f"Syntax Error, function not defined {f_name}")
 
 
 def p_func_call(p):
-    """func_call    : ID called_func '(' func_call_1 ')'
-                    | stat_methods """
+    """func_call    : std_methods called_func '(' func_call_1 ')'  """
     try:
         global_context.create_quad(Quadruple.OperationType.GOTO, "", "", global_context.get_function().quad_number + 1)
     except IndexError:
         print("No se pudo crear el cuadruplo")
+    global_context.func_calls.pop()
+    global_context.param_counter.pop()
     p[0] = p[1]
 
 
 def p_func_call_1(p):
     """func_call_1  : logic_comp func_call_2
                     | epsilon """
-    # global param_counter
-    # if p[1]:
-    #     function = function_table.function(global_context.function.top())
-    #     if param_counter < len(function.parameters):
-    #         pass
-    #     else:
-    #         print("Error, too many parameters")
-    #     param_counter += 1
+    if p[1]:
+        function_name = global_context.func_calls.top()
+        function = global_context.function_table.function(function_name)
+        if global_context.param_counter.top() < len(function.parameters):
+            vtype = global_context.types.pop()
+            var = global_context.operands.pop()
+            if vtype == function.parameters[global_context.param_counter.top()].type:
+                pass
+            else:
+                print(f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+        else:
+            print(f"Error, too many parameters on function {function.name}")
+        c = global_context.param_counter.pop()
+        c += 1
+        global_context.param_counter.push(c)
 
 
 def p_func_call_2(p):
@@ -785,7 +787,7 @@ main () var int: x, c, d; {
     x = (a + c) * d / d;
     if (b > c) then {
         t = f && f;
-        mean(f);
+
     } else {
         t = f || f;
     }
@@ -831,13 +833,13 @@ if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
 else:
     print("error de sintaxis")
 
-for k, v in global_context.function_table.table.items():
-    print(v.__str__())
+# for k, v in global_context.function_table.table.items():
+#     print(v.__str__())
 
-print(global_context.types)
-print(global_context.operands)
-print(global_context.operations)
+# print(global_context.types)
+# print(global_context.operands)
+# print(global_context.operations)
 
 # quads display
-for quad in range(len(global_context.quadruples)):
-    print(quad, global_context.quadruples[quad])
+# for quad in range(len(global_context.quadruples)):
+#     print(quad, global_context.quadruples[quad])

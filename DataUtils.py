@@ -22,8 +22,10 @@ class ParsingContext(object):
     operands: Stack
 
     semantic_cube: CuboSemantico()
-
     function_table: FunctionTable()
+
+    func_calls: Stack
+    param_counter: Stack
 
     def __init__(self):
         self.function = Stack()
@@ -35,6 +37,8 @@ class ParsingContext(object):
         self.types = Stack()
         self.semantic_cube = CuboSemantico()
         self.function_table = FunctionTable()
+        self.param_counter = Stack()
+        self.func_calls = Stack()
 
     @property
     def quad_counter(self):
