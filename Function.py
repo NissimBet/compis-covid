@@ -11,10 +11,14 @@ class Function(object):
     quad_number: int
 
     def __init__(self, name: str,
-                 return_type: str, quad_number: int = 0):
+                 return_type: str,
+                 parameters: List = None,
+                 quad_number: int = 0):
+        if parameters is None:
+            parameters = []
         self.name = name
         self.return_type = return_type
-        self.parameters = []
+        self.parameters = parameters
         self.variables = VariableTable()
         self.quad_number = quad_number
 
@@ -35,9 +39,20 @@ class Function(object):
         return f"{self.return_type} Function {self.name}({[pname.name for pname in self.parameters]}) vars: {[(v.name, v.dimesions) for k, v in self.variables.table.items()]} "
 
 
+# TODO Crear los cuadruplos para cada una de las funciones y definir los parametros
 class FunctionTable(object):
     def __init__(self):
-        self.__table: Dict[str, Function] = {}
+        self.__table: Dict[str, Function] = {
+            "mean": Function("mean", "float"),
+            "mode": Function("mode", "float"),
+            "variance": Function("variance", "float"),
+            "normal": Function("normal", "float"),
+            "gamma": Function("gamma", "float"),
+            "graph": Function("graph", "float"),
+            "normal_graph": Function("normal_graph", "float"),
+            "cov": Function("cov", "float"),
+            "scatter": Function("scatter", "float"),
+        }
 
     @property
     def table(self):
