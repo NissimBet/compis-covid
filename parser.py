@@ -84,7 +84,7 @@ def p_declare_var(p):
     """declare_var  : """
     # TODO tomar prestado el tipo de variable ultimo en el scope
     # TODO tomar prestado el nombre de la ultima funcion en el scope
-    if not global_context.declare_variable(p[-1][0], p[-1][1]):
+    if not global_context.declare_variable(p[-1][0], p[-1][1], global_context.function.top() == "global"):
         print(
                 f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
                 Variable "{p[-1][0]}" ya esta declarada en este contexto')
@@ -161,19 +161,18 @@ def p_tipo(p):
 
 def p_declare_func(p):
     """declare_func : """
-    # TODO tomar prestado el tipo de la ultima funcion en el scope
     if not global_context.declare_function(p[-1], None):
         print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
     else:
         global_context.set_function(p[-1])
+        avail.reset_locals()
 
 
 # function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(p):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
-    # print("Function", p[3])
-    # TODO quitar la funcion del scope
     global_context.function.pop()
+    avail.reset_locals()
 
 
 def p_function_1(p):
@@ -203,9 +202,7 @@ def p_parameters(p):
     if len(p) > 2:
         if not global_context.add_function_parameter(Variable(p[1], p[2][0], p[2][1])):
             print(
-                    f"Error de Sintaxis. Linea {p.lineno(2)}.\
-                    No se pudo declarar el parametro {p[2]}. \
-                    Ya esta declarado en el scope")
+                    f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
 
 
 def p_parameters_1(p):
@@ -214,9 +211,7 @@ def p_parameters_1(p):
     if len(p) > 2:
         if not global_context.add_function_parameter(Variable(p[2], p[3][0], p[3][1])):
             print(
-                    f"Error de Sintaxis. Linea {p.lineno(3)}. \
-                    No se pudo declarar el parametro {p[3]}. \
-                    Ya esta declarado en el scope")
+                    f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
 
 
 def p_statement(p):
@@ -723,7 +718,9 @@ def p_factor_var_check(p):
 
 def p_push_const(p):
     """push_const   : """
+    operand_type = avail.get_const_type(p[-1])
     global_context.operands.push(p[-1])
+    global_context.types.push(operand_type)
 
 
 def p_factor_2(p):
@@ -805,7 +802,11 @@ function int hello (float x, float y[1]) {
     b = 2;
     t = true;
     f = false;
-    
+}
+
+function void there (int a, int b) {
+    a = 1;
+    b = a + 10;
 }
 
 main () 

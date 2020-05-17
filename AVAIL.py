@@ -37,7 +37,7 @@ class AVAIL:
         return f"tempvar-{self.counter - 1}"
 
     def get_next_global(self, var_type: str, is_temp: bool, var_name: str = ""):
-        if var_type in self.data_types:
+        if var_type in [x[0] for x in self.data_types]:
             if is_temp:
                 count = self.types.get("global").get("temp").get(var_type)["counter"]
                 minimum = self.types.get("global").get("temp").get(var_type)["min"]
@@ -51,7 +51,7 @@ class AVAIL:
                 self.dir_to_var[str(minimum + count)] = var_name
                 return minimum + count
         else:
-            print("ERROR. variable type not recognized")
+            print(f"ERROR. variable type {var_type} not recognized")
 
     def get_next_local(self, var_type: str, is_temp: bool, var_name: str = ""):
         if var_type in [x[0] for x in self.data_types]:
@@ -68,7 +68,19 @@ class AVAIL:
                 self.dir_to_var[str(count + minimum)] = var_name
                 return count + minimum
         else:
-            print("ERROR. variable type not recognized")
+            print(f"ERROR. variable type {var_type} not recognized")
+
+    def reset_locals(self):
+        def reset(var_type: str):
+            for val_dir in self.types.get("local").get(var_type):
+                counter = self.types.get("local").get(var_type).get(val_dir)["counter"]
+                minim = self.types.get("local").get(var_type).get(val_dir)["min"]
+                maxim = self.types.get("local").get(var_type).get(val_dir)["max"]
+                for index in range(minim, counter):
+                    self.dir_to_var.pop(str(minim + index))
+                self.types.get("local").get(var_type).get(val_dir)["counter"] = 0
+        reset("non_temp")
+        reset("temp")
 
     def set_const_var(self, const_type: str, const_val: Any):
         if const_type in [x[0] for x in self.data_types]:

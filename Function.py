@@ -69,7 +69,11 @@ class FunctionTable(object):
 
     def add_parameter(self, func_name: str, param: Variable) -> bool:
         if func_name in self.__table:
-            return not self.is_variable_declared(func_name, param.name) and self.__table[func_name].add_parameter(param)
+            if self.is_variable_declared(func_name, param.name) and self.is_global(param.name) or \
+                    not self.is_variable_declared(func_name, param.name):
+                return self.__table[func_name].add_parameter(param)
+            else:
+                return False
         return False
 
     def declare_variable(self, func_name: str, var: Variable) -> bool:

@@ -45,6 +45,11 @@ class ParsingContext(object):
         return len(self.quadruples) - 1
 
     def add_function_parameter(self, var: Variable) -> bool:
+        if self.function.top() == "global":
+            var.direction = avail.get_next_global(var.type, False, var.name)
+        else:
+            var.direction = avail.get_next_local(var.type, False, var.name)
+
         if self.function_table.add_parameter(self.function.top(), var):
             return True
         return False
@@ -98,8 +103,8 @@ class ParsingContext(object):
         else:
             print(f"Error de sintaxis. Type Error")
 
-    def declare_variable(self, var_name: str, dimensions: Tuple[int, int]) -> bool:
-        if var_name == "global":
+    def declare_variable(self, var_name: str, dimensions: Tuple[int, int], is_global: bool) -> bool:
+        if is_global:
             var_direction = avail.get_next_global(self.var_type, False, var_name)
         else:
             var_direction = avail.get_next_local(self.var_type, False, var_name)
