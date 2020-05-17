@@ -245,7 +245,7 @@ def p_assignment(p):
     assigned = global_context.get_variable(p[1][0])
     operand_type = global_context.types.pop()
     operand_name = global_context.operands.pop()
-    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.name)
+    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.direction)
     # print(f"Assign to {p[1][0]}, {p[4]}")
 
 
@@ -392,7 +392,7 @@ def p_for_check_id(p):
     """for_check_id     : """
     if global_context.is_variable_declared(p[-1][0]):
         var = global_context.get_variable(p[-1][0])
-        global_context.operands.push(var.name)
+        global_context.operands.push(var.direction)
         global_context.types.push(var.type)
     else:
         print(f"Sintax Error. Variable {p[-1][0]} not declared in line {p.lineno(-1)}")
@@ -686,15 +686,16 @@ def p_factor(p):
         if p[1] == '+':
             p[0] = p[2]
         elif p[1] == '-':
-            global_context.operands.push(p[2])
-            global_context.types.push(global_context.get_variable(p[2]).type)
-            global_context.operations.push("=")
-            global_context.operations.push("*")
-            global_context.operands.push('-1')
-            global_context.types.push("int")
-            global_context.create_operation_quad(['*'])
-            global_context.create_operation_quad(['='])
+            # global_context.operands.push(p[2])
+            # global_context.types.push(global_context.get_variable(p[2]).type)
+            # global_context.operations.push("=")
+            # global_context.operations.push("*")
+            # global_context.operands.push('-1')
+            # global_context.types.push("int")
+            # global_context.create_operation_quad(['*'])
+            # global_context.create_operation_quad(['='])
             # p[0] = -p[2]
+            pass
         p[0] = p[2]
     else:
         p[0] = p[3]
@@ -714,7 +715,7 @@ def p_factor_var_check(p):
     else:
         variable = global_context.get_variable(p[-1])
         global_context.types.push(variable.type)
-        global_context.operands.push(variable.name)
+        global_context.operands.push(variable.direction)
 
 
 def p_factor_2(p):
@@ -803,7 +804,7 @@ main ()
 var int: x, c, d;
     float: xx, yy; 
 {
-    a = d + -c;
+    a = d + c;
     x = (a + c) * d / d;
     if (b > c) then {
         t = f && f;
@@ -861,5 +862,5 @@ else:
 # print(global_context.operations)
 
 # quads display
-# for quad in range(len(global_context.quadruples)):
-#     print(quad, global_context.quadruples[quad])
+for quad in range(len(global_context.quadruples)):
+    print(quad, global_context.quadruples[quad])

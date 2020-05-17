@@ -83,12 +83,15 @@ class ParsingContext(object):
             return
         right_operand = self.operands.pop()
         right_type = self.types.pop()
+
         left_operand = self.operands.pop()
         left_type = self.types.pop()
+
         operator = self.operations.pop()
         resultant_type = self.semantic_cube.cubo[left_type][right_type][operator]
         if resultant_type:
-            result = avail.get_next()
+            result = avail.get_next_local(resultant_type, True, "")
+
             self.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
             self.operands.push(result)
             self.types.push(resultant_type)
@@ -96,8 +99,13 @@ class ParsingContext(object):
             print(f"Error de sintaxis. Type Error")
 
     def declare_variable(self, var_name: str, dimensions: Tuple[int, int]) -> bool:
+        if var_name == "global":
+            var_direction = avail.get_next_global(self.var_type, False, var_name)
+        else:
+            var_direction = avail.get_next_local(self.var_type, False, var_name)
+
         if not self.function_table.declare_variable(self.function.top(),
-                                                    Variable(self.var_type, var_name, dimensions)):
+                                                    Variable(self.var_type, var_name, dimensions, var_direction)):
             return False
         return True
 

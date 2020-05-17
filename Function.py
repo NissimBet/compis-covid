@@ -73,7 +73,7 @@ class FunctionTable(object):
         return False
 
     def declare_variable(self, func_name: str, var: Variable) -> bool:
-        if not self.__table.get(func_name).variables.is_variable_defined(var.name):
+        if not self.is_variable_declared(func_name, var.name):
             return self.__table[func_name].add_variable(var)
             # print(f"Added Variable {var} to {func_name}")
         return False
@@ -97,5 +97,11 @@ class FunctionTable(object):
         else:
             return None
 
+    def is_global(self, var_name: str):
+        return self.__table["global"].variables.is_variable_defined(var_name)
+
+    def is_temp(self, func_name: str, var_name: str):
+        return func_name in self.__table and self.__table.get(func_name).variables.is_variable_defined(var_name)
+
     def function(self, func_name: str):
-        return self.__table.get(func_name, None);
+        return self.__table.get(func_name, None)

@@ -6,11 +6,13 @@ class Variable(object):
     name: str
     value: any
     dimesions: Tuple[int, int]
+    direction: int
 
-    def __init__(self, variable_type: str, name: str, dimensions: Tuple[int, int] = [None, None]):
+    def __init__(self, variable_type: str, name: str, dimensions: Tuple[int, int] = [None, None], var_direction: int = -1):
         self.type = variable_type
         self.name = name
         self.dimesions = dimensions
+        self.direction = var_direction
 
     def __str__(self):
         return f'({self.name}, {self.type})'
@@ -34,5 +36,7 @@ class VariableTable(object):
     def get_variable(self, name: str) -> Variable:
         return self.table.get(name)
 
-
+    def set_direction(self, var_name: str, direction: int):
+        if var_name in self.table:
+            self.table[var_name].direction = direction
 
