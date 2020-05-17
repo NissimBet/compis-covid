@@ -723,8 +723,8 @@ def p_factor_var_check(p):
 
 def p_push_const(p):
     """push_const   : """
-    # print("PREV", p[-1])
-    # global_context.opera
+    global_context.operands.push(p[-1])
+
 
 def p_factor_2(p):
     """factor_2     : var_cte push_const
