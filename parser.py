@@ -17,6 +17,8 @@ from lexer import tokens, literals
 from DataUtils import ParsingContext
 from Variable import Variable
 
+from AVAIL import avail
+
 global_context = ParsingContext()
 
 global_context.set_function("global")
@@ -470,6 +472,7 @@ def p_var_cte(p):
 def p_var_bool(p):
     """var_bool     : TRUE
                     | FALSE"""
+    # print(p[1])
     p[0] = p[1]
 
 
@@ -718,8 +721,13 @@ def p_factor_var_check(p):
         global_context.operands.push(variable.direction)
 
 
+def p_push_const(p):
+    """push_const   : """
+    # print("PREV", p[-1])
+    # global_context.opera
+
 def p_factor_2(p):
-    """factor_2     : var_cte
+    """factor_2     : var_cte push_const
                     | var factor_var_check"""
     p[0] = p[1]
 
@@ -808,7 +816,7 @@ var int: x, c, d;
     x = (a + c) * d / d;
     if (b > c) then {
         t = f && f;
-
+        t = true;
     } else {
         t = f || f;
     }

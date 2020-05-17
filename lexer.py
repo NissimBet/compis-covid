@@ -9,6 +9,8 @@
 
 import ply.lex as lex
 
+from AVAIL import avail
+
 # Rule to match reserved words and identifiers
 reserved = {
     'program'      : 'PROGRAM',
@@ -42,7 +44,6 @@ reserved = {
     'dataFrame'    : 'DATAFRAME',
     'bool'         : "BOOL",
 
-    # TODO Hay que implementar esto :-P
     'true'         : "TRUE",
     'false'        : "FALSE",
 
@@ -67,12 +68,11 @@ tokens = [
              'DIFF',
              'CTE_F',
              'CTE_I',
-             'ID',
              'CTE_STRING',
              'CTE_CHAR',
              'OR',
-             'AND'
-             
+             'AND',
+             'ID',
          ] + list(reserved.values())
 
 literals = '+-*/=<>(){}:;,[]'
@@ -80,23 +80,55 @@ literals = '+-*/=<>(){}:;,[]'
 # Regular expression rules for simple tokens
 t_DIFF = r'<>'
 t_EQUAL = r'=='
-t_CTE_STRING = r'\".*\"'
-t_CTE_CHAR = r'\'.\''
+# t_CTE_STRING = r'\".*\"'
+# t_CTE_CHAR = r'\'.\''
 t_OR = r'\|\|'
 t_AND = r'\&\&'
 
+def t_FALSE(t):
+    r'false'
+    t.type = "FALSE"
+    const_dir = avail.set_const_var("bool", "false")
+    t.value = const_dir
+    return t
+
+def t_TRUE(t):
+    r'true'
+    t.type = "TRUE"
+    const_dir = avail.set_const_var("bool", "true")
+    t.value = const_dir
+    return t
 
 # Expression rule to detect and convert floating point numbers
 def t_CTE_F(t):
     r'(\d+[.])\d+'
-    t.value = float(t.value)
+    const_dir = avail.set_const_var("float", str(t.value))
+    t.value = const_dir
     return t
 
+def t_DATAFRAME(t):
+    r'dataframe'
+    const_dir = avail.set_const_var("dataframe", t.value)
+    t.value = const_dir
+    return t
 
 # A regular expression rule with some action code
 def t_CTE_I(t):
     r'\d+'
-    t.value = int(t.value)
+    const_dir = avail.set_const_var("int", str(t.value))
+    t.value = const_dir
+    return t
+
+def t_CTE_STRING(t):
+    r'\".*\"'
+    const_dir = avail.set_const_var("string", t.value)
+    t.value = const_dir
+    return t
+
+def t_CTE_CHAR(t):
+    r'\'.\''
+    const_dir = avail.set_const_var("char", t.value)
+    t.value = const_dir
     return t
 
 
