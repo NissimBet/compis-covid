@@ -24,10 +24,10 @@ class AVAIL:
         # self.counter = 0
         self.data_types = [("int" ,100), ("float" ,100), ("char" ,100), ("string" ,100), ("bool" ,100), ("dataFrame" ,100)]
         self.types["global"]["non_temp"] = {self.data_types[x][0]: { "min": 1000 + x * self.data_types[x][1], "max": 1000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
-        self.types["global"]["temp"] = {self.data_types[x][0]: { "min": 2000 + x * self.data_types[x][1], "max": 2000 + x * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
-        self.types["local"]["non_temp"] = {self.data_types[x][0]: { "min": 5000 + x * self.data_types[x][1], "max": 5000 + x * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
-        self.types["local"]["temp"] = {self.data_types[x][0]: { "min": 6000 + x * self.data_types[x][1], "max": 6000 + x * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
-        self.types["constant"]["value"] = {self.data_types[x][0]: { "min": 10000 + x * self.data_types[x][1], "max": 10000 + x * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        self.types["global"]["temp"] = {self.data_types[x][0]: { "min": 2000 + x * self.data_types[x][1], "max": 2000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        self.types["local"]["non_temp"] = {self.data_types[x][0]: { "min": 5000 + x * self.data_types[x][1], "max": 5000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        self.types["local"]["temp"] = {self.data_types[x][0]: { "min": 6000 + x * self.data_types[x][1], "max": 6000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        self.types["constant"]["value"] = {self.data_types[x][0]: { "min": 10000 + x * self.data_types[x][1], "max": 10000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
         self.dir_to_var = {}
         self.const_to_dir = {}
         self.dir_to_const = {}
@@ -72,15 +72,19 @@ class AVAIL:
 
     def reset_locals(self):
         def reset(var_type: str):
+            count = 0
             for val_dir in self.types.get("local").get(var_type):
                 counter = self.types.get("local").get(var_type).get(val_dir)["counter"]
                 minim = self.types.get("local").get(var_type).get(val_dir)["min"]
                 maxim = self.types.get("local").get(var_type).get(val_dir)["max"]
-                for index in range(minim, counter):
-                    self.dir_to_var.pop(str(minim + index))
+                for index in range(minim, minim + counter):
+                    self.dir_to_var.pop(str(index), None)
+                    count += 1
                 self.types.get("local").get(var_type).get(val_dir)["counter"] = 0
+            return count
+
         reset("non_temp")
-        reset("temp")
+        return reset("temp")
 
     def set_const_var(self, const_type: str, const_val: Any):
         if const_type in [x[0] for x in self.data_types]:

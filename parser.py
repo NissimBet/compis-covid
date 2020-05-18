@@ -165,14 +165,19 @@ def p_declare_func(p):
         print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
     else:
         global_context.set_function(p[-1])
-        avail.reset_locals()
+        # avail.reset_locals()
 
 
 # function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(p):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
-    global_context.function.pop()
-    avail.reset_locals()
+    function = global_context.get_function()
+    function_name = global_context.function.pop()
+    # del global_context.function_table.table[global_context.function.top()].variables
+    global_context.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
+    temps = avail.reset_locals()
+    # global_context.function_table.table[function_name].temps_used = temps
+    function.temps_used = temps
 
 
 def p_function_1(p):
@@ -871,5 +876,5 @@ else:
 # print(global_context.operations)
 
 # quads display
-for quad in range(len(global_context.quadruples)):
-    print(quad, global_context.quadruples[quad])
+# for quad in range(len(global_context.quadruples)):
+#     print(quad, global_context.quadruples[quad])

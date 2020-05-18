@@ -9,6 +9,7 @@ class Function(object):
     parameters: List[Variable]
     variables: VariableTable
     quad_number: int
+    temps_used: int
 
     def __init__(self, name: str,
                  return_type: str,
@@ -21,6 +22,7 @@ class Function(object):
         self.parameters = parameters
         self.variables = VariableTable()
         self.quad_number = quad_number
+        self.temps_used = 0
 
     def add_variable(self, var: Variable) -> bool:
         if var in self.parameters or self.variables.is_variable_defined(var.name):
@@ -43,15 +45,15 @@ class Function(object):
 class FunctionTable(object):
     def __init__(self):
         self.__table: Dict[str, Function] = {
-            "mean": Function("mean", "float"),
-            "mode": Function("mode", "float"),
-            "variance": Function("variance", "float"),
-            "normal": Function("normal", "float"),
-            "gamma": Function("gamma", "float"),
-            "graph": Function("graph", "float"),
-            "normal_graph": Function("normal_graph", "float"),
-            "cov": Function("cov", "float"),
-            "scatter": Function("scatter", "float"),
+            # "mean": Function("mean", "float"),
+            # "mode": Function("mode", "float"),
+            # "variance": Function("variance", "float"),
+            # "normal": Function("normal", "float"),
+            # "gamma": Function("gamma", "float"),
+            # "graph": Function("graph", "float"),
+            # "normal_graph": Function("normal_graph", "float"),
+            # "cov": Function("cov", "float"),
+            # "scatter": Function("scatter", "float"),
         }
 
     @property

@@ -34,6 +34,10 @@ class Quadruple:
         NOT_EQUAL = "NEQ"
         LOGIC_AND = "LAND"
         LOGIC_OR = "LOR"
+        GO_SUB = "GOSUB"
+        ERA = "ERA"
+        PARAMETER = "PARAM"
+        END_FUNC = "ENDFUNC"
 
     @staticmethod
     def get_operator_name(name: str):
