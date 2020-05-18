@@ -52,15 +52,15 @@ class Function(object):
 class FunctionTable(object):
     def __init__(self):
         self.__table: Dict[str, Function] = {
-            "mean": Function("mean", "float"),
-            "mode": Function("mode", "float"),
-            "variance": Function("variance", "float"),
-            "normal": Function("normal", "float"),
-            "gamma": Function("gamma", "float"),
-            "graph": Function("graph", "float"),
-            "normal_graph": Function("normal_graph", "float"),
-            "cov": Function("cov", "float"),
-            "scatter": Function("scatter", "float"),
+            # "mean": Function("mean", "float"),
+            # "mode": Function("mode", "float"),
+            # "variance": Function("variance", "float"),
+            # "normal": Function("normal", "float"),
+            # "gamma": Function("gamma", "float"),
+            # "graph": Function("graph", "float"),
+            # "normal_graph": Function("normal_graph", "float"),
+            # "cov": Function("cov", "float"),
+            # "scatter": Function("scatter", "float"),
         }
 
     @property

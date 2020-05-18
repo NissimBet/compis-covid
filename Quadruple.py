@@ -38,6 +38,8 @@ class Quadruple:
         ERA = "ERA"
         PARAMETER = "PARAM"
         END_FUNC = "ENDFUNC"
+        WRITE = "WRITE"
+        READ = "READ"
 
     @staticmethod
     def get_operator_name(name: str):

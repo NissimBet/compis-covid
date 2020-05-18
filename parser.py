@@ -198,23 +198,23 @@ def p_return_type(p):
     global_context.set_type(p[1])
 
 
+def p_add_param(p):
+    """add_param    : """
+    var_type = global_context.var_type
+    var_name = p[-1][0]
+    var_dim = p[-1][1]
+    global_context.add_function_parameter(Variable(var_type, var_name, var_dim))
+
+
 # TIPO 'id' (',' TIPO 'id')*
 def p_parameters(p):
-    """parameters       : tipo id_completo parameters_1
+    """parameters       : tipo set_var_type id_completo add_param parameters_1
                         | epsilon"""
-    if len(p) > 2:
-        if not global_context.add_function_parameter(Variable(p[1], p[2][0], p[2][1])):
-            print(
-                    f"Error de Sintaxis. Linea {p.lineno(2)}. No se pudo declarar el parametro {p[2]}. Ya esta declarado en el scope")
 
 
 def p_parameters_1(p):
-    """parameters_1     : ',' tipo id_completo parameters_1
+    """parameters_1     : ',' tipo set_var_type id_completo add_param parameters_1
                         | epsilon"""
-    if len(p) > 2:
-        if not global_context.add_function_parameter(Variable(p[2], p[3][0], p[3][1])):
-            print(
-                    f"Error de Sintaxis. Linea {p.lineno(3)}. No se pudo declarar el parametro {p[3]}. Ya esta declarado en el scope")
 
 
 def p_statement(p):
@@ -266,28 +266,71 @@ def p_return(p):
         print(f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
 
 
+def p_set_func(p):
+    """set_func     :"""
+    global_context.operations.add_separator()
+    global_context.func_calls.push(p[-1])
+
+
+def p_check_read_param(p):
+    """check_read_param  : """
+    var = global_context.get_variable(p[-1][0])
+    if var:
+        global_context.create_quad(Quadruple.OperationType.READ, "", "", var.direction)
+    else:
+        print(f"Error. Variable {p[-1]} not declared in line {p.lineno(-1)}")
+
+
+def p_read_param(p):
+    """read_param     : id_completo check_read_param read_param_1"""
+
+
+def p_read_param_1(p):
+    """read_param_1    : ',' id_completo check_read_param read_param_1
+                         | epsilon"""
+
+
 # read ( LISTA_ID )
 def p_read(p):
-    """read     : READ '(' lista_id ')' """
-    pass
+    """read     : READ set_func '(' read_param ')' """
+    global_context.func_calls.pop()
+    global_context.operations.remove_separator()
+    p[0] = p[1]
+
+
+def p_check_write_param(p):
+    """check_write_param  : """
+    var_name = global_context.operands.pop()
+    var_type = global_context.types.pop()
+
+    global_context.create_quad(Quadruple.OperationType.WRITE, "", "", var_name)
+
+
+def p_write_param(p):
+    """write_param     : logic_comp check_write_param write_param_1"""
+
+
+def p_write_param_1(p):
+    """write_param_1    : ',' logic_comp check_write_param write_param_1
+                        | epsilon"""
 
 
 # write '(' ( EXPRESION | string_var )+ ')'
 def p_write(p):
-    """write    :  WRITE '(' write_1 write_2 ')' """
+    """write    :  WRITE set_func '(' write_param ')' """
     pass
 
 
-def p_write_1(p):
-    """write_1  : logic_comp
-                | string_var """
-    pass
-
-
-def p_write_2(p):
-    """write_2  : ',' write_1 write_2
-                | epsilon """
-    pass
+# def p_write_1(p):
+#     """write_1  : logic_comp
+#                 | string_var """
+#     pass
+#
+#
+# def p_write_2(p):
+#     """write_2  : ',' write_1 write_2
+#                 | epsilon """
+#     pass
 
 
 # load ( id , ruta_acceso , num_var , num_var )
@@ -494,13 +537,14 @@ def p_called_func(p):
     """called_func  : """
     f_name = p[-1]
     if f_name in global_context.function_table.table:
+        global_context.operations.add_separator()
         global_context.func_calls.push(f_name)
         global_context.param_counter.push(0)
         function_size = global_context.get_function().count_vars()
         for var_type, var_nums in function_size.items():
             global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
     else:
-        print(f"Syntax Error, function not defined {f_name}")
+        print(f"Syntax Error, function not defined {f_name} in line {p.lineno(-1)}")
 
 
 def p_func_call(p):
@@ -511,53 +555,40 @@ def p_func_call(p):
         print("No se pudo crear el cuadruplo")
     f_name = global_context.func_calls.pop()
     f_params = global_context.param_counter.pop()
+    global_context.operations.remove_separator()
     if len(global_context.function_table.function(f_name).parameters) != f_params:
         print(f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
     p[0] = p[1]
 
 
-def p_func_call_1(p):
-    """func_call_1  : logic_comp func_call_2
-                    | epsilon """
-    if p[1]:
-        function_name = global_context.func_calls.top()
-        function = global_context.function_table.function(function_name)
-        if global_context.param_counter.top() < len(function.parameters):
-            vtype = global_context.types.pop()
-            var = global_context.operands.pop()
-            if vtype == function.parameters[global_context.param_counter.top()].type:
-                global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", global_context.param_counter.top())
-                print(f"Parametro encontrado {var} en funcion {function.name}")
-            else:
-                print(f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+def p_check_param(p):
+    """check_param : """
+    function_name = global_context.func_calls.top()
+    function = global_context.function_table.function(function_name)
+    if global_context.param_counter.top() < len(function.parameters):
+        vtype = global_context.types.pop()
+        var = global_context.operands.pop()
+        if vtype == function.parameters[global_context.param_counter.top()].type:
+            global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", global_context.param_counter.top())
+            print(f"Parametro encontrado {var} en funcion {function.name}")
         else:
-            print(f"Error, too many parameters on function {function.name}")
-        c = global_context.param_counter.pop()
-        c += 1
-        global_context.param_counter.push(c)
+            print(
+                f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+    else:
+        print(f"Error, too many parameters on function {function.name}")
+    c = global_context.param_counter.pop()
+    c += 1
+    global_context.param_counter.push(c)
+
+
+def p_func_call_1(p):
+    """func_call_1  : logic_comp check_param func_call_2
+                    | epsilon """
 
 
 def p_func_call_2(p):
-    """func_call_2  : ',' logic_comp func_call_2
+    """func_call_2  : ',' logic_comp check_param func_call_2
                     | epsilon """
-    if p[1]:
-        function_name = global_context.func_calls.top()
-        function = global_context.function_table.function(function_name)
-        if global_context.param_counter.top() < len(function.parameters):
-            vtype = global_context.types.pop()
-            var = global_context.operands.pop()
-            if vtype == function.parameters[global_context.param_counter.top()].type:
-                global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "",
-                                           global_context.param_counter.top())
-                print(f"Parametro encontrado {var} en funcion {function.name}")
-            else:
-                print(
-                    f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
-        else:
-            print(f"Error, too many parameters on function {function.name}")
-        c = global_context.param_counter.pop()
-        c += 1
-        global_context.param_counter.push(c)
 
 
 def p_logic_comp_cuad(p):
@@ -818,9 +849,9 @@ function void there (int a, int b) {
     b = a + 10;
 }
 
-main () 
+main ()
 var int: x, c, d;
-    float: xx, yy; 
+    float: xx, yy;
 {
     a = d + c;
     x = (a + c) * d / d;
@@ -830,18 +861,19 @@ var int: x, c, d;
     } else {
         t = f || f;
     }
-    
+
     while (x > c) do {
         t = b + a;
     }
-    
-    hello(xx,yy, x, c);
-    
+
+    hello(xx,yy, x + c, c + x);
+
     from a = a to b do {
         b = x + c;
     }
-    
-    
+
+    write(xx, yy, x);
+
     return (a);
 }
 """
@@ -861,6 +893,13 @@ var int: x, c, d;
 # }
 # '''
 
+# data = '''
+# program patito;
+# var float: x, y, z;
+# main() {
+#     write(x,y,z);
+# }
+# '''
 
 logging.basicConfig(
         level=logging.DEBUG,
