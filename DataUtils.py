@@ -57,6 +57,7 @@ class ParsingContext(object):
     def declare_function(self, f_name: str, f_type: Optional[str]) -> bool:
         if f_name not in self.function_table.table:
             quad = self.quad_counter
+            print(f"QUAD {f_name} is {quad}")
             self.function_table.declare_function(f_name, f_type if f_type else self.var_type, quad)
             self.set_function(f_name)
             return True

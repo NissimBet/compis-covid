@@ -163,8 +163,6 @@ def p_declare_func(p):
     """declare_func : """
     if not global_context.declare_function(p[-1], None):
         print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
-    else:
-        global_context.set_function(p[-1])
         # avail.reset_locals()
 
 
@@ -176,7 +174,7 @@ def p_function(p):
     # del global_context.function_table.table[global_context.function.top()].variables
     global_context.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
     temps = avail.reset_locals()
-    global_context.function_table.erase_var_table(global_context.function.top())
+    global_context.function_table.erase_var_table(function_name)
     function.temps_used = temps
 
 
@@ -508,7 +506,7 @@ def p_called_func(p):
 def p_func_call(p):
     """func_call    : std_methods called_func '(' func_call_1 ')'  """
     try:
-        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "", global_context.get_function().quad_number + 1)
+        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "", global_context.function_table.function(p[1]).quad_number + 1)
     except IndexError:
         print("No se pudo crear el cuadruplo")
     f_name = global_context.func_calls.pop()
