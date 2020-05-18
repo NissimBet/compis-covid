@@ -176,7 +176,7 @@ def p_function(p):
     # del global_context.function_table.table[global_context.function.top()].variables
     global_context.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
     temps = avail.reset_locals()
-    # global_context.function_table.table[function_name].temps_used = temps
+    global_context.function_table.erase_var_table(global_context.function.top())
     function.temps_used = temps
 
 
@@ -498,6 +498,9 @@ def p_called_func(p):
     if f_name in global_context.function_table.table:
         global_context.func_calls.push(f_name)
         global_context.param_counter.push(0)
+        function_size = global_context.get_function().count_vars()
+        for var_type, var_nums in function_size.items():
+            global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
     else:
         print(f"Syntax Error, function not defined {f_name}")
 
@@ -505,7 +508,7 @@ def p_called_func(p):
 def p_func_call(p):
     """func_call    : std_methods called_func '(' func_call_1 ')'  """
     try:
-        global_context.create_quad(Quadruple.OperationType.GOTO, "", "", global_context.get_function().quad_number + 1)
+        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "", global_context.get_function().quad_number + 1)
     except IndexError:
         print("No se pudo crear el cuadruplo")
     f_name = global_context.func_calls.pop()
@@ -525,6 +528,7 @@ def p_func_call_1(p):
             vtype = global_context.types.pop()
             var = global_context.operands.pop()
             if vtype == function.parameters[global_context.param_counter.top()].type:
+                global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", global_context.param_counter.top())
                 print(f"Parametro encontrado {var} en funcion {function.name}")
             else:
                 print(f"Type Error on line {p.lineno(1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
@@ -545,6 +549,8 @@ def p_func_call_2(p):
             vtype = global_context.types.pop()
             var = global_context.operands.pop()
             if vtype == function.parameters[global_context.param_counter.top()].type:
+                global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "",
+                                           global_context.param_counter.top())
                 print(f"Parametro encontrado {var} en funcion {function.name}")
             else:
                 print(
@@ -802,7 +808,7 @@ program test;
 var int: a ,b;
 bool: t, f;
 
-function int hello (float x, float y[1]) {
+function int hello (float x, float y[1], int re, int be) {
     a = 1;
     b = 2;
     t = true;
@@ -831,7 +837,7 @@ var int: x, c, d;
         t = b + a;
     }
     
-    hello(xx,yy);
+    hello(xx,yy, x, c);
     
     from a = a to b do {
         b = x + c;
@@ -876,5 +882,8 @@ else:
 # print(global_context.operations)
 
 # quads display
-# for quad in range(len(global_context.quadruples)):
-#     print(quad, global_context.quadruples[quad])
+for quad in range(len(global_context.quadruples)):
+    print(quad, global_context.quadruples[quad])
+
+# for func in global_context.function_table.table.values():
+#     print(func.name, func.count_vars())
