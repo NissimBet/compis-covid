@@ -201,19 +201,18 @@ def p_return_type(p):
 def p_add_param(p):
     """add_param    : """
     var_type = global_context.var_type
-    var_name = p[-1][0]
-    var_dim = p[-1][1]
-    global_context.add_function_parameter(Variable(var_type, var_name, var_dim))
+    var_name = p[-1]
+    global_context.add_function_parameter(Variable(var_type, var_name, None))
 
 
 # TIPO 'id' (',' TIPO 'id')*
 def p_parameters(p):
-    """parameters       : tipo set_var_type id_completo add_param parameters_1
+    """parameters       : tipo set_var_type ID add_param parameters_1
                         | epsilon"""
 
 
 def p_parameters_1(p):
-    """parameters_1     : ',' tipo set_var_type id_completo add_param parameters_1
+    """parameters_1     : ',' tipo set_var_type ID add_param parameters_1
                         | epsilon"""
 
 
@@ -318,25 +317,72 @@ def p_write_param_1(p):
 # write '(' ( EXPRESION | string_var )+ ')'
 def p_write(p):
     """write    :  WRITE set_func '(' write_param ')' """
-    pass
+    global_context.func_calls.pop()
+    global_context.operations.remove_separator()
 
 
-# def p_write_1(p):
-#     """write_1  : logic_comp
-#                 | string_var """
-#     pass
+# def p_ver_load_id(p):
+#     """ver_load_id  :"""
+#     var = global_context.get_variable(p[-1][0])
+#     if var:
+#         if var.type == "dataFrame":
+#             global_context.operands.push(var.name)
+#             global_context.types.push(var.type)
+#         else:
+#             print(f"Error. Variable {var.name} is not of type dataFrame")
+#     else:
+#         print(f"ERROR. Variable not declared {p[-1][0]}")
 #
 #
-# def p_write_2(p):
-#     """write_2  : ',' write_1 write_2
-#                 | epsilon """
-#     pass
+# def p_ver_load_path(p):
+#     """ver_load_path  :"""
+#     var = global_context.get_variable(p[-1][0])
+#     if var:
+#         if var.type == "dataFrame":
+#             global_context.operands.push(var.name)
+#             global_context.types.push(var.type)
+#         else:
+#             print(f"Error. Variable {var.name} is not of type dataFrame")
+#     else:
+#         print(f"ERROR. Variable not declared {p[-1][0]}")
 
-
-# load ( id , ruta_acceso , num_var , num_var )
+# load ( id , ruta_acceso , id , id )
 def p_load(p):
-    """load     : LOAD '(' ID ',' string_var ',' string_var ',' num_var ')' """
-    pass
+    """load     : LOAD '(' ID ',' string_var ',' ID ',' ID ')' """
+    try:
+        var_name = p[3]
+        path = p[5]
+
+        num_lines_var_name = p[7]
+        num_vars_var_name = p[9]
+
+        var = global_context.get_variable(var_name)
+        num_lines = global_context.get_variable(num_lines_var_name)
+        num_vars = global_context.get_variable(num_vars_var_name)
+
+        if var and num_lines and num_vars:
+            if var.type == "dataFrame":
+                if num_lines.type == "int" and num_vars.type == "int":
+                    global_context.create_quad(Quadruple.OperationType.FILE_SEARCH, path, "", var.direction)
+                    global_context.create_quad(Quadruple.OperationType.LINES, var.direction, "", num_lines.direction)
+                    global_context.create_quad(Quadruple.OperationType.COLS, var.direction, "", num_vars.direction)
+                else:
+                    if num_lines.type == "int":
+                        print(f"ERROR in line {p.lineno(7)}. Expected int, got {num_lines.type}")
+                    if num_vars.type == "int":
+                        print(f"ERROR in line {p.lineno(9)}. Expected int, got {num_vars.type}")
+            else:
+                print(f"ERROR in line {p.lineno(3)}. Expected type dataFrame, got {var.type}")
+        else:
+            if not var:
+                print(f"ERROR in line {p.lineno(3)}. Variable not declared {p[3]}")
+            if not num_lines:
+                print(f"ERROR in line {p.lineno(7)}. Variable not declared {p[7]}")
+            if not num_vars:
+                print(f"ERROR in line {p.lineno(9)}. Variable not declared {p[9]}")
+    except IndexError:
+        print(f"ERROR in line {p.lineno(0)}. Too little variables provided")
+
 
 
 def p_declare_main(p):
@@ -837,7 +883,7 @@ program test;
 var int: a ,b;
 bool: t, f;
 
-function int hello (float x, float y[1], int re, int be) {
+function int hello (float x, float y, int re, int be) {
     a = 1;
     b = 2;
     t = true;
@@ -850,8 +896,9 @@ function void there (int a, int b) {
 }
 
 main ()
-var int: x, c, d;
+var int: x, c, d, y;
     float: xx, yy;
+    dataFrame: frame;
 {
     a = d + c;
     x = (a + c) * d / d;
@@ -874,6 +921,8 @@ var int: x, c, d;
 
     write(xx, yy, x);
 
+    load(frame, "i", x, y);
+    
     return (a);
 }
 """
