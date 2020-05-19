@@ -334,10 +334,50 @@ def p_write(p):
 
 
 # load ( id , ruta_acceso , num_var , num_var )
-def p_load(p):
-    """load     : LOAD '(' ID ',' string_var ',' string_var ',' num_var ')' """
-    pass
+# def p_load(p):
+#     """load     : LOAD '(' ID ',' string_var ',' string_var ',' num_var ')' """
+#     pass
 
+def p_check_ruta(p):
+    """check_ruta   : """
+    ruta = p[-1]
+    print("Ruta", ruta)
+    if ruta:
+        global_context.create_quad(Quadruple.OperationType.LOAD, "", "", ruta)
+    else:
+        print(f"Error. Path {p[-1]} not declared in line {p.lineno(-1)}")
+  
+
+def p_check_load_param(p):
+    """check_load_param : """
+    var = global_context.get_variable(p[-1][0])
+    print("Var", var)
+    if var:
+        global_context.create_quad(Quadruple.OperationType.LOAD, "", "", var.direction)
+    else:
+        print(f"Error. Variable {p[-1]} not declared in line {p.lineno(-1)}")
+  
+
+def p_load_param(p):
+    """load_param   : id_completo check_load_param load_param_1"""
+
+def p_load_param_1(p):
+    """load_param_1 : ',' CTE_STRING check_ruta load_param_2"""
+
+def p_load_param_2(p):
+    """load_param_2 : ',' id_completo check_load_param load_param_3"""
+
+def p_load_param_3(p):
+    """load_param_3 : ',' id_completo check_load_param"""
+
+# def p_load_param_2(p):
+#     """load_param_2 : ',' id_completo check_load_param ',' id_completo check_load_param"""
+
+def p_load(p):
+    """load     : LOAD set_func '(' load_param ')' """
+    global_context.func_calls.pop()
+    global_context.operations.remove_separator()
+    p[0] = p[1]
 
 def p_declare_main(p):
     """declare_main : """
@@ -850,8 +890,9 @@ function void there (int a, int b) {
 }
 
 main ()
-var int: x, c, d;
+var int: x, c, d, ren, col;
     float: xx, yy;
+    dataFrame: myData;
 {
     a = d + c;
     x = (a + c) * d / d;
@@ -861,6 +902,9 @@ var int: x, c, d;
     } else {
         t = f || f;
     }
+ 
+    load(myData, "miRuta", ren, col);
+   
 
     while (x > c) do {
         t = b + a;

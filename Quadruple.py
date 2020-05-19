@@ -40,6 +40,7 @@ class Quadruple:
         END_FUNC = "ENDFUNC"
         WRITE = "WRITE"
         READ = "READ"
+        LOAD = "LOAD"
 
     @staticmethod
     def get_operator_name(name: str):
