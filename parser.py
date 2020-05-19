@@ -321,32 +321,6 @@ def p_write(p):
     global_context.operations.remove_separator()
 
 
-# def p_ver_load_id(p):
-#     """ver_load_id  :"""
-#     var = global_context.get_variable(p[-1][0])
-#     if var:
-#         if var.type == "dataFrame":
-#             global_context.operands.push(var.name)
-#             global_context.types.push(var.type)
-#         else:
-#             print(f"Error. Variable {var.name} is not of type dataFrame")
-#     else:
-#         print(f"ERROR. Variable not declared {p[-1][0]}")
-#
-#
-# def p_ver_load_path(p):
-#     """ver_load_path  :"""
-#     var = global_context.get_variable(p[-1][0])
-#     if var:
-#         if var.type == "dataFrame":
-#             global_context.operands.push(var.name)
-#             global_context.types.push(var.type)
-#         else:
-#             print(f"Error. Variable {var.name} is not of type dataFrame")
-#     else:
-#         print(f"ERROR. Variable not declared {p[-1][0]}")
-
-# load ( id , ruta_acceso , id , id )
 def p_load(p):
     """load     : LOAD '(' ID ',' string_var ',' ID ',' ID ')' """
     try:
@@ -382,7 +356,6 @@ def p_load(p):
                 print(f"ERROR in line {p.lineno(9)}. Variable not declared {p[9]}")
     except IndexError:
         print(f"ERROR in line {p.lineno(0)}. Too little variables provided")
-
 
 
 def p_declare_main(p):
@@ -896,9 +869,9 @@ function void there (int a, int b) {
 }
 
 main ()
-var int: x, c, d, y;
+var int: x, c, d, y, ren, col;
     float: xx, yy;
-    dataFrame: frame;
+    dataFrame: myData, frame;
 {
     a = d + c;
     x = (a + c) * d / d;
@@ -908,6 +881,9 @@ var int: x, c, d, y;
     } else {
         t = f || f;
     }
+ 
+    load(myData, "miRuta", ren, col);
+   
 
     while (x > c) do {
         t = b + a;
