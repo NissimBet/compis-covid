@@ -30,8 +30,9 @@ class Variable(object):
     def init_dimensions(self, bounds: List[int]):
         if not bounds or len(bounds) == 0:
             self.dimensions = []
+            self.size = 1
             return
-        print(bounds)
+
         r = 1
         offset = 0
         dimensions: List[Dimension] = []

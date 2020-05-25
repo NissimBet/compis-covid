@@ -115,10 +115,12 @@ class ParsingContext(object):
 
         if not dimensions:
             dimensions = []
-        dims = [int(avail.get_val_from_dir(val)) for val in list(dimensions)]
+        dims = [int(avail.get_val_from_dir(val)) for val in list(dimensions) if val is not None]
 
-        if not self.function_table.declare_variable(self.function.top(),
-                                                    Variable(self.var_type, var_name, dims, var_direction)):
+        new_var = Variable(self.var_type, var_name, dims, var_direction)
+        avail.set_size(new_var.type, new_var.size, is_global)
+
+        if not self.function_table.declare_variable(self.function.top(), new_var):
             return False
         return True
 
@@ -130,6 +132,14 @@ class ParsingContext(object):
 
     def get_function(self):
         return self.function_table.function(self.function.top())
+
+    def end_function(self):
+        function = self.get_function()
+        function_name = self.function.pop()
+        self.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
+        temps = avail.reset_locals()
+        self.function_table.erase_var_table(function_name)
+        function.temps_used = temps
 
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)

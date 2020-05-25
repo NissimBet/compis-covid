@@ -87,7 +87,7 @@ def p_declare_var(p):
 
 # lista_id : id (, id)*
 def p_lista_id(p):
-    """lista_id     : id_completo declare_var lista_id_1"""
+    """lista_id     : declare_id declare_var lista_id_1"""
     if p[2] is not None:
         p[0] = [p[1]] + p[2]
     else:
@@ -95,13 +95,32 @@ def p_lista_id(p):
 
 
 def p_lista_id_1(p):
-    """lista_id_1   : ',' id_completo declare_var lista_id_1
+    """lista_id_1   : ',' declare_id declare_var lista_id_1
                     | epsilon"""
     if len(p) > 2:
         if p[3] is not None:
             p[0] = [p[2]] + p[3]
         else:
             p[0] = [p[2]]
+
+
+def p_declare_id(p):
+    """declare_id   : ID declare_id_1"""
+    p[0] = p[1], p[2]
+
+
+def p_declare_id_1(p):
+    """declare_id_1 : '[' CTE_I ']' declare_id_2
+                    | epsilon"""
+    if p[1]:
+        p[0] = (p[2], p[4])
+
+
+def p_declare_id_2(p):
+    """declare_id_2 : '[' CTE_I ']'
+                    | epsilon"""
+    if len(p) > 2:
+        p[0] = p[2]
 
 
 # id dimension?
@@ -157,13 +176,7 @@ def p_declare_func(p):
 # function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(_):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
-    function = global_context.get_function()
-    function_name = global_context.function.pop()
-    # del global_context.function_table.table[global_context.function.top()].variables
-    global_context.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
-    temps = avail.reset_locals()
-    global_context.function_table.erase_var_table(function_name)
-    function.temps_used = temps
+    global_context.end_function()
 
 
 def p_function_1(_):
@@ -801,7 +814,7 @@ parser = yacc.yacc(start="programa")
 
 data = """
 program test;
-var int: a ,b;
+var int: a, xyz[20] ,b;
 bool: t, f;
 
 function int hello (float x, float y, int re, int be) {
@@ -903,4 +916,4 @@ for quad in range(len(global_context.quadruples)):
 # for _, function in global_context.function_table.table.items():
 #     print(function.name)
 #     for var in function.variables.table.values():
-#         print(f"\t{[dim.__str__() for dim in var.dimensions]}")
+#         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
