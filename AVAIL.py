@@ -115,5 +115,11 @@ class AVAIL:
     def get_const_type(self, mem_dir: int):
         return self.dir_to_const[str(mem_dir)]['type']
 
+    def get_val_from_dir(self, var_dir: int):
+        if str(var_dir) in self.dir_to_const:
+            return self.dir_to_const[str(var_dir)]["value"]
+        elif str(var_dir) in self.dir_to_var:
+            return self.dir_to_var[str(var_dir)]
+
 
 avail = AVAIL()

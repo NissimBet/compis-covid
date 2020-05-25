@@ -27,6 +27,8 @@ class ParsingContext(object):
     func_calls: Stack
     param_counter: Stack
 
+    dimensions: Stack
+
     def __init__(self):
         self.function = Stack()
         self.var_type = ''
@@ -39,6 +41,7 @@ class ParsingContext(object):
         self.function_table = FunctionTable()
         self.param_counter = Stack()
         self.func_calls = Stack()
+        self.dimensions = Stack()
 
     @property
     def quad_counter(self):
@@ -104,14 +107,18 @@ class ParsingContext(object):
         else:
             print(f"Error de sintaxis. Type Error")
 
-    def declare_variable(self, var_name: str, dimensions: Tuple[int, int], is_global: bool) -> bool:
+    def declare_variable(self, var_name: str, dimensions: [], is_global: bool) -> bool:
         if is_global:
             var_direction = avail.get_next_global(self.var_type, False, var_name)
         else:
             var_direction = avail.get_next_local(self.var_type, False, var_name)
 
+        if not dimensions:
+            dimensions = []
+        dims = [int(avail.get_val_from_dir(val)) for val in list(dimensions)]
+
         if not self.function_table.declare_variable(self.function.top(),
-                                                    Variable(self.var_type, var_name, dimensions, var_direction)):
+                                                    Variable(self.var_type, var_name, dims, var_direction)):
             return False
         return True
 

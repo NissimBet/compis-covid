@@ -25,9 +25,9 @@ global_context.set_function("global")
 global_context.declare_function('global', 'void')
 
 
-def p_goto_main(p):
+def p_goto_main(_):
     """goto_main    :"""
-    quad_index = global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
+    global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
     global_context.create_jump()
 
 
@@ -38,21 +38,19 @@ def p_programa(p):
     pass
 
 
-def p_programa_1(p):
+def p_programa_1(_):
     """programa_1   : vars goto_main programa_2
                     | goto_main programa_2 """
-    # print("Programa ", p[1])
-    pass
 
 
-def p_programa_2(p):
+def p_programa_2(_):
     """programa_2   : function programa_2
                     | epsilon"""
     pass
 
 
 # var (tipo : lista_id ;)+
-def p_vars(p):
+def p_vars(_):
     """vars         : VAR vars_1 """
     pass
 
@@ -63,10 +61,8 @@ def p_set_var_type(p):
     global_context.set_type(p[-1])
 
 
-def p_vars_1(p):
+def p_vars_1(_):
     """vars_1       : tipo set_var_type ':' lista_id ';' vars_2 """
-    # print("vars_1", p[1], p[4], p[6])
-    pass
 
 
 def p_vars_1_error(p):
@@ -74,10 +70,9 @@ def p_vars_1_error(p):
     print("Error de sintaxis en la declaración de variables. Línea ", p.lineno(5), ", Posición", p.lexpos(5))
 
 
-def p_vars_2(p):
+def p_vars_2(_):
     """vars_2       : vars_1
                     | epsilon """
-    pass
 
 
 def p_declare_var(p):
@@ -97,7 +92,6 @@ def p_lista_id(p):
         p[0] = [p[1]] + p[2]
     else:
         p[0] = [p[1]]
-    pass
 
 
 def p_lista_id_1(p):
@@ -108,7 +102,6 @@ def p_lista_id_1(p):
             p[0] = [p[2]] + p[3]
         else:
             p[0] = [p[2]]
-    pass
 
 
 # id dimension?
@@ -116,28 +109,23 @@ def p_id_completo(p):
     """id_completo      : ID id_completo_1"""
     # print("Id Completo",p[1], p[2])
     p[0] = p[1], p[2]
-    pass
 
 
 def p_id_completo_1(p):
     """id_completo_1    : dimension
                         | epsilon"""
-    # print("Id_completo_1 ", p[1])
     p[0] = p[1]
-    pass
 
 
-def p_id_completo_1_error(p):
+def p_id_completo_1_error(_):
     """id_completo_1    : error """
     print("Syntax error while declaring variable dimensions.")
-    pass
 
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
     """dimension    : '[' num_var ']' dimension_1 """
-    # print("dimension", p[1:4])
     p[0] = (p[2], p[4])
 
 
@@ -167,7 +155,7 @@ def p_declare_func(p):
 
 
 # function return_type ID ( parameters? ) vars? { bloque? }
-def p_function(p):
+def p_function(_):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
     function = global_context.get_function()
     function_name = global_context.function.pop()
@@ -178,16 +166,14 @@ def p_function(p):
     function.temps_used = temps
 
 
-def p_function_1(p):
+def p_function_1(_):
     """function_1   : parameters
                     | epsilon """
-    pass
 
 
-def p_function_2(p):
+def p_function_2(_):
     """function_2   : vars
                     | epsilon """
-    pass
 
 
 def p_return_type(p):
@@ -202,28 +188,27 @@ def p_add_param(p):
     """add_param    : """
     var_type = global_context.var_type
     var_name = p[-1]
-    global_context.add_function_parameter(Variable(var_type, var_name, None))
+    global_context.add_function_parameter(Variable(var_type, var_name, []))
 
 
 # TIPO 'id' (',' TIPO 'id')*
-def p_parameters(p):
+def p_parameters(_):
     """parameters       : tipo set_var_type ID add_param parameters_1
                         | epsilon"""
 
 
-def p_parameters_1(p):
+def p_parameters_1(_):
     """parameters_1     : ',' tipo set_var_type ID add_param parameters_1
                         | epsilon"""
 
 
-def p_statement(p):
+def p_statement(_):
     """statement    : condition
                     | loop
                     | statement_1 ';' """
-    pass
 
 
-def p_statement_1(p):
+def p_statement_1(_):
     """statement_1  : assignment
                     | func_call
                     | return
@@ -280,11 +265,11 @@ def p_check_read_param(p):
         print(f"Error. Variable {p[-1]} not declared in line {p.lineno(-1)}")
 
 
-def p_read_param(p):
+def p_read_param(_):
     """read_param     : id_completo check_read_param read_param_1"""
 
 
-def p_read_param_1(p):
+def p_read_param_1(_):
     """read_param_1    : ',' id_completo check_read_param read_param_1
                          | epsilon"""
 
@@ -297,7 +282,7 @@ def p_read(p):
     p[0] = p[1]
 
 
-def p_check_write_param(p):
+def p_check_write_param(_):
     """check_write_param  : """
     var_name = global_context.operands.pop()
     var_type = global_context.types.pop()
@@ -305,17 +290,17 @@ def p_check_write_param(p):
     global_context.create_quad(Quadruple.OperationType.WRITE, "", "", var_name)
 
 
-def p_write_param(p):
+def p_write_param(_):
     """write_param     : logic_comp check_write_param write_param_1"""
 
 
-def p_write_param_1(p):
+def p_write_param_1(_):
     """write_param_1    : ',' logic_comp check_write_param write_param_1
                         | epsilon"""
 
 
 # write '(' ( EXPRESION | string_var )+ ')'
-def p_write(p):
+def p_write(_):
     """write    :  WRITE set_func '(' write_param ')' """
     global_context.func_calls.pop()
     global_context.operations.remove_separator()
@@ -358,18 +343,18 @@ def p_load(p):
         print(f"ERROR in line {p.lineno(0)}. Too little variables provided")
 
 
-def p_declare_main(p):
+def p_declare_main(_):
     """declare_main : """
     global_context.declare_function('main', 'void')
     global_context.fill_quad()
 
 
-def p_main(p):
+def p_main(_):
     """main     : MAIN declare_main '(' ')' main_1 '{' bloque '}'  """
     pass
 
 
-def p_main_1(p):
+def p_main_1(_):
     """main_1   : vars
                 | epsilon """
     pass
@@ -387,31 +372,31 @@ def p_logic_comp_check(p):
 
 
 # if ( EXPRESION ) then { bloque? } ( else { bloque? } )?
-def p_condition(p):
+def p_condition(_):
     """condition    : IF '(' logic_comp logic_comp_check ')' THEN '{' condition_1 '}' condition_2 """
     global_context.fill_quad()
 
 
-def p_condition_1(p):
+def p_condition_1(_):
     """condition_1  : bloque
                     | epsilon """
     pass
 
 
-def p_go_else(p):
+def p_go_else(_):
     """go_else      : """
     global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
     global_context.fill_quad()
     global_context.create_jump()
 
 
-def p_condition_2(p):
+def p_condition_2(_):
     """condition_2  : ELSE go_else '{' condition_1 '}'
                     | epsilon"""
     pass
 
 
-def p_loop(p):
+def p_loop(_):
     """loop     : conditional_loop
                 | no_condition_loop """
     pass
@@ -428,13 +413,13 @@ def p_check_loop(p):
         global_context.create_jump()
 
 
-def p_while_return(p):
+def p_while_return(_):
     """while_return     : """
     global_context.create_jump()
 
 
 # while ( EXPRESION ) do { bloque? }
-def p_conditional_loop(p):
+def p_conditional_loop(_):
     """conditional_loop     : WHILE '(' while_return logic_comp check_loop ')' DO '{' conditional_loop_1 '}' """
     # global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, '/', '/', 'LINE')
     # quads display
@@ -444,7 +429,7 @@ def p_conditional_loop(p):
     global_context.fill_quad(end)
 
 
-def p_conditional_loop_1(p):
+def p_conditional_loop_1(_):
     """conditional_loop_1   : bloque
                             | epsilon """
     pass
@@ -460,13 +445,13 @@ def p_for_check_id(p):
         print(f"Sintax Error. Variable {p[-1][0]} not declared in line {p.lineno(-1)}")
 
 
-def p_for_assign(p):
+def p_for_assign(_):
     """for_assign   : """
     global_context.operations.push("=")
     global_context.create_operation_quad(["="])
 
 
-def p_for_compare(p):
+def p_for_compare(_):
     """for_compare  : """
     global_context.create_jump()
     global_context.operations.push("<")
@@ -478,7 +463,7 @@ def p_for_compare(p):
 
 
 # desde ID_COMPLETO = EXP to EXP hacer { ESTATUTO* }
-def p_no_condition_loop(p):
+def p_no_condition_loop(_):
     """no_condition_loop    : FROM id_completo for_check_id '=' exp for_assign TO exp for_compare DO '{' no_condition_loop_1 '}'  """
     end = global_context.jumpStack.pop()
     start = global_context.jumpStack.pop()
@@ -486,7 +471,7 @@ def p_no_condition_loop(p):
     global_context.fill_quad(end)
 
 
-def p_no_condition_loop_1(p):
+def p_no_condition_loop_1(_):
     """no_condition_loop_1  : bloque
                             | epsilon """
     pass
@@ -504,19 +489,6 @@ def p_string_var(p):
     """ string_var  : ID
                     | CTE_STRING """
     p[0] = p[1]
-
-
-def p_var(p):
-    """var      : ID var_1"""
-    p[0] = p[1]
-    # print("id?", p[1])
-
-
-def p_var_1(p):
-    """var_1    : '(' func_call_1 ')'
-                | dimension
-                | epsilon"""
-    # print("VAR", p[1])
 
 
 def p_var_cte(p):
@@ -569,14 +541,16 @@ def p_called_func(p):
 def p_func_call(p):
     """func_call    : std_methods called_func '(' func_call_1 ')'  """
     try:
-        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "", global_context.function_table.function(p[1]).quad_number + 1)
+        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "",
+                                   global_context.function_table.function(p[1]).quad_number + 1)
     except IndexError:
         print("No se pudo crear el cuadruplo")
     f_name = global_context.func_calls.pop()
     f_params = global_context.param_counter.pop()
     global_context.operations.remove_separator()
     if len(global_context.function_table.function(f_name).parameters) != f_params:
-        print(f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
+        print(
+            f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
     p[0] = p[1]
 
 
@@ -592,7 +566,7 @@ def p_check_param(p):
             print(f"Parametro encontrado {var} en funcion {function.name}")
         else:
             print(
-                f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+                    f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
     else:
         print(f"Error, too many parameters on function {function.name}")
     c = global_context.param_counter.pop()
@@ -600,27 +574,26 @@ def p_check_param(p):
     global_context.param_counter.push(c)
 
 
-def p_func_call_1(p):
+def p_func_call_1(_):
     """func_call_1  : logic_comp check_param func_call_2
                     | epsilon """
 
 
-def p_func_call_2(p):
+def p_func_call_2(_):
     """func_call_2  : ',' logic_comp check_param func_call_2
                     | epsilon """
 
 
-def p_logic_comp_cuad(p):
+def p_logic_comp_cuad(_):
     """logic_comp_cuad  : """
     global_context.create_operation_quad(["&&", "||"])
 
 
-def p_logic_comp(p):
+def p_logic_comp(_):
     """logic_comp       : expression logic_comp_cuad logic_comp_1"""
-    p[0] = p[1]
 
 
-def p_logic_comp_1(p):
+def p_logic_comp_1(_):
     """logic_comp_1     : logic_comp_ops expression logic_comp_cuad logic_comp_1
                         | epsilon"""
     pass
@@ -629,29 +602,18 @@ def p_logic_comp_1(p):
 def p_logic_comp_ops(p):
     """logic_comp_ops   : AND
                         | OR"""
-    p[0] = p[1]
     global_context.operations.push(p[1])
-    pass
 
 
 # ( EXP ) ( ( '>' | '<' | '==' | '<>' ) ( EXP ) )?
-def p_expression(p):
+def p_expression(_):
     """ expression      : exp expression_1 """
-    if p[2]:
-        # TODO hacer la comparacion
-        p[0] = p[2][1]
-        global_context.create_operation_quad([">", "<", "<>", "=="])
-    else:
-        p[0] = p[1]
+    global_context.create_operation_quad([">", "<", "<>", "=="])
 
 
-def p_expression_1(p):
+def p_expression_1(_):
     """expression_1     : comparison_ops exp
                         | epsilon"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2])
 
 
 def p_comparison_ops(p):
@@ -660,32 +622,21 @@ def p_comparison_ops(p):
                         | DIFF
                         | EQUAL """
     global_context.operations.push(p[1])
-    p[0] = p[1]
 
 
-def p_exp_cuad(p):
+def p_exp_cuad(_):
     """exp_cuad   : """
     global_context.create_operation_quad(["+", "-"])
 
 
 # TERMINO ( ( '+' | '-' ) TERMINO )*
-def p_exp(p):
+def p_exp(_):
     """exp      : termino exp_cuad exp_1 """
-    if p[2]:
-        p[0] = p[1]
-    else:
-        # TODO hacer multiplicacion
-        p[0] = p[1]
 
 
-def p_exp1(p):
+def p_exp1(_):
     """exp_1    : exp_2 termino exp_cuad exp_1
                 | epsilon"""
-    if len(p) > 2:
-        # TODO hacer multiplicacion o division
-        p[0] = p[2]
-    else:
-        p[0] = None
 
 
 def p_exp_2(p):
@@ -695,28 +646,19 @@ def p_exp_2(p):
     global_context.operations.push(p[1])
 
 
-def p_termino_vp(p):
+def p_termino_vp(_):
     """termino_vp    : """
     global_context.create_operation_quad(["*", "/"])
 
 
 # FACTOR ( ( '*' | '/' ) FACTOR )*
-def p_termino(p):
+def p_termino(_):
     """termino      : factor termino_vp termino_1 """
-    # print("Termino", p[1])
-    if p[2]:
-        p[0] = p[1]
-    else:
-        p[0] = p[1]
 
 
-def p_termino_1(p):
+def p_termino_1(_):
     """termino_1    : termino_2 factor termino_vp termino_1
                     | epsilon """
-    if len(p) > 2:
-        p[0] = p[2]
-    else:
-        p[0] = None
 
 
 def p_termino_2(p):
@@ -726,36 +668,19 @@ def p_termino_2(p):
     global_context.operations.push(p[1])
 
 
-def p_remove_false_bottom(p):
+def p_remove_false_bottom(_):
     """remove_false_bottom  : """
     global_context.operations.remove_separator()
 
 
-def p_add_false_bottom(p):
+def p_add_false_bottom(_):
     """add_false_bottom     : """
     global_context.operations.add_separator()
 
 
-def p_factor(p):
+def p_factor(_):
     """factor       : '(' add_false_bottom logic_comp remove_false_bottom ')'
                     | factor_1 factor_2"""
-    if len(p) == 3:
-        if p[1] == '+':
-            p[0] = p[2]
-        elif p[1] == '-':
-            # global_context.operands.push(p[2])
-            # global_context.types.push(global_context.get_variable(p[2]).type)
-            # global_context.operations.push("=")
-            # global_context.operations.push("*")
-            # global_context.operands.push('-1')
-            # global_context.types.push("int")
-            # global_context.create_operation_quad(['*'])
-            # global_context.create_operation_quad(['='])
-            # p[0] = -p[2]
-            pass
-        p[0] = p[2]
-    else:
-        p[0] = p[3]
 
 
 def p_factor_1(p):
@@ -765,16 +690,6 @@ def p_factor_1(p):
     p[0] = p[1]
 
 
-def p_factor_var_check(p):
-    """factor_var_check : """
-    if not global_context.is_variable_declared(p[-1]):
-        print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
-    else:
-        variable = global_context.get_variable(p[-1])
-        global_context.types.push(variable.type)
-        global_context.operands.push(variable.direction)
-
-
 def p_push_const(p):
     """push_const   : """
     operand_type = avail.get_const_type(p[-1])
@@ -782,19 +697,52 @@ def p_push_const(p):
     global_context.types.push(operand_type)
 
 
-def p_factor_2(p):
+def p_factor_2(_):
     """factor_2     : var_cte push_const
-                    | var factor_var_check"""
-    p[0] = p[1]
+                    | var"""
 
 
-def p_bloque(p):
+def p_push_id(p):
+    """push_id  :   """
+    var = global_context.get_variable(p[-1])
+    if not var:
+        print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
+    global_context.operands.push(var.direction)
+    global_context.types.push(var.type)
+
+
+def p_var(_):
+    """var      : ID push_id var_1"""
+
+
+def p_check_dim(_):
+    """check_dim    : """
+    # TODO has dims?
+
+
+def p_check_logic_type(_):
+    """check_logic_type :"""
+    # TODO revisar el tipo de logic_comp (numerico?)
+
+
+def p_var_1(_):
+    """var_1    : '(' func_call_1 ')'
+                | '[' check_dim logic_comp check_logic_type  ']' var_call_dim
+                | epsilon"""
+
+
+def p_var_call_dim(_):
+    """var_call_dim : '[' logic_comp ']'
+                    | epsilon"""
+
+
+def p_bloque(_):
     """bloque   : statement bloque
                 | epsilon"""
     pass
 
 
-def p_epsilon(p):
+def p_epsilon(_):
     """epsilon :"""
     pass
 
@@ -869,7 +817,7 @@ function void there (int a, int b) {
 }
 
 main ()
-var int: x, c, d, y, ren, col;
+var int: x, c, d, y, ren, col, dev[10][2];
     float: xx, yy;
     dataFrame: myData, frame;
 {
@@ -894,6 +842,8 @@ var int: x, c, d, y, ren, col;
     from a = a to b do {
         b = x + c;
     }
+
+    dev[2][1] = 10;
 
     write(xx, yy, x);
 
@@ -949,3 +899,8 @@ for quad in range(len(global_context.quadruples)):
 
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())
+
+# for _, function in global_context.function_table.table.items():
+#     print(function.name)
+#     for var in function.variables.table.values():
+#         print(f"\t{[dim.__str__() for dim in var.dimensions]}")
