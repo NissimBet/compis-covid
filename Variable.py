@@ -26,6 +26,7 @@ class Variable(object):
         self.name = name
         self.direction = var_direction
         self.init_dimensions(dimensions)
+        
 
     def init_dimensions(self, bounds: List[int]):
         if not bounds or len(bounds) == 0:
@@ -50,6 +51,7 @@ class Variable(object):
             dimensions[index].m = m
 
         dimensions[-1].m = - offset
+
         self.dimensions = dimensions
 
     def __str__(self):
@@ -73,6 +75,15 @@ class VariableTable(object):
 
     def get_variable(self, name: str) -> Variable:
         return self.table.get(name)
+    
+    def get_dimensions(self, name: str):
+        length = len(self.table[name].dimensions)
+        if length == 1:
+            return self.table[name].dimensions[0].upper_bound
+        elif length ==2:
+            return [self.table[name].dimensions[0].upper_bound, self.table[name].dimensions[1].upper_bound]
+        else:
+            return 0
 
     def set_direction(self, var_name: str, direction: int):
         if var_name in self.table:

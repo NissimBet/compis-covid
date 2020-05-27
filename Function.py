@@ -110,6 +110,15 @@ class FunctionTable(object):
         else:
             return None
 
+    def get_dimensions(self, func_name: str, var_name: str):
+        if func_name in self.__table:
+            if self.__table[func_name].variables.is_variable_defined(var_name):
+                return self.__table[func_name].variables.get_dimensions(var_name)
+            if 'global' in self.__table and self.__table['global'].variables.is_variable_defined(var_name):
+                return self.__table['global'].variables.get_dimensions(var_name)
+        else:
+            return None
+
     def is_global(self, var_name: str):
         return self.__table["global"].variables.is_variable_defined(var_name)
 

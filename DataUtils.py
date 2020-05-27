@@ -130,6 +130,9 @@ class ParsingContext(object):
     def get_variable(self, var_name: str):
         return self.function_table.get_variable(self.function.top(), var_name)
 
+    def get_dimensions(self, var_name: str):
+        return self.function_table.get_dimensions(self.function.top(), var_name)
+
     def get_function(self):
         return self.function_table.function(self.function.top())
 

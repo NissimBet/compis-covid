@@ -135,17 +135,41 @@ def p_id_completo_1(p):
                         | epsilon"""
     p[0] = p[1]
 
+#  operand = global_context.operands.pop()
+#         operand_type = global_context.types.pop()
+#         global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+    
+# usar produccion exp, y verificar los tipos que aparecen
 
 def p_id_completo_1_error(_):
     """id_completo_1    : error """
     print("Syntax error while declaring variable dimensions.")
 
+def p_check_dimension_exists(p):
+    """check_dimension_exists   : """
+    
+    if global_context.get_dimensions(p[-2]) == 0:
+        print('Error de sintaxis: Variable no tiene dimensiones:', p[-2])
+    else:
+        global_context.operands.push(p[-2])
+
+def p_cuadruplo_verificacion(p):
+    """cuadruplo_verificacion : """
+    # print('pilaoperandos', global_context.operands.top())
+    var = global_context.operands.pop()
+    dim_list = global_context.get_dimensions(var)
+    dim_size = dim_list[0]
+    global_context.create_quad(Quadruple.OperationType.VER, var, "", dim_size)
+
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    """dimension    : '[' num_var ']' dimension_1 """
-    p[0] = (p[2], p[4])
+    """dimension    : '[' check_dimension_exists num_var cuadruplo_verificacion ']' dimension_1 """
+    p[0] = (p[3], p[6])
+    # print('numvar', p[3])
+    
+   
 
 
 def p_dimension_1(p):
@@ -154,6 +178,7 @@ def p_dimension_1(p):
     # print("dimension x2", p[1:4])
     if len(p) > 2:
         p[0] = p[2]
+    # print ('This is p4', p[0])
 
 
 def p_tipo(p):
@@ -830,7 +855,7 @@ function void there (int a, int b) {
 }
 
 main ()
-var int: x, c, d, y, ren, col, dev[10][2];
+var int: x, c, d, y, ren, col, dev[10][2], ted[19];
     float: xx, yy;
     dataFrame: myData, frame;
 {
@@ -842,6 +867,7 @@ var int: x, c, d, y, ren, col, dev[10][2];
     } else {
         t = f || f;
     }
+
  
     load(myData, "miRuta", ren, col);
    
@@ -909,6 +935,8 @@ else:
 # quads display
 for quad in range(len(global_context.quadruples)):
     print(quad, global_context.quadruples[quad])
+
+# print(global_context.get_dimensions('d'))
 
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())
