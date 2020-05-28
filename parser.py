@@ -79,6 +79,7 @@ def p_declare_var(p):
     """declare_var  : """
     # TODO tomar prestado el tipo de variable ultimo en el scope
     # TODO tomar prestado el nombre de la ultima funcion en el scope
+    # print('variable dimension', p[-1][1])
     if not global_context.declare_variable(p[-1][0], p[-1][1], global_context.function.top() == "global"):
         print(
                 f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
@@ -151,15 +152,29 @@ def p_check_dimension_exists(p):
     if global_context.get_dimensions(p[-2]) == 0:
         print('Error de sintaxis: Variable no tiene dimensiones:', p[-2])
     else:
-        global_context.operands.push(p[-2])
+        var = global_context.get_variable(p[-2])
+        global_context.operands.push(var)
 
 def p_cuadruplo_verificacion(p):
     """cuadruplo_verificacion : """
     # print('pilaoperandos', global_context.operands.top())
-    var = global_context.operands.pop()
-    dim_list = global_context.get_dimensions(var)
-    dim_size = dim_list[0]
-    global_context.create_quad(Quadruple.OperationType.VER, var, "", dim_size)
+    var = global_context.operands.top()
+    print('direccion dimension', var.dimensions[0])
+    # dimensions = global_context.get_dimensions(var.name)
+    # val_accesado = int(avail.get_val_from_dir(p[-1]))
+    # print('dir var', var.direction, var)
+    # print('direcciones de dims', global_context.get_variable(var.name).dimensions[0].r )
+    # if (val_accesado < dimensions[0]):
+    #     global_context.dimensions.push(dimensions[0])
+    # else:
+    #     print('Error de sintaxis: Fuera de límite en acceso')
+    
+    # print('dimension y num_var', dimensions[0], valdir)
+    # if (dimensions[0] < )
+    # dim_list = global_context.get_dimensions(var[0])
+    # print('dimlist', dim_list)
+    # dim_size = dim_list[0]
+    # global_context.create_quad(Quadruple.OperationType.VER, var, "", dim_size)
 
 
 # TODO debe ser num_var entera
@@ -167,7 +182,7 @@ def p_cuadruplo_verificacion(p):
 def p_dimension(p):
     """dimension    : '[' check_dimension_exists num_var cuadruplo_verificacion ']' dimension_1 """
     p[0] = (p[3], p[6])
-    # print('numvar', p[3])
+    # print('numvar', avail.get_val_from_dir(p[3]),avail.get_val_from_dir(p[6]) )
     
    
 
@@ -882,7 +897,7 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
         b = x + c;
     }
 
-    dev[2][1] = 10;
+    ted[10] = 5;
 
     write(xx, yy, x);
 
@@ -891,7 +906,7 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
     return (a);
 }
 """
-
+    # dev[2][1] = 10;
 # data = '''
 # program donpato;
 # var float:numero;
@@ -941,7 +956,7 @@ for quad in range(len(global_context.quadruples)):
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())
 
-# for _, function in global_context.function_table.table.items():
-#     print(function.name)
-#     for var in function.variables.table.values():
-#         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
+for _, function in global_context.function_table.table.items():
+    print(function.name)
+    for var in function.variables.table.values():
+        print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")

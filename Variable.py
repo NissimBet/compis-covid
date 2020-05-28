@@ -79,7 +79,7 @@ class VariableTable(object):
     def get_dimensions(self, name: str):
         length = len(self.table[name].dimensions)
         if length == 1:
-            return self.table[name].dimensions[0].upper_bound
+            return [self.table[name].dimensions[0].upper_bound]
         elif length ==2:
             return [self.table[name].dimensions[0].upper_bound, self.table[name].dimensions[1].upper_bound]
         else:
