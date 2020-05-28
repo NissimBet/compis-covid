@@ -812,59 +812,59 @@ parser = yacc.yacc(start="programa")
 # }
 # '''
 
-data = """
-program test;
-var int: a, xyz[20] ,b;
-bool: t, f;
-
-function int hello (float x, float y, int re, int be) {
-    a = 1;
-    b = 2;
-    t = true;
-    f = false;
-}
-
-function void there (int a, int b) {
-    a = 1;
-    b = a + 10;
-}
-
-main ()
-var int: x, c, d, y, ren, col, dev[10][2];
-    float: xx, yy;
-    dataFrame: myData, frame;
-{
-    a = d + c;
-    x = (a + c) * d / d;
-    if (b > c) then {
-        t = f && f;
-        t = true;
-    } else {
-        t = f || f;
-    }
- 
-    load(myData, "miRuta", ren, col);
-   
-
-    while (x > c) do {
-        t = b + a;
-    }
-
-    hello(xx,yy, x + c, c + x);
-
-    from a = a to b do {
-        b = x + c;
-    }
-
-    dev[2][1] = 10;
-
-    write(xx, yy, x);
-
-    load(frame, "i", x, y);
-    
-    return (a);
-}
-"""
+# data = """
+# program test;
+# var int: a, xyz[20] ,b;
+# bool: t, f;
+#
+# function int hello (float x, float y, int re, int be) {
+#     a = 1;
+#     b = 2;
+#     t = true;
+#     f = false;
+# }
+#
+# function void there (int a, int b) {
+#     a = 1;
+#     b = a + 10;
+# }
+#
+# main ()
+# var int: x, c, d, y, ren, col, dev[10][2];
+#     float: xx, yy;
+#     dataFrame: myData, frame;
+# {
+#     a = d + c;
+#     x = (a + c) * d / d;
+#     if (b > c) then {
+#         t = f && f;
+#         t = true;
+#     } else {
+#         t = f || f;
+#     }
+#
+#     load(myData, "miRuta", ren, col);
+#
+#
+#     while (x > c) do {
+#         t = b + a;
+#     }
+#
+#     hello(xx,yy, x + c, c + x);
+#
+#     from a = a to b do {
+#         b = x + c;
+#     }
+#
+#     dev[2][1] = 10;
+#
+#     write(xx, yy, x);
+#
+#     load(frame, "i", x, y);
+#
+#     return (a);
+# }
+# """
 
 # data = '''
 # program donpato;
@@ -881,13 +881,16 @@ var int: x, c, d, y, ren, col, dev[10][2];
 # }
 # '''
 
-# data = '''
-# program patito;
-# var float: x, y, z;
-# main() {
-#     write(x,y,z);
-# }
-# '''
+data = '''
+program patito;
+var float: x, y, z;
+main() {
+    x = 1 + 2 * 5;
+    y = 2;
+    z = 3;
+    write(x + y,y,z);
+}
+'''
 
 logging.basicConfig(
         level=logging.DEBUG,
@@ -907,8 +910,22 @@ else:
 # print(global_context.operations)
 
 # quads display
-for quad in range(len(global_context.quadruples)):
-    print(quad, global_context.quadruples[quad])
+with open("export.obj", "w+") as export:
+    export.write("%%\n")
+    for value, direction in avail.const_to_dir.items():
+        export.write(f"{direction},{value}\n")
+    export.write("%%\n")
+    for quad in range(len(global_context.quadruples)):
+        print(quad, global_context.quadruples[quad])
+        quadruple = global_context.quadruples[quad]
+        try:
+            quad_name = Quadruple.OperationType[quadruple.operation].value
+            print("NAME", quad_name)
+        except KeyError:
+            quad_name = quadruple.operation
+        line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
+        print(line)
+        export.write(line)
 
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())
@@ -917,3 +934,6 @@ for quad in range(len(global_context.quadruples)):
 #     print(function.name)
 #     for var in function.variables.table.values():
 #         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
+
+for var in global_context.function_table.table["global"].variables.table.values():
+    print(var.direction)

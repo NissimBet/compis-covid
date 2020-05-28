@@ -73,6 +73,7 @@ class ParsingContext(object):
         self.function.push(name)
 
     def create_quad(self, operation: Quadruple.OperationType, mem_location_1: str, mem_location_2, mem_result: str):
+        print(operation, mem_location_1, mem_location_2, mem_result)
         self.quadruples.append(Quadruple(operation, mem_location_1, mem_location_2, mem_result))
         return self.quad_counter
 
