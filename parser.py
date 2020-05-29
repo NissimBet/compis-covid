@@ -35,7 +35,7 @@ def p_goto_main(_):
 def p_programa(p):
     """programa     : PROGRAM ID ';' programa_1 main"""
     p[0] = "COMPILA"
-    pass
+    global_context.create_quad(Quadruple.OperationType.END_PROG, "", "", "")
 
 
 def p_programa_1(_):
@@ -889,6 +889,16 @@ main() {
     y = 2;
     z = 3;
     write(x + y,y,z);
+    if (x < y) then {
+        write("X = ", x);
+    } else {
+        write("Y = ", y);
+    }
+    while (y < x) do {
+        write(y);
+        y = y + 1;
+    }
+    
 }
 '''
 

@@ -44,6 +44,7 @@ class Quadruple:
         FILE_SEARCH = "FS"
         LINES = "LINES"
         COLS = "COLS"
+        END_PROG = "END"
 
     @staticmethod
     def get_operator_name(name: str):
