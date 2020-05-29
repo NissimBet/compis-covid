@@ -130,9 +130,15 @@ def p_id_completo(p):
     # print("Id Completo",p[1], p[2])
     p[0] = p[1], p[2]
 
+def p_push_dim_var(p):
+    """push_dim_var     : """
+    global_context.operands.push(global_context.get_variable(p[-1]))
+    dims = global_context.get_dimensions(p[-1]) 
+    for dim in dims:
+        global_context.dimensions.push(dim)
 
 def p_id_completo_1(p):
-    """id_completo_1    : dimension
+    """id_completo_1    : push_dim_var dimension 
                         | epsilon"""
     p[0] = p[1]
 
@@ -140,55 +146,53 @@ def p_id_completo_1(p):
 #         operand_type = global_context.types.pop()
 #         global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
     
-# usar produccion exp, y verificar los tipos que aparecen
-
 def p_id_completo_1_error(_):
     """id_completo_1    : error """
     print("Syntax error while declaring variable dimensions.")
 
-def p_check_dimension_exists(p):
-    """check_dimension_exists   : """
-    
-    if global_context.get_dimensions(p[-2]) == 0:
-        print('Error de sintaxis: Variable no tiene dimensiones:', p[-2])
-    else:
-        var = global_context.get_variable(p[-2])
-        global_context.operands.push(var)
-
-def p_cuadruplo_verificacion(p):
-    """cuadruplo_verificacion : """
-    # print('pilaoperandos', global_context.operands.top())
-    var = global_context.operands.top()
-    print('direccion dimension', var.dimensions[0])
-    # dimensions = global_context.get_dimensions(var.name)
-    # val_accesado = int(avail.get_val_from_dir(p[-1]))
-    # print('dir var', var.direction, var)
-    # print('direcciones de dims', global_context.get_variable(var.name).dimensions[0].r )
-    # if (val_accesado < dimensions[0]):
-    #     global_context.dimensions.push(dimensions[0])
-    # else:
-    #     print('Error de sintaxis: Fuera de límite en acceso')
-    
-    # print('dimension y num_var', dimensions[0], valdir)
-    # if (dimensions[0] < )
-    # dim_list = global_context.get_dimensions(var[0])
-    # print('dimlist', dim_list)
-    # dim_size = dim_list[0]
-    # global_context.create_quad(Quadruple.OperationType.VER, var, "", dim_size)
-
+def p_verif_dim(p):
+    """verif_dim : """
+    val_limite = global_context.dimensions.pop()
+    dir_limite = avail.get_next_const('int', val_limite)
+    valor_comparar = p[-1]
+    global_context.create_quad(Quadruple.OperationType.VER, valor_comparar, "", dir_limite)
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    """dimension    : '[' check_dimension_exists num_var cuadruplo_verificacion ']' dimension_1 """
-    p[0] = (p[3], p[6])
-    # print('numvar', avail.get_val_from_dir(p[3]),avail.get_val_from_dir(p[6]) )
-    
-   
+    """dimension    : '[' num_var verif_dim ']' dimension_1 """
+    p[0] = (p[2], p[5])
 
+    # Guardar num de direccion base en constante
+    dir_base = global_context.operands.pop()
+    const_base = avail.get_next_const('int', dir_base)
+
+    if global_context.function.top() == "global":
+        print('hi')
+        # result = avail.get_next_global('pointer', True, '')
+    else:        
+       result = avail.get_next_local('pointer', True, '')
+    
+    if p[5] is None:
+        global_context.create_quad(Quadruple.OperationType.ADD, p[0][0], dir_base, [result])
+    else:
+        # Multiplicar el primer subíndice por el segundo limite superior, sumar uno
+        first_bound = dir_base.dimensions[1].upper_bound
+        first_dir = avail.get_next_const('int', first_bound)
+        res = avail.get_next_const('int', '')
+        global_context.create_quad(Quadruple.OperationType.MULTIPLY, dir_base.direction, first_dir, res)
+        res2 = avail.get_next_const('int', '')
+        global_context.create_quad(Quadruple.OperationType.ADD, res, avail.get_next_const('int', 1), res2)
+        # Sumar 
+        ofs = avail.get_next_const('int', 1)
+        # global_context.create_quad(Quadruple.OperationType.ADD, upper_bound )
+        print('ub', first_bound)
+
+    print('p0', p[0])
+    
 
 def p_dimension_1(p):
-    """dimension_1  : '[' num_var ']'
+    """dimension_1  : '[' num_var verif_dim ']'
                     | epsilon """
     # print("dimension x2", p[1:4])
     if len(p) > 2:
@@ -367,7 +371,7 @@ def p_load(p):
 
         num_lines_var_name = p[7]
         num_vars_var_name = p[9]
-
+        print('nombres', num_lines_var_name, num_vars_var_name)
         var = global_context.get_variable(var_name)
         num_lines = global_context.get_variable(num_lines_var_name)
         num_vars = global_context.get_variable(num_vars_var_name)
@@ -897,7 +901,7 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
         b = x + c;
     }
 
-    ted[10] = 5;
+    dev[2][4] = 18;
 
     write(xx, yy, x);
 
@@ -951,12 +955,14 @@ else:
 for quad in range(len(global_context.quadruples)):
     print(quad, global_context.quadruples[quad])
 
-# print(global_context.get_dimensions('d'))
+# print(global_context.get_dimensions('ted'))
 
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())
 
-for _, function in global_context.function_table.table.items():
-    print(function.name)
-    for var in function.variables.table.values():
-        print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
+# for _, function in global_context.function_table.table.items():
+#     print(function.name)
+#     for var in function.variables.table.values():
+#         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
+
+# print('dlelel', global_context.get_variable('ted').size)

@@ -83,7 +83,7 @@ class VariableTable(object):
         elif length ==2:
             return [self.table[name].dimensions[0].upper_bound, self.table[name].dimensions[1].upper_bound]
         else:
-            return 0
+            return None
 
     def set_direction(self, var_name: str, direction: int):
         if var_name in self.table:
