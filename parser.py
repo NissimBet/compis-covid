@@ -460,26 +460,58 @@ def p_for_check_id(p):
 
 def p_for_assign(_):
     """for_assign   : """
-    global_context.operations.push("=")
-    global_context.create_operation_quad(["="])
+    operand_type = global_context.types.pop()
+    operand_name = global_context.operands.pop()
+    assigned_type = global_context.types.top()
+    assigned = global_context.operands.top()
+    # assigned = global_context.get_variable(p[1][0])
+    print(assigned, operand_name)
+    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned)
 
 
 def p_for_compare(_):
     """for_compare  : """
     global_context.create_jump()
-    global_context.operations.push("<")
-    global_context.create_operation_quad(["<"])
-    operand = global_context.operands.pop()
-    op_type = global_context.types.pop()
-    global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
-    global_context.create_jump()
+    print(global_context.operands, global_context.operations)
+    right_operand = global_context.operands.pop()
+    right_type = global_context.types.pop()
+
+    left_operand = global_context.operands.pop()
+    left_type = global_context.types.pop()
+
+    operator = "<"
+    resultant_type = global_context.semantic_cube.cubo[left_type][right_type][operator]
+    if resultant_type:
+        result = avail.get_next_local(resultant_type, True, "")
+
+        global_context.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
+        global_context.operands.push(result)
+        global_context.types.push(resultant_type)
+
+        print(global_context.operands, global_context.operations)
+        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, result, "", "")
+        global_context.create_jump()
+
+        global_context.operands.push(left_operand)
+        global_context.types.push(left_type)
+    else:
+        print(f"Error de sintaxis. Type Error")
+    # global_context.operations.push("<")
+    # global_context.create_operation_quad(["<"])
+    # operand = global_context.operands.pop()
+    # op_type = global_context.types.pop()
 
 
 # desde ID_COMPLETO = EXP to EXP hacer { ESTATUTO* }
 def p_no_condition_loop(_):
     """no_condition_loop    : FROM id_completo for_check_id '=' exp for_assign TO exp for_compare DO '{' no_condition_loop_1 '}'  """
+    operand = global_context.operands.pop()
+    operand_type = global_context.types.pop()
+    one = avail.get_next_const("int", 1)
+    global_context.create_quad(Quadruple.OperationType.ADD, operand, one, operand)
     end = global_context.jumpStack.pop()
     start = global_context.jumpStack.pop()
+    print("End of for loop", global_context.operands)
     global_context.create_quad(Quadruple.OperationType.GOTO, "", "", start + 1)
     global_context.fill_quad(end)
 
@@ -487,7 +519,6 @@ def p_no_condition_loop(_):
 def p_no_condition_loop_1(_):
     """no_condition_loop_1  : bloque
                             | epsilon """
-    pass
 
 
 def p_num_var(p):
@@ -884,6 +915,7 @@ parser = yacc.yacc(start="programa")
 data = '''
 program patito;
 var float: x, y, z;
+    int: count;
 main() {
     x = 1 + 2 * 5;
     y = 2;
@@ -898,7 +930,9 @@ main() {
         write(y);
         y = y + 1;
     }
-    
+    from count = 1 to 5 do {
+        write(count);
+    }
 }
 '''
 
@@ -926,15 +960,15 @@ with open("export.obj", "w+") as export:
         export.write(f"{direction},{value}\n")
     export.write("%%\n")
     for quad in range(len(global_context.quadruples)):
-        print(quad, global_context.quadruples[quad])
+        # print(quad, global_context.quadruples[quad])
         quadruple = global_context.quadruples[quad]
         try:
             quad_name = Quadruple.OperationType[quadruple.operation].value
-            print("NAME", quad_name)
+            # print("NAME", quad_name)
         except KeyError:
             quad_name = quadruple.operation
         line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
-        print(line)
+        # print(line)
         export.write(line)
 
 # for func in global_context.function_table.table.values():
@@ -945,5 +979,5 @@ with open("export.obj", "w+") as export:
 #     for var in function.variables.table.values():
 #         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
 
-for var in global_context.function_table.table["global"].variables.table.values():
-    print(var.direction)
+# for var in global_context.function_table.table["global"].variables.table.values():
+#     print(var.direction)

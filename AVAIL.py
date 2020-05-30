@@ -107,7 +107,7 @@ class AVAIL:
 
     def get_next_const(self, var_type: str, value: Any):
         if var_type in [x[0] for x in self.data_types]:
-            if value not in self.const_to_dir:
+            if str(value) not in self.const_to_dir:
                 count = self.types.get("constant").get("value").get(var_type)["counter"]
                 minimum = self.types.get("constant").get("value").get(var_type)["min"]
                 self.types.get("constant").get("value").get(var_type)["counter"] += 1
@@ -116,7 +116,7 @@ class AVAIL:
                 self.dir_to_const[str(count + minimum)]["type"] = var_type
                 return count + minimum
             else:
-                return self.const_to_dir[value]
+                return self.const_to_dir[str(value)]
         else:
             print("ERROR. variable type not recognized")
 
