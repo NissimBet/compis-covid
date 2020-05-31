@@ -1,60 +1,57 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union, List
+from .v_variables import data_types, get_type
 
 
 class Memory:
-    __memory: Dict[str, Any]
+    __base_dir: int
+    __memory: Dict[str, Dict[str, Union[int, List[Any]]]]
 
-    def __init__(self):
-        self.__memory = {}
+    def __init__(self, base: int):
+        self.__base_dir = base
+        self.__memory = {
+            d_type[0]: {"base": d_type[1], "values": []} for d_type in data_types
+        }
 
-    def get_var(self, variable_dir: str):
-        return self.__memory[variable_dir]
+    @property
+    def base(self):
+        return self.__base_dir
 
-    def assign_var(self, variable_dir: str, value: Any):
-        self.__memory[variable_dir] = value
+    def get_var_index(self, direction: int, var_type: str = ""):
+        if not var_type: var_type = get_type(direction)
+        return direction - self.__base_dir - self.__memory.get(var_type).get("base")
 
-    def allocate_var(self, variable_dir: str, value: Any):
+    def get_var(self, variable_dir: int):
         try:
-            self.__memory[variable_dir] = value
-        except KeyError:
-            print(f"Error during allocation of variable")
-            return False
-        return True
+            var_type = get_type(variable_dir)
+            var_index = self.get_var_index(variable_dir, var_type)
+            variable = self.__memory.get(var_type).get("values")[var_index]
+            if not variable:
+                print(f"Variable not initialized {variable_dir}")
+            else:
+                return variable
+        except IndexError:
+            print(f"Error accessing element {variable_dir} in memory")
 
-    def allocate_function(self, function_dir: str):
+    def assign_var(self, variable_dir: int, value: Any):
         try:
-            self.__memory[function_dir] = {
-                "parameters": [""],
-                "variables": {}
-            }
-        except KeyError:
-            print(f"Error allocating function")
-            return False
-        return True
+            var_type = get_type(variable_dir)
+            var_index = self.get_var_index(variable_dir, var_type)
+            self.__memory.get(var_type).get("values")[var_index] = value
+        except IndexError:
+            print(f"Error assigning to element {variable_dir} in memory")
 
-    def pass_param(self, function_dir: str, destination_param: str, param_value: str):
+    def push_var(self, variable_dir: int, value: Any):
         try:
-            self.__memory[function_dir]["parameters"][destination_param] = param_value
-        except KeyError or IndexError:
-            print(f"Error sendinf parameter to function")
-            return False
-        return True
+            var_type = get_type(variable_dir)
+            self.__memory.get(var_type).get("values").append(value)
+        except IndexError:
+            print(f"Error assigning to element {variable_dir} in memory")
 
-    def add_function_vars(self, function_dir: str, variables_type: str, size_amount: int):
-        try:
-            self.__memory[function_dir][variables_type] = size_amount
-        except KeyError:
-            print("Error adding variables to function")
-            return False
-        return True
+    def initialize_var_type(self, var_type: str, size: int):
+        self.__memory.get(var_type)["values"] = [None] * size
 
-    def remove_function(self, function_dir: str):
-        try:
-            del self.__memory[function_dir]
-        except KeyError:
-            print("Error removing function")
-            return False
-        return True
+    def get_vars(self):
+        return self.__memory.values()
 
     def clear(self):
         self.__memory.clear()

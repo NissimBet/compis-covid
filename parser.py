@@ -575,9 +575,13 @@ def p_called_func(p):
         global_context.operations.add_separator()
         global_context.func_calls.push(f_name)
         global_context.param_counter.push(0)
-        function_size = global_context.get_function().count_vars()
-        for var_type, var_nums in function_size.items():
-            global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
+        function_size = global_context.function_table.function(f_name).vars
+        print(function_size)
+        print(global_context.function_table.function(f_name).temps)
+        total_vars = sum([i for i in function_size.values()])
+        # for var_type, var_nums in function_size.items():
+        #     global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
+        global_context.create_quad(Quadruple.OperationType.ERA, "", "", f_name)
     else:
         print(f"Syntax Error, function not defined {f_name} in line {p.lineno(-1)}")
 
@@ -586,7 +590,7 @@ def p_func_call(p):
     """func_call    : std_methods called_func '(' func_call_1 ')'  """
     try:
         global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "",
-                                   global_context.function_table.function(p[1]).quad_number + 1)
+                                   global_context.function_table.function(p[1]).quad_number)
     except IndexError:
         print("No se pudo crear el cuadruplo")
     f_name = global_context.func_calls.pop()
@@ -606,7 +610,10 @@ def p_check_param(p):
         vtype = global_context.types.pop()
         var = global_context.operands.pop()
         if vtype == function.parameters[global_context.param_counter.top()].type:
-            global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", global_context.param_counter.top())
+            param_counter = global_context.param_counter.top()
+            param_dir = function.parameters[param_counter].direction
+            # print(function.parameters[param_counter].direction)
+            global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", param_dir)
             print(f"Parametro encontrado {var} en funcion {function.name}")
         else:
             print(
@@ -897,44 +904,58 @@ parser = yacc.yacc(start="programa")
 # }
 # """
 
-# data = '''
-# program donpato;
-# var float:numero;
-# main() {
-#     numeroPi = 3.1;
-# 	if (numeroPi < hi) {
-# 		numeroPi = 3.14159;
-# 	}
-#     else
-#     {
-# 		print("Coronavirus will destroy math");
-# 	}
-# }
-# '''
-
 data = '''
-program patito;
-var float: x, y, z;
-    int: count;
-main() {
-    x = 1 + 2 * 5;
+program donpato;
+
+function void print2(string word) {
+    write(word);
+}
+
+function void print(string word, string word2) var int: x, y; {
+    x = 1;
     y = 2;
-    z = 3;
-    write(x + y,y,z);
-    if (x < y) then {
-        write("X = ", x);
-    } else {
-        write("Y = ", y);
-    }
-    while (y < x) do {
-        write(y);
-        y = y + 1;
-    }
-    from count = 1 to 5 do {
-        write(count);
-    }
+    write(x + y ); 
+    write(word);
+    print2(word2);
+}
+
+main() {
+    write("START");
+    print("FUNCTION", "SECOND");
+    write("END");
 }
 '''
+
+# data = '''
+# program patito;
+# var float: x, y, z;
+#     int: count;
+#
+# function void there (int a, int b) {
+#     a = 1;
+#     b = a + 10;
+# }
+#
+# main() {
+#     x = 1 + 2 * 5;
+#     y = 2;
+#     z = 3;
+#     write(x + y,y,z);
+#     if (x < y) then {
+#         write("X = ", x);
+#     } else {
+#         write("Y = ", y);
+#     }
+#     while (y < x) do {
+#         write(y);
+#         y = y + 1;
+#     }
+#     from count = 1 to 5 do {
+#         write(count);
+#     }
+#     there(1,2);
+# }
+# '''
 
 logging.basicConfig(
         level=logging.DEBUG,
@@ -958,6 +979,12 @@ with open("export.obj", "w+") as export:
     export.write("%%\n")
     for value, direction in avail.const_to_dir.items():
         export.write(f"{direction},{value}\n")
+    export.write("%%\n")
+    for func in global_context.function_table.table.values():
+        export.write(f"{func.name},{func.return_type}," +
+                     f"{func.quad_number}," +
+                     f"{[(k, v) for k, v in func.vars.items()]}," +
+                     f"{[(k, v) for k, v in  func.temps.items()]}\n")
     export.write("%%\n")
     for quad in range(len(global_context.quadruples)):
         # print(quad, global_context.quadruples[quad])
