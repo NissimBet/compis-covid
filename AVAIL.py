@@ -13,7 +13,7 @@ class AVAIL:
             "temp": {}
         },
         "constant": {
-            "variable": {}
+            "value": {}
         }
     }
     dir_to_var: Dict[str, str]
@@ -22,12 +22,28 @@ class AVAIL:
 
     def __init__(self) -> None:
         # self.counter = 0
-        self.data_types = [("int" ,100), ("float" ,100), ("char" ,100), ("string" ,100), ("bool" ,100), ("dataFrame" ,100)]
-        self.types["global"]["non_temp"] = {self.data_types[x][0]: { "min": 1000 + x * self.data_types[x][1], "max": 1000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["global"]["temp"] = {self.data_types[x][0]: { "min": 2000 + x * self.data_types[x][1], "max": 2000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["local"]["non_temp"] = {self.data_types[x][0]: { "min": 5000 + x * self.data_types[x][1], "max": 5000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["local"]["temp"] = {self.data_types[x][0]: { "min": 6000 + x * self.data_types[x][1], "max": 6000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["constant"]["value"] = {self.data_types[x][0]: { "min": 10000 + x * self.data_types[x][1], "max": 10000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        categs = [("global", "non_temp", 1000), ("global", "temp", 2000),
+                  ("local", "non_temp", 5000), ("local", "temp", 6000),
+                  ("constant", "value", 10000)]
+        self.data_types = [("int", 100), ("float", 100),
+                           ("char", 100), ("string", 100),
+                           ("bool", 100), ("dataFrame", 100)]
+        for category in categs:
+            self.types[category[0]][category[1]] = {
+                self.data_types[x][0]:
+                    {
+                        "min": category[2] + x * self.data_types[x][1],
+                        "max": category[2] + (x + 1) * self.data_types[x][1] - 1,
+                        "counter": 0,
+                        "size": 1
+                    } for x in range(len(self.data_types))
+            }
+            # print(category[0], category[1], self.types[category[0]][category[1]])
+        # self.types["global"]["non_temp"] = {self.data_types[x][0]: { "min": 1000 + x * self.data_types[x][1], "max": 1000 + (x + 1) * self.data_types[x][1] - 1, "counter": 0, "size": 1} for x in range(len(self.data_types))}
+        # self.types["global"]["temp"] = {self.data_types[x][0]: { "min": 2000 + x * self.data_types[x][1], "max": 2000 + (x + 1) * self.data_types[x][1] - 1, "counter": 0, "size": 1} for x in range(len(self.data_types))}
+        # self.types["local"]["non_temp"] = {self.data_types[x][0]: { "min": 5000 + x * self.data_types[x][1], "max": 5000 + (x + 1) * self.data_types[x][1] - 1, "counter": 0, "size": 1} for x in range(len(self.data_types))}
+        # self.types["local"]["temp"] = {self.data_types[x][0]: { "min": 6000 + x * self.data_types[x][1], "max": 6000 + (x + 1) * self.data_types[x][1] - 1, "counter": 0, "size": 1} for x in range(len(self.data_types))}
+        # self.types["constant"]["value"] = {self.data_types[x][0]: { "min": 10000 + x * self.data_types[x][1], "max": 10000 + (x + 1) * self.data_types[x][1] - 1, "counter": 0} for x in range(len(self.data_types))}
         self.dir_to_var = {}
         self.const_to_dir = {}
         self.dir_to_const = {}
