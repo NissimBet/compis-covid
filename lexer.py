@@ -120,7 +120,7 @@ def t_CTE_I(t):
     return t
 
 def t_CTE_STRING(t):
-    r'\".*\"'
+    r'\"\w*\"'
     const_dir = avail.set_const_var("string", t.value)
     t.value = const_dir
     return t

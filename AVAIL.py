@@ -13,7 +13,7 @@ class AVAIL:
             "temp": {}
         },
         "constant": {
-            "variable": {}
+            "value": {}
         }
     }
     dir_to_var: Dict[str, str]
@@ -22,12 +22,23 @@ class AVAIL:
 
     def __init__(self) -> None:
         # self.counter = 0
-        self.data_types = [("int" ,100), ("float" ,100), ("char" ,100), ("string" ,100), ("bool" ,100), ("dataFrame" ,100), ("pointer" ,100)]
-        self.types["global"]["non_temp"] = {self.data_types[x][0]: { "min": 1000 + x * self.data_types[x][1], "max": 1000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["global"]["temp"] = {self.data_types[x][0]: { "min": 2000 + x * self.data_types[x][1], "max": 2000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["local"]["non_temp"] = {self.data_types[x][0]: { "min": 5000 + x * self.data_types[x][1], "max": 5000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["local"]["temp"] = {self.data_types[x][0]: { "min": 6000 + x * self.data_types[x][1], "max": 6000 + (x + 1) * self.data_types[x][1], "counter": 0, "size": 1} for x in range(len(self.data_types))}
-        self.types["constant"]["value"] = {self.data_types[x][0]: { "min": 10000 + x * self.data_types[x][1], "max": 10000 + (x + 1) * self.data_types[x][1], "counter": 0} for x in range(len(self.data_types))}
+        categs = [("global", "non_temp", 1000), ("global", "temp", 2000),
+                  ("local", "non_temp", 5000), ("local", "temp", 6000),
+                  ("constant", "value", 10000)]
+        self.data_types = [("int", 100), ("float", 100),
+                           ("char", 100), ("string", 100),
+                           ("bool", 100), ("dataFrame", 100),
+                           ("pointer", 100)]
+        for category in categs:
+            self.types[category[0]][category[1]] = {
+                self.data_types[x][0]:
+                    {
+                        "min": category[2] + x * self.data_types[x][1],
+                        "max": category[2] + (x + 1) * self.data_types[x][1] - 1,
+                        "counter": 0,
+                        "size": 1
+                    } for x in range(len(self.data_types))
+            }
         self.dir_to_var = {}
         self.const_to_dir = {}
         self.dir_to_const = {}
@@ -73,23 +84,23 @@ class AVAIL:
                 size = self.types.get("global").get("non_temp").get(var_type).get("size")
                 self.types.get("local").get("non_temp").get(var_type)["counter"] += size
 
-                self.dir_to_var[str(count + minimum + size)] = var_name
-                return count + minimum + size
+                self.dir_to_var[str(count + minimum + size - 1)] = var_name
+                return count + minimum + size - 1
         else:
             print(f"ERROR. variable type {var_type} not recognized")
 
     def reset_locals(self):
-        def reset(var_type: str):
-            count = 0
-            for val_dir in self.types.get("local").get(var_type):
-                counter = self.types.get("local").get(var_type).get(val_dir)["counter"]
-                minim = self.types.get("local").get(var_type).get(val_dir)["min"]
-                maxim = self.types.get("local").get(var_type).get(val_dir)["max"]
+        def reset(var_scope: str):
+            variables = {v_key: v_val.get("counter") for v_key, v_val in self.types.get("local").get(var_scope).items()
+                         if v_val.get("counter") > 0}
+            for val_dir in self.types.get("local").get(var_scope):
+                counter = self.types.get("local").get(var_scope).get(val_dir)["counter"]
+                minim = self.types.get("local").get(var_scope).get(val_dir)["min"]
+                maxim = self.types.get("local").get(var_scope).get(val_dir)["max"]
                 for index in range(minim, minim + counter):
                     self.dir_to_var.pop(str(index), None)
-                    count += 1
-                self.types.get("local").get(var_type).get(val_dir)["counter"] = 0
-            return count
+                self.types.get("local").get(var_scope).get(val_dir)["counter"] = 0
+            return variables
 
         reset("non_temp")
         return reset("temp")
@@ -107,7 +118,7 @@ class AVAIL:
 
     def get_next_const(self, var_type: str, value: Any):
         if var_type in [x[0] for x in self.data_types]:
-            if value not in self.const_to_dir:
+            if str(value) not in self.const_to_dir:
                 count = self.types.get("constant").get("value").get(var_type)["counter"]
                 minimum = self.types.get("constant").get("value").get(var_type)["min"]
                 self.types.get("constant").get("value").get(var_type)["counter"] += 1
@@ -116,7 +127,7 @@ class AVAIL:
                 self.dir_to_const[str(count + minimum)]["type"] = var_type
                 return count + minimum
             else:
-                return self.const_to_dir[value]
+                return self.const_to_dir[str(value)]
         else:
             print("ERROR. variable type not recognized")
 

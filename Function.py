@@ -22,7 +22,8 @@ class Function(object):
         self.parameters = parameters
         self.variables = VariableTable()
         self.quad_number = quad_number
-        self.temps_used = 0
+        self.temps = {}
+        self.vars = {}
 
     def add_variable(self, var: Variable) -> bool:
         if var in self.parameters or self.variables.is_variable_defined(var.name):
@@ -37,12 +38,12 @@ class Function(object):
         self.variables.declare_variable(var)
         return True
 
-    def count_vars(self) -> Dict[str, int]:
-        var_vals = list(self.variables.table.values()) + self.parameters
+    def count_vars(self):
+        var_vals = list(self.variables.table.values())
         var_org: Dict[str, int] = {var.type: 0 for var in var_vals}
         for var in var_vals:
             var_org[var.type] += 1
-        return var_org
+        self.vars = var_org
 
     def __str__(self):
         return f"{self.return_type} Function {self.name}({[pname.name for pname in self.parameters]}) vars: {[(v.name, v.dimesions) for k, v in self.variables.table.items()]} "
@@ -129,4 +130,5 @@ class FunctionTable(object):
         return self.__table.get(func_name, None)
 
     def erase_var_table(self, func_name: str):
+        self.__table.get(func_name, None).count_vars()
         self.__table.get(func_name, None).variables.table.clear()

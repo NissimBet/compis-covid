@@ -1,0 +1,32 @@
+%%
+10000,1
+10001,2
+10300,"START"
+10301,"FUNCTION"
+10302,"SECOND"
+10303,"END"
+%%
+global,void,0,[],[]
+print2,void,1,[('string', 1)],[]
+print,void,3,[('string', 2), ('int', 2)],[('int', 1)]
+main,void,12,[],[]
+%%
+GOTO,,,12
+WRITE,,,5300
+ENDFUNC,,,
+ASG,10000,,5000
+ASG,10001,,5001
+SUM,5000,5001,6000
+WRITE,,,6000
+WRITE,,,5300
+ERA,,,print2
+PARAM,5301,,5300
+GOSUB,,,1
+ENDFUNC,,,
+WRITE,,,10300
+ERA,,,print
+PARAM,10301,,5300
+PARAM,10302,,5301
+GOSUB,,,3
+WRITE,,,10303
+END,,,

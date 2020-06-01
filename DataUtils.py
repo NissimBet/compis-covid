@@ -59,7 +59,7 @@ class ParsingContext(object):
 
     def declare_function(self, f_name: str, f_type: Optional[str]) -> bool:
         if f_name not in self.function_table.table:
-            quad = self.quad_counter
+            quad = self.quad_counter + 1
             print(f"QUAD {f_name} is {quad}")
             self.function_table.declare_function(f_name, f_type if f_type else self.var_type, quad)
             self.set_function(f_name)
@@ -73,6 +73,7 @@ class ParsingContext(object):
         self.function.push(name)
 
     def create_quad(self, operation: Quadruple.OperationType, mem_location_1: str, mem_location_2, mem_result: str):
+        # print(operation, mem_location_1, mem_location_2, mem_result)
         self.quadruples.append(Quadruple(operation, mem_location_1, mem_location_2, mem_result))
         return self.quad_counter
 
@@ -113,6 +114,7 @@ class ParsingContext(object):
         else:
             var_direction = avail.get_next_local(self.var_type, False, var_name)
 
+        print(var_direction)
         if not dimensions:
             dimensions = []
         dims = [int(avail.get_val_from_dir(val)) for val in list(dimensions) if val is not None]
@@ -142,7 +144,7 @@ class ParsingContext(object):
         self.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
         temps = avail.reset_locals()
         self.function_table.erase_var_table(function_name)
-        function.temps_used = temps
+        function.temps = temps
 
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)
