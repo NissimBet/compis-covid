@@ -1,32 +1,19 @@
+# tipos de datos aceptados
 dataTypes = [
-    # data types
     'int',  # 0
     'float',  # 1
     'string',  # 2
     'char',  # 3
-    #'void',  # 4
     'dataFrame',  # 5
     'bool',  # 6
     'pointer'
 ]
-
+# operadores validos
 operators = [
     '+', '-', '*', '/', '=', '<', '>', "<>", "==", "&&", "||"
 ]
-
-
-# allowedOps = {
-#     '+' : [{"float", "int"}, {"float"}, {"int"}],
-#     '-' : [{"float", "int"}, {"float"}, {"int"}],
-#     '*' : [{"float", "int"}, {"float"}, {"int"}],
-#     '/' : [{"float", "int"}, {"float"}, {"int"}],
-#     '=' : [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-#     '<' : [{"float", "int"}, {"float"}, {"int"}],
-#     '>' : [{"float", "int"}, {"float"}, {"int"}],
-#     "<>": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-#     "==": [{"float", "int"}, {"float"}, {"int"}, {"string"}, {"char"}, {"dataFrame"}, {"bool"}],
-# }
-
+# operaciones permitidas
+# es un mapa de la operacion y los resultados generados segun un set
 allowedOps = {
     '+' : [
         ({"float", "int"}, "float"),
@@ -143,6 +130,7 @@ class CuboSemantico:
                 self.cubo[type1][type2] = {}
                 for op in operators:
                     try:
+                        # indice del valor resultado de la operacion para el operador
                         index = [pair[0] for pair in allowedOps[op]].index({type1, type2})
                         value = allowedOps[op][index][1]
                     except ValueError:
