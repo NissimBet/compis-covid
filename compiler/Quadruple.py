@@ -1,7 +1,7 @@
 from enum import Enum, unique
 from typing import Union
 
-
+# mapeo de los operadores simples a su nombre en el enum
 operator_names = {
     '+': "SUM",
     '-': "SUB",
@@ -49,6 +49,7 @@ class Quadruple:
 
     @staticmethod
     def get_operator_name(name: str):
+        """Regresa el nombre del operador"""
         if name in operator_names:
             return operator_names[name]
         return None

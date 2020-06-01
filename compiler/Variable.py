@@ -27,7 +27,13 @@ class Variable(object):
         self.direction = var_direction
         self.init_dimensions(dimensions)
 
-    def init_dimensions(self, bounds: List[int]):
+    def init_dimensions(self, bounds: List[int]) -> None:
+        """
+        Funcion que realiza la inicializacion de las dimensiones de la variable
+
+        :param bounds: la lista de los limites superiores para cada dimension
+        :return: None
+        """
         if not bounds or len(bounds) == 0:
             self.dimensions = []
             self.size = 1
@@ -36,21 +42,24 @@ class Variable(object):
         r = 1
         offset = 0
         dimensions: List[Dimension] = []
+        # para cada limite superior, realizar el calculo de la R y crear una dimension para agregar sobre la variable
         for index in range(len(bounds)):
             r = r * (bounds[index])
             dimension = Dimension(bounds[index])
             dimension.r = r
             dimensions.append(dimension)
 
+        # el tamano total de la variable es la r final / m0
         self.size = r
+        # asignar el m0 al ultimo valor
         dimensions[-1].m = r
 
+        # segunda pasada para calcular el tamano de cada dimension
         for index in range(len(bounds)):
-            m = dimensions[index - 1].m // (bounds[index])
+            m = dimensions[index - 1].m // bounds[index]
             dimensions[index].m = m
 
         dimensions[-1].m = - offset
-
         self.dimensions = dimensions
 
     def __str__(self):
@@ -64,26 +73,27 @@ class VariableTable(object):
         self.table = {}
 
     def declare_variable(self, var: Variable) -> bool:
+        """Declarar una variable en la tabla. Regresa si se la declaracion es exitosa"""
         if var.name not in self.table:
             self.table[var.name] = var
             return True
         return False
 
     def is_variable_defined(self, name: str) -> bool:
+        """Regresa si la variable ya esta definida"""
         return name in self.table
 
     def get_variable(self, name: str) -> Variable:
-        return self.table.get(name)
+        """Regresa una variable de la tabla o None si no se encontro"""
+        return self.table.get(name, None)
     
-    def get_dimensions(self, name: str):
-        length = len(self.table[name].dimensions)
-        if length == 1:
-            return [self.table[name].dimensions[0].upper_bound]
-        elif length == 2:
-            return [self.table[name].dimensions[0].upper_bound, self.table[name].dimensions[1].upper_bound]
-        else:
-            return None
+    def get_dimensions(self, name: str) -> List[int]:
+        """Regresa la lista de dimensiones"""
+        if name in self.table:
+            return [dim.upper_bound for dim in self.table.get(name).dimensions]
+        return []
 
-    def set_direction(self, var_name: str, direction: int):
+    def set_direction(self, var_name: str, direction: int) -> None:
+        """asigna la direccion virtual de una variable"""
         if var_name in self.table:
             self.table[var_name].direction = direction
