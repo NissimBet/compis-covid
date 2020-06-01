@@ -6,9 +6,8 @@ categs = [("global", "non_temp", 1000, 1000), ("global", "temp", 2000, 1000),
 
 data_types = [("int", 0, 100), ("float", 100, 100),
               ("char", 200, 100), ("string", 300, 100),
-              ("bool", 400, 100), ("dataFrame", 500, 100)]
-
-temp_ints = ()
+              ("bool", 400, 100), ("dataFrame", 500, 100),
+              ("pointer", 600, 100)]
 
 
 def get_scope(mem_direction: int):
@@ -40,6 +39,8 @@ def try_cast(mem_direction: int, mem_value: Any):
         elif val_type == "char":
             return str(mem_value)[0]
         elif val_type == "dataFrame":
+            return mem_value
+        elif val_type == "pointer":
             return mem_value
     except ValueError:
         print(f"Error Casting value {mem_value} to {val_type}")

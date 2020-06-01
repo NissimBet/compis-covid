@@ -7,6 +7,7 @@ dataTypes = [
     #'void',  # 4
     'dataFrame',  # 5
     'bool',  # 6
+    'pointer'
 ]
 
 operators = [
@@ -30,23 +31,34 @@ allowedOps = {
     '+' : [
         ({"float", "int"}, "float"),
         ({"float"}, "float"),
-        ({"int"}, "int")
+        ({"int"}, "int"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     '-' : [
         ({"float", "int"}, "float"),
         ({"float"}, "float"),
-        ({"int"}, "int")
+        ({"int"}, "int"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     '*' : [
         ({"float", "int"}, "float"),
         ({"float"}, "float"),
-        ({"int"}, "int")
+        ({"int"}, "int"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     '/' : [
         ({"float", "int"}, "float"),
         ({"float"}, "float"),
-        ({"int"}, "int")
-
+        ({"int"}, "int"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     '=' : [
         ({"float", "int"}, "float"),
@@ -55,17 +67,29 @@ allowedOps = {
         ({"string"}, "string"),
         ({"char"}, "char"),
         ({"dataFrame"}, "dataFrame"),
-        ({"bool"}, "bool")
+        ({"bool"}, "bool"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
+        ({"pointer", "string"}, "string"),
+        ({"pointer", "char"}, "char"),
+        ({"pointer", "bool"}, "bool")
     ],
     '<' : [
         ({"float", "int"}, "bool"),
         ({"float"}, "bool"),
-        ({"int"}, "bool")
+        ({"int"}, "bool"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     '>' : [
         ({"float", "int"}, "bool"),
         ({"float"}, "bool"),
-        ({"int"}, "bool")
+        ({"int"}, "bool"),
+        ({"pointer"}, "pointer"),
+        ({"pointer", "int"}, "int"),
+        ({"pointer", "float"}, "float"),
     ],
     "<>": [
         ({"float", "int"}, "bool"),
@@ -74,7 +98,13 @@ allowedOps = {
         ({"string"}, "bool"),
         ({"char"}, "bool"),
         ({"dataFrame"}, "bool"),
-        ({"bool"}, "bool")
+        ({"bool"}, "bool"),
+        ({"pointer"}, "bool"),
+        ({"pointer", "int"}, "bool"),
+        ({"pointer", "float"}, "bool"),
+        ({"pointer", "string"}, "bool"),
+        ({"pointer", "char"}, "bool"),
+        ({"pointer", "bool"}, "bool")
     ],
     "==": [
         ({"float", "int"}, "bool"),
@@ -83,13 +113,23 @@ allowedOps = {
         ({"string"}, "bool"),
         ({"char"}, "bool"),
         ({"dataFrame"}, "bool"),
-        ({"bool"}, "bool")
+        ({"bool"}, "bool"),
+        ({"pointer"}, "bool"),
+        ({"pointer", "int"}, "bool"),
+        ({"pointer", "float"}, "bool"),
+        ({"pointer", "string"}, "bool"),
+        ({"pointer", "char"}, "bool"),
+        ({"pointer", "bool"}, "bool")
     ],
     "&&": [
-        ({"bool"}, "bool")
+        ({"bool"}, "bool"),
+        ({"pointer"}, "bool"),
+        ({"pointer", "bool"}, "bool")
     ],
     "||": [
-        ({"bool"}, "bool")
+        ({"bool"}, "bool"),
+        ({"pointer"}, "bool"),
+        ({"pointer", "bool"}, "bool")
     ]
 }
 

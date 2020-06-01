@@ -18,6 +18,7 @@ class VirtualMachine:
 
     def __init__(self, file_path):
         self.__global_memory = Memory(1000)
+        self.__global_temps = Memory(2000)
         self.__constants = Memory(10000)
         self.__execution_stack = Stack[VMFunction]()
 
@@ -27,14 +28,30 @@ class VirtualMachine:
 
         self.__function_table = {}
 
+        self.__context = None
+
         self.load_file_contents(file_path)
 
     def execute_quads(self):
+        global_func = self.__function_table.get("global")
+        for var, size in global_func.get("num_vars").items():
+            self.__global_memory.initialize_var_type(var, size)
+        for var, size in global_func.get("num_temps").items():
+            self.__global_temps.initialize_var_type(var, size)
+
+        function = self.__function_table.get("main")
+        function_context = VMFunction("main")
+        for var, size in function.get("num_vars").items():
+            function_context.era(var, size, False)
+        for var, size in function.get("num_temps").items():
+            function_context.era(var, size, True)
+        self.__execution_stack.push(function_context)
         while self.__index_counter < len(self.__quads):
             current_quad = self.__quads[self.__index_counter]
             # print("counter ", self.__index_counter, len(self.__quads))
             # print("QUAD", current_quad)
-            self.__index_counter = self.load_quad(current_quad[0], current_quad[1], current_quad[2], current_quad[3])
+            self.__index_counter = self.load_quad(
+                current_quad[0], current_quad[1], current_quad[2], current_quad[3])
 
     def load_file_contents(self, filename: str):
         if os.path.exists(filename):
@@ -49,13 +66,15 @@ class VirtualMachine:
                         if len(values) < 2:
                             print(f"Error, malformed pair for constant variables")
                         else:
-                            self.__constants.push_var(int(values[0]), try_cast(int(values[0]), values[1]))
+                            self.__constants.push_var(
+                                int(values[0]), try_cast(int(values[0]), values[1]))
                 # FUNCTION TABLE
                 for line in file:
                     if line == stop_string:
                         break
                     else:
-                        values = re.match(r"(\w*),(\w*),(\w*),(\[.*\]),(\[.*\])", line.strip('\r\n'))
+                        values = re.match(
+                            r"(\w*),(\w*),(\w*),(\[.*\]),(\[.*\])", line.strip('\r\n'))
                         func_vars = re.findall(r"\(.*?,.*?\)", values.group(4))
                         temp_vars = re.findall(r"\(.*?,.*?\)", values.group(5))
                         # print(values.groups())
@@ -65,10 +84,12 @@ class VirtualMachine:
                         num_temps = {}
                         for func_var in func_vars:
                             var_type = func_var.split(',')
-                            num_vars.setdefault(var_type[0].strip("()'"), int(var_type[1].strip("()'")))
+                            num_vars.setdefault(var_type[0].strip(
+                                "()'"), int(var_type[1].strip("()'")))
                         for temp_var in temp_vars:
                             temp_type = temp_var.split(',')
-                            num_temps.setdefault(temp_type[0].strip("()'"), int(temp_type[1].strip("()'")))
+                            num_temps.setdefault(temp_type[0].strip(
+                                "()'"), int(temp_type[1].strip("()'")))
 
                         if len(values.groups()) < 5:
                             print(f"Error, malformed fucntion table data")
@@ -79,7 +100,8 @@ class VirtualMachine:
                                 "num_vars": num_vars,
                                 "num_temps": num_temps
                             }
-                            self.__function_table.setdefault(values[1], new_function)
+                            self.__function_table.setdefault(
+                                values[1], new_function)
                 # QUADS
                 for line in file:
                     quad = line.strip("\r\n").split(',')
@@ -94,13 +116,22 @@ class VirtualMachine:
 
     def get_var(self, var_dir: str):
         try:
-            direction = int(var_dir)
+            match = re.match(r"\((.*)\)\n", var_dir)
+            if match:
+                print("FOUND POINTER", match.group(1))
+                direction = self.get_var(match.group(1))
+            else:
+                # print(var_dir)
+                direction = int(var_dir)
         except ValueError:
             print(f"Provided Direction is not a number format {var_dir}")
             return
         var_scope = get_scope(direction)
         if var_scope == "global":
-            return self.__global_memory.get_var(direction)
+            if 1000 <= direction < 2000:
+                return self.__global_memory.get_var(direction)
+            elif 2000 <= direction < 3000:
+                return self.__global_temps.get_var(direction)
         elif var_scope == "local":
             return self.__execution_stack.top().get_var(direction)
         elif var_scope == "constant":
@@ -108,14 +139,29 @@ class VirtualMachine:
 
     def assign_var(self, var_dir: str, value: Any):
         try:
-            direction = int(var_dir)
+            match = re.match(r"\((.*)\).*", var_dir)
+            if match:
+                # print("FOUND POINTER", var_dir, match.group(1))
+                direction = self.get_var(match.group(1))
+                # print(direction)
+                # func_vars, func_temps = self.__execution_stack.top().get_vars()
+                # for i in func_vars:
+                #     print(i.items())
+                # print(func_vars)
+                # print(func_temps)
+            else:
+                # print(var_dir)
+                direction = int(var_dir)
         except ValueError:
-            print(f"Provided Direction is not a number format {var_dir}, cannot assign {value}")
+            print(
+                f"Provided Direction is not a number format {var_dir}, cannot assign {value}")
             return
         var_scope = get_scope(direction)
         if var_scope == "global":
-            # self.__global_memory.assign_var(direction, try_cast(direction, value))
-            self.__global_memory.assign_var(direction, value)
+            if 1000 <= direction < 2000:
+                return self.__global_memory.assign_var(direction, value)
+            elif 2000 <= direction < 3000:
+                return self.__global_temps.assign_var(direction, value)
         elif var_scope == "local":
             # self.__execution_stack.top().assign_var(direction, try_cast(direction, value))
             self.__execution_stack.top().assign_var(direction, value)
@@ -183,6 +229,7 @@ class VirtualMachine:
             self.assign_var(dir3, var1 or var2)
         elif operation == "GOSUB":  # GOSUB
             self.__index_stack.push(self.__index_counter)
+            self.__execution_stack.push(self.__context)
             return int(dir3)
         elif operation == "ERA":  # ERA
             function = self.__function_table.get(dir3)
@@ -191,12 +238,10 @@ class VirtualMachine:
                 function_context.era(var, size, False)
             for var, size in function.get("num_temps").items():
                 function_context.era(var, size, True)
-            self.__execution_stack.push(function_context)
+            self.__context = function_context
         elif operation == "PARAM":  # PARAM
-            current_context = self.__execution_stack.pop()
             var1 = self.get_var(dir1)
-            current_context.pass_param(int(dir3), var1)
-            self.__execution_stack.push(current_context)
+            self.__context.pass_param(int(dir3), var1)
         elif operation == "ENDFUNC":  # END FUNC
             self.__execution_stack.pop()
             return self.__index_stack.pop() + 1
@@ -214,4 +259,12 @@ class VirtualMachine:
             pass
         elif operation == "COLS":  # COLS
             pass
+        elif operation == "VER":
+            var1 = self.get_var(dir1)
+            var3 = self.get_var(dir3)
+            if var1 >= var3:
+                print(dir1, dir3)
+                print(var1, var3)
+                print(f"Error, index out of bounds")
+                sys.exit(1)
         return self.__index_counter + 1

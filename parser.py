@@ -35,6 +35,7 @@ def p_goto_main(_):
 def p_programa(p):
     """programa     : PROGRAM ID ';' programa_1 main"""
     p[0] = "COMPILA"
+    global_context.end_function(False)
     global_context.create_quad(Quadruple.OperationType.END_PROG, "", "", "")
 
 
@@ -67,7 +68,8 @@ def p_vars_1(_):
 
 def p_vars_1_error(p):
     """vars_1       : tipo set_var_type ':' lista_id error ';' vars_2 """
-    print("Error de sintaxis en la declaración de variables. Línea ", p.lineno(5), ", Posición", p.lexpos(5))
+    print("Error de sintaxis en la declaración de variables. Línea ",
+          p.lineno(5), ", Posición", p.lexpos(5))
 
 
 def p_vars_2(_):
@@ -82,7 +84,7 @@ def p_declare_var(p):
     # print('variable dimension', p[-1][1])
     if not global_context.declare_variable(p[-1][0], p[-1][1], global_context.function.top() == "global"):
         print(
-                f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
+            f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
                 Variable "{p[-1][0]}" ya esta declarada en este contexto')
 
 
@@ -129,7 +131,7 @@ def p_id_completo(p):
     """id_completo      : ID push_dim_var id_completo_1"""
     # print("Id Completo",p[1], p[2])
     p[0] = p[1], p[2]
-    print('p0', p[0])
+    # print('p0', p[0])
     # print('asignable', global_context.operands.pop())
 
 
@@ -144,9 +146,6 @@ def p_id_completo_1(p):
     """id_completo_1    :  dimension
                         | epsilon"""
     p[0] = p[1]
-    # operand = global_context.operands.pop()
-    #     operand_type = global_context.types.pop()
-    #     global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
 
 
 def p_id_completo_1_error(_):
@@ -154,50 +153,80 @@ def p_id_completo_1_error(_):
     print("Syntax error while declaring variable dimensions.")
 
 
-def p_verif_dim(p):
+def p_verif_dim(_):
     """verif_dim : """
     direc = global_context.operands.pop()
+    direc_type = global_context.types.pop()
     var = global_context.get_variable(avail.get_val_from_dir(direc))
-    tipo = global_context.types.pop()
 
-    print('Verificacion de dimension var y tipo', var, tipo)
+    # print('Verificacion de dimension var y tipo', var, direc_type)
     # if var.dimensions is None:
-        # print('Syntax error: variable has no dimensions')
+    #   print('Syntax error: variable has no dimensions')
     # elif tipo is not 'int':
-        # print('Syntax error, array access must use int value')
+    #     print('Syntax error, array access must use int value')
     # else:
-    DIM = 1
-    global_context.dimensions.push((var.name, DIM))
+    dim = 1
+    global_context.dimensions.push((var.name, dim))
     global_context.operations.add_separator()
 
 
 def p_crear_quad_ver(p):
     """crear_quad_ver   :"""
-    valor = p[-1]
-    global_context.operands.push(valor)
+    num_var = p[-1]
+    operand_var = num_var
+    is_var = False
+    if global_context.is_variable_declared(num_var):
+        operand_var = global_context.get_variable(num_var)
+        is_var = True
+        if operand_var.type != "int":
+            print(f"ERROR. Only integer indices are allowed")
+    elif avail.get_val_from_dir(num_var):
+        operand_var = num_var
+        is_var = False
 
-    var = global_context.dimensions.top()[0]
-    dims = global_context.get_dimensions(var)
-    dir_dim1 = avail.get_next_const('int', dims[0])
-    global_context.create_quad(Quadruple.OperationType.VER, valor, '', dir_dim1)
+    global_context.operands.push(
+        operand_var.direction if is_var else operand_var)
+    global_context.types.push(operand_var.type if is_var else "int")
+
+    dim_context = global_context.dimensions.top()
+    dimensions = global_context.get_dimensions(dim_context[0])
+    first_dimension = avail.get_next_const('int', dimensions[0])
+    global_context.create_quad(Quadruple.OperationType.VER,
+                               operand_var.direction if is_var else operand_var,
+                               '',
+                               first_dimension)
     # Revisar si hay segunda dimension
-    if len(dims) == 2:
-        aux = global_context.operands.pop()
-        lim_dim2 = avail.get_next_const('int', dims[1])
-        next_temp = avail.get_next_const('int','')
-        global_context.create_quad(Quadruple.OperationType.MULTIPLY, aux, lim_dim2, next_temp )
-        next_temp2 = avail.get_next_const('int', '')
-        global_context.create_quad(Quadruple.OperationType.ADD, next_temp, avail.get_next_const('int', 1), next_temp2)
-        global_context.operands.push(next_temp2)
+    if len(dimensions) == 2:
+        second_dimension = avail.get_next_const('int', dimensions[1])
+        global_context.operands.push(second_dimension)
+        global_context.types.push("int")
+        global_context.operations.push("*")
+        global_context.create_operation_quad(["*"])
+
+        second_dimension = avail.get_next_const('int', 1)
+        global_context.operands.push(second_dimension)
+        global_context.types.push("int")
+        global_context.operations.push("+")
+        global_context.create_operation_quad(["+"])
 
 
-def p_suma_arreglo(p):
+def p_suma_arreglo(_):
     """suma_arreglo : """
     aux1 = global_context.operands.pop()
+    aux_type = global_context.types.pop()
+
     base = global_context.get_variable(global_context.dimensions.pop()[0])
-    tk = avail.get_next_const('pointer', '')
-    global_context.create_quad(Quadruple.OperationType.ADD, aux1, base.direction, (tk,))
-    global_context.operands.push(tk)
+    base_dir_const = avail.set_const_var("int", base.direction)
+    print("SUMA_ARR", base, base.direction, base_dir_const)
+    pointer_direction = global_context.generate_temp("pointer")
+    global_context.create_quad(
+            Quadruple.OperationType.ADD,
+            f"({aux1})" if aux_type == "pointer" else aux1,
+            base_dir_const,
+            pointer_direction)
+
+    global_context.operands.push(pointer_direction)
+    global_context.types.push("pointer")
     global_context.operations.pop()
 
 
@@ -212,16 +241,43 @@ def p_dimension(p):
 def p_handle_matrix(p):
     """handle_matrix    : """
     # Cuadruplo de verificacion, dimensión 2
-    valor = avail.get_next_const('int', p[-1])
-    lim_dim2 = avail.get_next_const('int', valor)
-    print('var, dims, valor, lim_dim2', valor, lim_dim2)
-    global_context.create_quad(Quadruple.OperationType.VER, valor, '', lim_dim2)
+    num_var = p[-1]
+    operand_var = num_var
+    is_var = False
+    if global_context.is_variable_declared(num_var):
+        operand_var = global_context.get_variable(num_var)
+        is_var = True
+        if operand_var.type != "int":
+            print(f"ERROR. Only integer indices are allowed")
+    elif avail.get_val_from_dir(num_var):
+        operand_var = num_var
+        is_var = False
+
+    dimension = global_context.dimensions.top()
+    dim_var = global_context.get_variable(dimension[0])
+    print([dim.m for dim  in dim_var.dimensions])
+    lim_dim2 = avail.get_next_const('int', dim_var.dimensions[dimension[1]].upper_bound)
+    print(lim_dim2)
+    global_context.create_quad(Quadruple.OperationType.VER,
+                               operand_var.direction if is_var else operand_var,
+                               '',
+                               lim_dim2)
     # Paso 3.3 de acciones neurálgicas
-    aux1 = global_context.operands.pop()
-    aux2 = global_context.operands.pop()
-    next_temp = avail.get_next_const('int', '')
-    global_context.create_quad(Quadruple.OperationType.ADD, aux1, aux2, next_temp)
-    global_context.operands.push(next_temp)
+    # aux1 = global_context.operands.pop()
+    # aux1_type = global_context.types.pop()
+    # aux2 = global_context.operands.pop()
+    # aux2_type = global_context.types.pop()
+    # dir_const = avail.get_next_const("int", operand_var.direction if is_var else operand_var)
+    dir_const = operand_var.direction if is_var else operand_var
+    global_context.operands.push(dir_const)
+    global_context.types.push("int")
+    global_context.operations.push("+")
+    global_context.create_operation_quad(["+"])
+    # next_temp = global_context.generate_temp("int")
+    # global_context.create_quad(Quadruple.OperationType.ADD, aux1, aux2, next_temp)
+    #
+    # global_context.operands.push(next_temp)
+    # global_context.types.push("int")
 
 
 def p_dimension_1(p):
@@ -229,7 +285,7 @@ def p_dimension_1(p):
                     | epsilon """
     if len(p) > 2:
         p[0] = p[2]
-    print('This is p4', p[0])
+    # print('This is p4', p[0])
 
 
 def p_tipo(p):
@@ -245,7 +301,8 @@ def p_tipo(p):
 def p_declare_func(p):
     """declare_func : """
     if not global_context.declare_function(p[-1], None):
-        print(f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
+        print(
+            f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
         # avail.reset_locals()
 
 
@@ -309,7 +366,8 @@ def p_statement_1(_):
 def p_check_variable(p):
     """check_variable   : """
     if not global_context.is_variable_declared(p[-1][0]):
-        print(f'Error de Sintaxis. Error de asignacion en linea {p.lineno(-1)}. Variable no declarada {p[-1][0]}')
+        print(
+            f'Error de Sintaxis. Error de asignacion en linea {p.lineno(-1)}. Variable no declarada {p[-1][0]}')
 
 
 # ID_COMPLETO '=' EXPRESSION
@@ -320,10 +378,16 @@ def p_assignment(p):
 
     if global_context.operands.top() is not None:
         assigned = global_context.operands.pop()
+        assigned_type = global_context.types.pop()
     else:
         assigned = global_context.get_variable(p[1][0]).direction
+        assigned_type = global_context.get_variable(p[1][0]).type
 
-    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned)
+    global_context.create_quad(
+            Quadruple.OperationType.ASSIGN,
+            f"({operand_name})" if operand_type == "pointer" else operand_name,
+            "",
+            f"({assigned})" if assigned_type == "pointer" else assigned)
     # print(f"Assign to {p[1][0]}, {p[4]}")
 
 
@@ -341,7 +405,8 @@ def p_return(p):
     exp_type = global_context.types.pop()
     exp_val = global_context.operands.pop()
     if exp_type != function.return_type:
-        print(f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
+        print(
+            f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
 
 
 def p_set_func(p):
@@ -354,7 +419,8 @@ def p_check_read_param(p):
     """check_read_param  : """
     var = global_context.get_variable(p[-1][0])
     if var:
-        global_context.create_quad(Quadruple.OperationType.READ, "", "", var.direction)
+        global_context.create_quad(
+            Quadruple.OperationType.READ, "", "", var.direction)
     else:
         print(f"Error. Variable {p[-1]} not declared in line {p.lineno(-1)}")
 
@@ -408,7 +474,7 @@ def p_load(p):
 
         num_lines_var_name = p[7]
         num_vars_var_name = p[9]
-        print('nombres', num_lines_var_name, num_vars_var_name)
+        # print('nombres', num_lines_var_name, num_vars_var_name)
         var = global_context.get_variable(var_name)
         num_lines = global_context.get_variable(num_lines_var_name)
         num_vars = global_context.get_variable(num_vars_var_name)
@@ -416,23 +482,32 @@ def p_load(p):
         if var and num_lines and num_vars:
             if var.type == "dataFrame":
                 if num_lines.type == "int" and num_vars.type == "int":
-                    global_context.create_quad(Quadruple.OperationType.FILE_SEARCH, path, "", var.direction)
-                    global_context.create_quad(Quadruple.OperationType.LINES, var.direction, "", num_lines.direction)
-                    global_context.create_quad(Quadruple.OperationType.COLS, var.direction, "", num_vars.direction)
+                    global_context.create_quad(
+                        Quadruple.OperationType.FILE_SEARCH, path, "", var.direction)
+                    global_context.create_quad(
+                        Quadruple.OperationType.LINES, var.direction, "", num_lines.direction)
+                    global_context.create_quad(
+                        Quadruple.OperationType.COLS, var.direction, "", num_vars.direction)
                 else:
                     if num_lines.type == "int":
-                        print(f"ERROR in line {p.lineno(7)}. Expected int, got {num_lines.type}")
+                        print(
+                            f"ERROR in line {p.lineno(7)}. Expected int, got {num_lines.type}")
                     if num_vars.type == "int":
-                        print(f"ERROR in line {p.lineno(9)}. Expected int, got {num_vars.type}")
+                        print(
+                            f"ERROR in line {p.lineno(9)}. Expected int, got {num_vars.type}")
             else:
-                print(f"ERROR in line {p.lineno(3)}. Expected type dataFrame, got {var.type}")
+                print(
+                    f"ERROR in line {p.lineno(3)}. Expected type dataFrame, got {var.type}")
         else:
             if not var:
-                print(f"ERROR in line {p.lineno(3)}. Variable not declared {p[3]}")
+                print(
+                    f"ERROR in line {p.lineno(3)}. Variable not declared {p[3]}")
             if not num_lines:
-                print(f"ERROR in line {p.lineno(7)}. Variable not declared {p[7]}")
+                print(
+                    f"ERROR in line {p.lineno(7)}. Variable not declared {p[7]}")
             if not num_vars:
-                print(f"ERROR in line {p.lineno(9)}. Variable not declared {p[9]}")
+                print(
+                    f"ERROR in line {p.lineno(9)}. Variable not declared {p[9]}")
     except IndexError:
         print(f"ERROR in line {p.lineno(0)}. Too little variables provided")
 
@@ -445,7 +520,7 @@ def p_declare_main(_):
 
 def p_main(_):
     """main     : MAIN declare_main '(' ')' main_1 '{' bloque '}'  """
-    pass
+    global_context.end_function(False)
 
 
 def p_main_1(_):
@@ -457,11 +532,13 @@ def p_main_1(_):
 def p_logic_comp_check(p):
     """logic_comp_check : """
     if not global_context.types.top() == "bool":
-        print(f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
+        print(
+            f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
     else:
         operand = global_context.operands.pop()
         operand_type = global_context.types.pop()
-        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+        global_context.create_quad(
+            Quadruple.OperationType.GOTO_FALSE, operand, "", "")
         global_context.create_jump()
 
 
@@ -499,11 +576,13 @@ def p_loop(_):
 def p_check_loop(p):
     """check_loop   : """
     if not global_context.types.top() == "bool":
-        print(f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
+        print(
+            f"Type Error. Se esperaba un valor booleano en linea {p.lineno(-1)}")
     else:
         operand = global_context.operands.pop()
         operand_type = global_context.types.pop()
-        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, operand, "", "")
+        global_context.create_quad(
+            Quadruple.OperationType.GOTO_FALSE, operand, "", "")
         global_context.create_jump()
 
 
@@ -536,7 +615,8 @@ def p_for_check_id(p):
         global_context.operands.push(var.direction)
         global_context.types.push(var.type)
     else:
-        print(f"Sintax Error. Variable {p[-1][0]} not declared in line {p.lineno(-1)}")
+        print(
+            f"Syntax Error. Variable {p[-1][0]} not declared in line {p.lineno(-1)}")
 
 
 def p_for_assign(_):
@@ -546,14 +626,15 @@ def p_for_assign(_):
     assigned_type = global_context.types.top()
     assigned = global_context.operands.top()
     # assigned = global_context.get_variable(p[1][0])
-    print(assigned, operand_name)
-    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned)
+    # print(assigned, operand_name)
+    global_context.create_quad(
+        Quadruple.OperationType.ASSIGN, operand_name, "", assigned)
 
 
 def p_for_compare(_):
     """for_compare  : """
     global_context.create_jump()
-    print(global_context.operands, global_context.operations)
+    # print(global_context.operands, global_context.operations)
     right_operand = global_context.operands.pop()
     right_type = global_context.types.pop()
 
@@ -565,12 +646,14 @@ def p_for_compare(_):
     if resultant_type:
         result = avail.get_next_local(resultant_type, True, "")
 
-        global_context.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
+        global_context.create_quad(Quadruple.get_operator_name(
+            operator), left_operand, right_operand, result)
         global_context.operands.push(result)
         global_context.types.push(resultant_type)
 
-        print(global_context.operands, global_context.operations)
-        global_context.create_quad(Quadruple.OperationType.GOTO_FALSE, result, "", "")
+        # print(global_context.operands, global_context.operations)
+        global_context.create_quad(
+            Quadruple.OperationType.GOTO_FALSE, result, "", "")
         global_context.create_jump()
 
         global_context.operands.push(left_operand)
@@ -588,11 +671,13 @@ def p_no_condition_loop(_):
     """no_condition_loop    : FROM id_completo for_check_id '=' exp for_assign TO exp for_compare DO '{' no_condition_loop_1 '}'  """
     operand = global_context.operands.pop()
     operand_type = global_context.types.pop()
+
     one = avail.get_next_const("int", 1)
-    global_context.create_quad(Quadruple.OperationType.ADD, operand, one, operand)
+    global_context.create_quad(
+        Quadruple.OperationType.ADD, operand, one, operand)
     end = global_context.jumpStack.pop()
     start = global_context.jumpStack.pop()
-    print("End of for loop", global_context.operands)
+    # print("End of for loop", global_context.operands)
     global_context.create_quad(Quadruple.OperationType.GOTO, "", "", start + 1)
     global_context.fill_quad(end)
 
@@ -657,14 +742,15 @@ def p_called_func(p):
         global_context.func_calls.push(f_name)
         global_context.param_counter.push(0)
         function_size = global_context.function_table.function(f_name).vars
-        print(function_size)
-        print(global_context.function_table.function(f_name).temps)
+        # print(function_size)
+        # print(global_context.function_table.function(f_name).temps)
         total_vars = sum([i for i in function_size.values()])
         # for var_type, var_nums in function_size.items():
         #     global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
         global_context.create_quad(Quadruple.OperationType.ERA, "", "", f_name)
     else:
-        print(f"Syntax Error, function not defined {f_name} in line {p.lineno(-1)}")
+        print(
+            f"Syntax Error, function not defined {f_name} in line {p.lineno(-1)}")
 
 
 def p_func_call(p):
@@ -694,11 +780,12 @@ def p_check_param(p):
             param_counter = global_context.param_counter.top()
             param_dir = function.parameters[param_counter].direction
             # print(function.parameters[param_counter].direction)
-            global_context.create_quad(Quadruple.OperationType.PARAMETER, var, "", param_dir)
+            global_context.create_quad(
+                Quadruple.OperationType.PARAMETER, var, "", param_dir)
             print(f"Parametro encontrado {var} en funcion {function.name}")
         else:
             print(
-                    f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
+                f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
     else:
         print(f"Error, too many parameters on function {function.name}")
     c = global_context.param_counter.pop()
@@ -838,7 +925,8 @@ def p_push_id(p):
     """push_id  :   """
     var = global_context.get_variable(p[-1])
     if not var:
-        print(f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
+        print(
+            f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
     global_context.operands.push(var.direction)
     global_context.types.push(var.type)
 
@@ -953,6 +1041,15 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
     float: xx, yy;
     dataFrame: myData, frame;
 {
+    x = 30;
+    d = 10;
+    c = 14;
+    y = 400;
+    b = 30;
+    
+    t = true;
+    f = false;
+    
     a = d + c;
     x = (a + c) * d / d;
     if (b > c) then {
@@ -968,8 +1065,11 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
 
     while (x > c) do {
         t = b + a;
+        x = x - 1; 
     }
 
+    xx = 42.1;
+    yy = 12.3;
     hello(xx,yy, x + c, c + x);
 
     from a = a to b do {
@@ -977,6 +1077,7 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
     }
 
     dev[1][1] = 18;
+    dev[3][0] = 10;
 
     write(xx, yy, x);
 
@@ -1033,9 +1134,9 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
 # '''
 
 logging.basicConfig(
-        level=logging.DEBUG,
-        filemode="w",
-        filename="parselog.txt")
+    level=logging.DEBUG,
+    filemode="w",
+    filename="parselog.txt")
 
 if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
     print("Sintaxis aceptada")

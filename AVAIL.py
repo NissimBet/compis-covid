@@ -66,8 +66,8 @@ class AVAIL:
                 size = self.types.get("global").get("non_temp").get(var_type).get("size")
                 self.types.get("global").get("non_temp").get(var_type)["counter"] += size
 
-                self.dir_to_var[str(minimum + count + size)] = var_name
-                return minimum + count + size
+                self.dir_to_var[str(minimum + count + size - 1)] = var_name
+                return minimum + count + size - 1
         else:
             print(f"ERROR. variable type {var_type} not recognized")
 
@@ -125,6 +125,7 @@ class AVAIL:
                 self.dir_to_const[str(count + minimum)] = {}
                 self.dir_to_const[str(count + minimum)]["value"] = value
                 self.dir_to_const[str(count + minimum)]["type"] = var_type
+                self.const_to_dir[value] = count + minimum
                 return count + minimum
             else:
                 return self.const_to_dir[str(value)]

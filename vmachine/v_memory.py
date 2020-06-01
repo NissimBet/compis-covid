@@ -17,7 +17,8 @@ class Memory:
         return self.__base_dir
 
     def get_var_index(self, direction: int, var_type: str = ""):
-        if not var_type: var_type = get_type(direction)
+        if not var_type:
+            var_type = get_type(direction)
         return direction - self.__base_dir - self.__memory.get(var_type).get("base")
 
     def get_var(self, variable_dir: int):
@@ -25,7 +26,8 @@ class Memory:
             var_type = get_type(variable_dir)
             var_index = self.get_var_index(variable_dir, var_type)
             variable = self.__memory.get(var_type).get("values")[var_index]
-            if not variable:
+            if variable is None:
+                print(variable, var_index, var_type)
                 print(f"Variable not initialized {variable_dir}")
             else:
                 return variable

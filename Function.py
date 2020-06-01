@@ -42,7 +42,7 @@ class Function(object):
         var_vals = list(self.variables.table.values())
         var_org: Dict[str, int] = {var.type: 0 for var in var_vals}
         for var in var_vals:
-            var_org[var.type] += 1
+            var_org[var.type] += var.size
         self.vars = var_org
 
     def __str__(self):

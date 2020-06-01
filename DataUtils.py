@@ -60,7 +60,7 @@ class ParsingContext(object):
     def declare_function(self, f_name: str, f_type: Optional[str]) -> bool:
         if f_name not in self.function_table.table:
             quad = self.quad_counter + 1
-            print(f"QUAD {f_name} is {quad}")
+            # print(f"QUAD {f_name} is {quad}")
             self.function_table.declare_function(f_name, f_type if f_type else self.var_type, quad)
             self.set_function(f_name)
             return True
@@ -102,7 +102,10 @@ class ParsingContext(object):
         if resultant_type:
             result = avail.get_next_local(resultant_type, True, "")
 
-            self.create_quad(Quadruple.get_operator_name(operator), left_operand, right_operand, result)
+            self.create_quad(Quadruple.get_operator_name(operator),
+                             f"({left_operand})" if left_type == "pointer" else left_operand,
+                             f"({right_operand})" if right_type == "pointer" else right_operand,
+                             result)
             self.operands.push(result)
             self.types.push(resultant_type)
         else:
@@ -114,7 +117,7 @@ class ParsingContext(object):
         else:
             var_direction = avail.get_next_local(self.var_type, False, var_name)
 
-        print(var_direction)
+        # print(var_direction)
         if not dimensions:
             dimensions = []
         dims = [int(avail.get_val_from_dir(val)) for val in list(dimensions) if val is not None]
@@ -138,13 +141,20 @@ class ParsingContext(object):
     def get_function(self):
         return self.function_table.function(self.function.top())
 
-    def end_function(self):
+    def end_function(self, quad: bool = True):
         function = self.get_function()
         function_name = self.function.pop()
-        self.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
+        if quad:
+            self.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
         temps = avail.reset_locals()
         self.function_table.erase_var_table(function_name)
         function.temps = temps
+
+    def generate_temp(self, temp_type: str):
+        if self.function.top() == "global":
+            return avail.get_next_global(temp_type, True)
+        else:
+            return avail.get_next_local(temp_type, True)
 
     def __str__(self):
         return "({}, {})".format(self.function, self.var_type)

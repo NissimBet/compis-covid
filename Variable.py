@@ -26,7 +26,6 @@ class Variable(object):
         self.name = name
         self.direction = var_direction
         self.init_dimensions(dimensions)
-        
 
     def init_dimensions(self, bounds: List[int]):
         if not bounds or len(bounds) == 0:
@@ -38,7 +37,7 @@ class Variable(object):
         offset = 0
         dimensions: List[Dimension] = []
         for index in range(len(bounds)):
-            r = r * (bounds[index] + 1)
+            r = r * (bounds[index])
             dimension = Dimension(bounds[index])
             dimension.r = r
             dimensions.append(dimension)
@@ -47,7 +46,7 @@ class Variable(object):
         dimensions[-1].m = r
 
         for index in range(len(bounds)):
-            m = dimensions[index - 1].m / (bounds[index] + 1)
+            m = dimensions[index - 1].m // (bounds[index])
             dimensions[index].m = m
 
         dimensions[-1].m = - offset
@@ -80,7 +79,7 @@ class VariableTable(object):
         length = len(self.table[name].dimensions)
         if length == 1:
             return [self.table[name].dimensions[0].upper_bound]
-        elif length ==2:
+        elif length == 2:
             return [self.table[name].dimensions[0].upper_bound, self.table[name].dimensions[1].upper_bound]
         else:
             return None
@@ -88,4 +87,3 @@ class VariableTable(object):
     def set_direction(self, var_name: str, direction: int):
         if var_name in self.table:
             self.table[var_name].direction = direction
-
