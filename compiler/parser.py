@@ -11,13 +11,13 @@ import logging
 
 import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
-from Quadruple import Quadruple
-from lexer import tokens, literals
+from .lexer import tokens, literals
+from .Quadruple import Quadruple
 
-from DataUtils import ParsingContext
-from Variable import Variable
+from .DataUtils import ParsingContext
+from .Variable import Variable
 
-from AVAIL import avail
+from compiler.AVAIL import avail
 
 global_context = ParsingContext()
 
@@ -1136,12 +1136,45 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
 logging.basicConfig(
     level=logging.DEBUG,
     filemode="w",
-    filename="parselog.txt")
+    filename="../parselog.txt")
 
-if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
-    print("Sintaxis aceptada")
-else:
-    print("error de sintaxis")
+
+# def parse(file: str, debug: bool = False):
+#     input_data = ""
+#     with open(file, "r") as input_file:
+#         input_data = "".join(input_file.readlines())
+#     parse_status = parser.parse(input_data, tracking=True, debug=debug)
+#     return parse_status == "COMPILA"
+
+
+# def export(file: str):
+#     with open(file, "w+") as export_file:
+#         export_file.write("%%\n")
+#         for value, direction in avail.const_to_dir.items():
+#             export_file.write(f"{direction},{value}\n")
+#         export_file.write("%%\n")
+#         for func in global_context.function_table.table.values():
+#             export_file.write(f"{func.name},{func.return_type}," +
+#                               f"{func.quad_number}," +
+#                               f"{[(k, v) for k, v in func.vars.items()]}," +
+#                               f"{[(k, v) for k, v in func.temps.items()]}\n")
+#         export_file.write("%%\n")
+#         for quad in range(len(global_context.quadruples)):
+#             # print(quad, global_context.quadruples[quad])
+#             quadruple = global_context.quadruples[quad]
+#             try:
+#                 quad_name = Quadruple.OperationType[quadruple.operation].value
+#                 # print("NAME", quad_name)
+#             except KeyError:
+#                 quad_name = quadruple.operation
+#             line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
+#             # print(line)
+#             export_file.write(line)
+#
+# if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
+#     print("Sintaxis aceptada")
+# else:
+#     print("error de sintaxis")
 
 # for k, v in global_context.function_table.table.items():
 #     print(v.__str__())
@@ -1151,28 +1184,28 @@ else:
 # print(global_context.operations)
 
 # quads display
-with open("export.obj", "w+") as export:
-    export.write("%%\n")
-    for value, direction in avail.const_to_dir.items():
-        export.write(f"{direction},{value}\n")
-    export.write("%%\n")
-    for func in global_context.function_table.table.values():
-        export.write(f"{func.name},{func.return_type}," +
-                     f"{func.quad_number}," +
-                     f"{[(k, v) for k, v in func.vars.items()]}," +
-                     f"{[(k, v) for k, v in  func.temps.items()]}\n")
-    export.write("%%\n")
-    for quad in range(len(global_context.quadruples)):
-        # print(quad, global_context.quadruples[quad])
-        quadruple = global_context.quadruples[quad]
-        try:
-            quad_name = Quadruple.OperationType[quadruple.operation].value
-            # print("NAME", quad_name)
-        except KeyError:
-            quad_name = quadruple.operation
-        line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
-        # print(line)
-        export.write(line)
+# with open("../export.obj", "w+") as export:
+#     export.write("%%\n")
+#     for value, direction in avail.const_to_dir.items():
+#         export.write(f"{direction},{value}\n")
+#     export.write("%%\n")
+#     for func in global_context.function_table.table.values():
+#         export.write(f"{func.name},{func.return_type}," +
+#                      f"{func.quad_number}," +
+#                      f"{[(k, v) for k, v in func.vars.items()]}," +
+#                      f"{[(k, v) for k, v in  func.temps.items()]}\n")
+#     export.write("%%\n")
+#     for quad in range(len(global_context.quadruples)):
+#         # print(quad, global_context.quadruples[quad])
+#         quadruple = global_context.quadruples[quad]
+#         try:
+#             quad_name = Quadruple.OperationType[quadruple.operation].value
+#             # print("NAME", quad_name)
+#         except KeyError:
+#             quad_name = quadruple.operation
+#         line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
+#         # print(line)
+#         export.write(line)
 
 # for func in global_context.function_table.table.values():
 #     print(func.name, func.count_vars())

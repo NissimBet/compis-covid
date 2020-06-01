@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from Variable import Variable, VariableTable
+from .Variable import Variable, VariableTable
 
 
 class Function(object):

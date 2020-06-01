@@ -9,7 +9,7 @@
 
 import ply.lex as lex
 
-from AVAIL import avail
+from .AVAIL import avail
 
 # Rule to match reserved words and identifiers
 reserved = {

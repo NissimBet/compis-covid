@@ -1,0 +1,65 @@
+program test;
+var int: a, xyz[20] ,b;
+bool: t, f;
+
+function int hello (float x, float y, int re, int be) {
+    a = 1;
+    b = 2;
+    t = true;
+    f = false;
+}
+
+function void there (int a, int b) {
+    a = 1;
+    b = a + 10;
+}
+
+main ()
+var int: x, c, d, y, ren, col, dev[10][2], ted[19];
+    float: xx, yy;
+    dataFrame: myData, frame;
+{
+    x = 30;
+    d = 10;
+    c = 14;
+    y = 400;
+    b = 30;
+
+    t = true;
+    f = false;
+
+    a = d + c;
+    x = (a + c) * d / d;
+    if (b > c) then {
+        t = f && f;
+        t = true;
+    } else {
+        t = f || f;
+    }
+
+
+    load(myData, "miRuta", ren, col);
+
+
+    while (x > c) do {
+        t = b + a;
+        x = x - 1;
+    }
+
+    xx = 42.1;
+    yy = 12.3;
+    hello(xx,yy, x + c, c + x);
+
+    from a = a to b do {
+        b = x + c;
+    }
+
+    dev[1][1] = 18;
+    dev[3][0] = 10;
+
+    write(xx, yy, x);
+
+    load(frame, "i", x, y);
+
+    return (a);
+}

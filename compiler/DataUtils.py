@@ -1,11 +1,11 @@
 from typing import List, Tuple, Union, Optional
 
-from CuboSemantico import CuboSemantico
-from Function import FunctionTable
+from .CuboSemantico import CuboSemantico
+from .Function import FunctionTable
 from Stack import Stack
-from Quadruple import Quadruple
-from AVAIL import avail
-from Variable import Variable
+from .Quadruple import Quadruple
+from .AVAIL import avail
+from .Variable import Variable
 
 
 class ParsingContext(object):
