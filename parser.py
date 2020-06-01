@@ -126,19 +126,21 @@ def p_declare_id_2(p):
 
 # id dimension?
 def p_id_completo(p):
-    """id_completo      : ID id_completo_1"""
+    """id_completo      : ID push_dim_var id_completo_1"""
     # print("Id Completo",p[1], p[2])
     p[0] = p[1], p[2]
+    print('p0', p[0])
+    # print('asignable', global_context.operands.pop())
 
 def p_push_dim_var(p):
     """push_dim_var     : """
-    global_context.operands.push(global_context.get_variable(p[-1]))
-    dims = global_context.get_dimensions(p[-1]) 
-    for dim in dims:
-        global_context.dimensions.push(dim)
+    var = global_context.get_variable(p[-1])
+    global_context.types.push(var.type)
+    global_context.operands.push(var.direction)
+
 
 def p_id_completo_1(p):
-    """id_completo_1    : push_dim_var dimension 
+    """id_completo_1    :  dimension 
                         | epsilon"""
     p[0] = p[1]
 
@@ -152,52 +154,76 @@ def p_id_completo_1_error(_):
 
 def p_verif_dim(p):
     """verif_dim : """
-    val_limite = global_context.dimensions.pop()
-    dir_limite = avail.get_next_const('int', val_limite)
-    valor_comparar = p[-1]
-    global_context.create_quad(Quadruple.OperationType.VER, valor_comparar, "", dir_limite)
+    direc = global_context.operands.pop()
+    var = global_context.get_variable(avail.get_val_from_dir(direc))
+    tipo = global_context.types.pop()
+    
+    print('var y tipo', var, tipo)
+    # if var.dimensions is None:
+        # print('Syntax error: variable has no dimensions')
+    # elif tipo is not 'int':
+        # print('Syntax error, array access must use int value')
+    # else:
+    DIM = 1
+    global_context.dimensions.push((var.name, DIM))
+    global_context.operations.add_separator()
+
+def p_crear_quad_ver(p):
+    """crear_quad_ver   :"""
+    valor = p[-1]
+    global_context.operands.push(valor)
+
+    var = global_context.dimensions.top()[0]
+    dims = global_context.get_dimensions(var)
+    dir_dim1 = avail.get_next_const('int', dims[0])
+    global_context.create_quad(Quadruple.OperationType.VER, valor, '', dir_dim1)
+    # Revisar si hay segunda dimension
+    if len(dims) == 2:
+        aux = global_context.operands.pop()        
+        lim_dim2 = avail.get_next_const('int', dims[1])
+        next_temp = avail.get_next_const('int','')
+        global_context.create_quad(Quadruple.OperationType.MULTIPLY, aux, lim_dim2, next_temp )
+        next_temp2 = avail.get_next_const('int', '')
+        global_context.create_quad(Quadruple.OperationType.ADD, next_temp, avail.get_next_const('int', 1), next_temp2)
+        global_context.operands.push(next_temp2)
+
+def p_suma_arreglo(p):
+    """suma_arreglo : """
+    aux1 = global_context.operands.pop()
+    base = global_context.get_variable(global_context.dimensions.pop()[0])
+    tk = avail.get_next_const('pointer', '')
+    global_context.create_quad(Quadruple.OperationType.ADD, aux1, base.direction, (tk,))
+    global_context.operands.push(tk)
+    global_context.operations.pop()
 
 # TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    """dimension    : '[' num_var verif_dim ']' dimension_1 """
+    """dimension    : '[' verif_dim num_var crear_quad_ver  ']' dimension_1 suma_arreglo """
     p[0] = (p[2], p[5])
+    # print('p0', p[0])
 
-    # Guardar num de direccion base en constante
-    dir_base = global_context.operands.pop()
-    const_base = avail.get_next_const('int', dir_base)
+def p_handle_matrix(p):
+    """handle_matrix    : """
+    # Cuadruplo de verificacion, dimensión 2
+    valor = avail.get_next_const('int', p[-1])
+    lim_dim2 = avail.get_next_const('int', valor)
+    print('var, dims, valor, lim_dim2', valor, lim_dim2)
+    global_context.create_quad(Quadruple.OperationType.VER, valor, '', lim_dim2)
+    # Paso 3.3 de acciones neurálgicas
+    aux1 = global_context.operands.pop()
+    aux2 = global_context.operands.pop()
+    next_temp = avail.get_next_const('int', '')
+    global_context.create_quad(Quadruple.OperationType.ADD, aux1, aux2, next_temp)
+    global_context.operands.push(next_temp)
 
-    if global_context.function.top() == "global":
-        print('hi')
-        # result = avail.get_next_global('pointer', True, '')
-    else:        
-       result = avail.get_next_local('pointer', True, '')
-    
-    if p[5] is None:
-        global_context.create_quad(Quadruple.OperationType.ADD, p[0][0], dir_base, [result])
-    else:
-        # Multiplicar el primer subíndice por el segundo limite superior, sumar uno
-        first_bound = dir_base.dimensions[1].upper_bound
-        first_dir = avail.get_next_const('int', first_bound)
-        res = avail.get_next_const('int', '')
-        global_context.create_quad(Quadruple.OperationType.MULTIPLY, dir_base.direction, first_dir, res)
-        res2 = avail.get_next_const('int', '')
-        global_context.create_quad(Quadruple.OperationType.ADD, res, avail.get_next_const('int', 1), res2)
-        # Sumar 
-        ofs = avail.get_next_const('int', 1)
-        # global_context.create_quad(Quadruple.OperationType.ADD, upper_bound )
-        print('ub', first_bound)
-
-    print('p0', p[0])
-    
 
 def p_dimension_1(p):
-    """dimension_1  : '[' num_var verif_dim ']'
+    """dimension_1  : '[' num_var handle_matrix ']'
                     | epsilon """
-    # print("dimension x2", p[1:4])
     if len(p) > 2:
         p[0] = p[2]
-    # print ('This is p4', p[0])
+    print ('This is p4', p[0])
 
 
 def p_tipo(p):
@@ -283,10 +309,15 @@ def p_check_variable(p):
 # ID_COMPLETO '=' EXPRESSION
 def p_assignment(p):
     """assignment   : id_completo check_variable '=' logic_comp """
-    assigned = global_context.get_variable(p[1][0])
     operand_type = global_context.types.pop()
     operand_name = global_context.operands.pop()
-    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned.direction)
+
+    if global_context.operands.top() is not None: 
+        assigned = global_context.operands.pop()
+    else:
+        assigned = global_context.get_variable(p[1][0]).direction
+
+    global_context.create_quad(Quadruple.OperationType.ASSIGN, operand_name, "", assigned)
     # print(f"Assign to {p[1][0]}, {p[4]}")
 
 
@@ -901,7 +932,7 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
         b = x + c;
     }
 
-    dev[2][4] = 18;
+    dev[1][1] = 18;
 
     write(xx, yy, x);
 
