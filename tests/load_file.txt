@@ -1,0 +1,9 @@
+program test;
+
+main ()
+var dataFrame: testFrame;
+    int: lines, cols;
+{
+    load(testFrame, "./tests/test_input_data.txt", cols, lines);
+    write(cols, lines);
+}
