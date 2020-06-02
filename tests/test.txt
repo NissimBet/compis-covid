@@ -61,7 +61,5 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
 
     write(xx, yy, x);
 
-    load(frame, "i", x, y);
-
-    return (a);
+    load(frame, "export.obj", x, y);
 }

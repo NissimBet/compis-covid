@@ -6,6 +6,7 @@
 # using PLY (a lex/yacc implementation for Python)
 # code samples from: https://ply.readthedocs.io/en/latest/ply.html
 # ------------------------------------------------------------
+import re
 
 import ply.lex as lex
 
@@ -118,8 +119,9 @@ def t_CTE_I(t):
     return t
 
 def t_CTE_STRING(t):
-    r'\"\w*\"'
-    const_dir = avail.get_next_const("string", t.value)
+    r'\"[^"]*\"'
+    regex = re.search(r'\"([^"]*)\"', t.value)
+    const_dir = avail.get_next_const("string", regex.group(1))
     t.value = const_dir
     return t
 
