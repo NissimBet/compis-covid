@@ -283,4 +283,12 @@ class VirtualMachine:
                 self.assign_var(dir3, mode_val)
             else:
                 print(f"Error. Index out of range")
+        elif operation == "VAR":
+            var1 = self.get_var(dir1)
+            var2 = self.get_var(dir2)
+            if 0 <= var2 < len(var1.columns):
+                variance = var1[var2].var()
+                self.assign_var(dir3, variance)
+            else:
+                print(f"Error. Index out of range")
         return self.__index_counter + 1
