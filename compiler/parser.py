@@ -47,18 +47,15 @@ def p_programa_1(_):
 def p_programa_2(_):
     """programa_2   : function programa_2
                     | epsilon"""
-    pass
 
 
 # var (tipo : lista_id ;)+
 def p_vars(_):
     """vars         : VAR vars_1 """
-    pass
 
 
 def p_set_var_type(p):
     """set_var_type : """
-    # TODO push el tipo de variable a stack
     global_context.set_type(p[-1])
 
 
@@ -79,9 +76,6 @@ def p_vars_2(_):
 
 def p_declare_var(p):
     """declare_var  : """
-    # TODO tomar prestado el tipo de variable ultimo en el scope
-    # TODO tomar prestado el nombre de la ultima funcion en el scope
-    # print('variable dimension', p[-1][1])
     if not global_context.declare_variable(p[-1][0], p[-1][1], global_context.function.top() == "global"):
         print(
             f'Error de Sintaxis en la declaracion de variables. Linea {p.lineno(-1)}. \
@@ -129,10 +123,7 @@ def p_declare_id_2(p):
 # id dimension?
 def p_id_completo(p):
     """id_completo      : ID push_dim_var id_completo_1"""
-    # print("Id Completo",p[1], p[2])
     p[0] = p[1], p[2]
-    # print('p0', p[0])
-    # print('asignable', global_context.operands.pop())
 
 
 def p_push_dim_var(p):
@@ -159,133 +150,37 @@ def p_verif_dim(_):
     direc_type = global_context.types.pop()
     var = global_context.get_variable(avail.get_val_from_dir(direc))
 
-    # print('Verificacion de dimension var y tipo', var, direc_type)
-    # if var.dimensions is None:
-    #   print('Syntax error: variable has no dimensions')
-    # elif tipo is not 'int':
-    #     print('Syntax error, array access must use int value')
-    # else:
+    if len(var.dimensions) == 0:
+        print(f"Error. variable {var.name} no tiene dimensiones.")
+
     dim = 1
     global_context.dimensions.push((var.name, dim))
     global_context.operations.add_separator()
 
 
-def p_crear_quad_ver(p):
+def p_crear_quad_ver(_):
     """crear_quad_ver   :"""
-    num_var = p[-1]
-    operand_var = num_var
-    is_var = False
-    if global_context.is_variable_declared(num_var):
-        operand_var = global_context.get_variable(num_var)
-        is_var = True
-        if operand_var.type != "int":
-            print(f"ERROR. Only integer indices are allowed")
-    elif avail.get_val_from_dir(num_var):
-        operand_var = num_var
-        is_var = False
-
-    global_context.operands.push(
-        operand_var.direction if is_var else operand_var)
-    global_context.types.push(operand_var.type if is_var else "int")
-
-    dim_context = global_context.dimensions.top()
-    dimensions = global_context.get_dimensions(dim_context[0])
-    first_dimension = avail.get_next_const('int', dimensions[0])
-    global_context.create_quad(Quadruple.OperationType.VER,
-                               operand_var.direction if is_var else operand_var,
-                               '',
-                               first_dimension)
-    # Revisar si hay segunda dimension
-    if len(dimensions) == 2:
-        second_dimension = avail.get_next_const('int', dimensions[1])
-        global_context.operands.push(second_dimension)
-        global_context.types.push("int")
-        global_context.operations.push("*")
-        global_context.create_operation_quad(["*"])
-
-        second_dimension = avail.get_next_const('int', 1)
-        global_context.operands.push(second_dimension)
-        global_context.types.push("int")
-        global_context.operations.push("+")
-        global_context.create_operation_quad(["+"])
+    global_context.create_first_dim_access_quads()
 
 
-def p_suma_arreglo(_):
-    """suma_arreglo : """
-    aux1 = global_context.operands.pop()
-    aux_type = global_context.types.pop()
-
-    base = global_context.get_variable(global_context.dimensions.pop()[0])
-    base_dir_const = avail.set_const_var("int", base.direction)
-    print("SUMA_ARR", base, base.direction, base_dir_const)
-    pointer_direction = global_context.generate_temp("pointer")
-    global_context.create_quad(
-            Quadruple.OperationType.ADD,
-            f"({aux1})" if aux_type == "pointer" else aux1,
-            base_dir_const,
-            pointer_direction)
-
-    global_context.operands.push(pointer_direction)
-    global_context.types.push("pointer")
-    global_context.operations.pop()
-
-
-# TODO debe ser num_var entera
 # [ num_var ] {0, 2}
 def p_dimension(p):
-    """dimension    : '[' verif_dim num_var crear_quad_ver  ']' dimension_1 suma_arreglo """
+    """dimension    : '[' verif_dim logic_comp crear_quad_ver  ']' dimension_1 """
+    global_context.create_dimension_final_quads()
+    global_context.operations.remove_separator()
     p[0] = (p[2], p[5])
-    # print('p0', p[0])
 
 
-def p_handle_matrix(p):
+def p_handle_matrix(_):
     """handle_matrix    : """
-    # Cuadruplo de verificacion, dimensión 2
-    num_var = p[-1]
-    operand_var = num_var
-    is_var = False
-    if global_context.is_variable_declared(num_var):
-        operand_var = global_context.get_variable(num_var)
-        is_var = True
-        if operand_var.type != "int":
-            print(f"ERROR. Only integer indices are allowed")
-    elif avail.get_val_from_dir(num_var):
-        operand_var = num_var
-        is_var = False
-
-    dimension = global_context.dimensions.top()
-    dim_var = global_context.get_variable(dimension[0])
-    print([dim.m for dim  in dim_var.dimensions])
-    lim_dim2 = avail.get_next_const('int', dim_var.dimensions[dimension[1]].upper_bound)
-    print(lim_dim2)
-    global_context.create_quad(Quadruple.OperationType.VER,
-                               operand_var.direction if is_var else operand_var,
-                               '',
-                               lim_dim2)
-    # Paso 3.3 de acciones neurálgicas
-    # aux1 = global_context.operands.pop()
-    # aux1_type = global_context.types.pop()
-    # aux2 = global_context.operands.pop()
-    # aux2_type = global_context.types.pop()
-    # dir_const = avail.get_next_const("int", operand_var.direction if is_var else operand_var)
-    dir_const = operand_var.direction if is_var else operand_var
-    global_context.operands.push(dir_const)
-    global_context.types.push("int")
-    global_context.operations.push("+")
-    global_context.create_operation_quad(["+"])
-    # next_temp = global_context.generate_temp("int")
-    # global_context.create_quad(Quadruple.OperationType.ADD, aux1, aux2, next_temp)
-    #
-    # global_context.operands.push(next_temp)
-    # global_context.types.push("int")
+    global_context.create_second_dim_access_quads()
 
 
 def p_dimension_1(p):
-    """dimension_1  : '[' num_var handle_matrix ']'
+    """dimension_1  : '[' logic_comp handle_matrix ']'
                     | epsilon """
     if len(p) > 2:
         p[0] = p[2]
-    # print('This is p4', p[0])
 
 
 def p_tipo(p):
@@ -326,7 +221,6 @@ def p_return_type(p):
     """return_type  : tipo
                     | VOID """
     p[0] = p[1]
-    # TODO poner el tipo de retorno de la funcion
     global_context.set_type(p[1])
 
 
@@ -977,6 +871,11 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc(start="programa")
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    filemode="w",
+    filename="../parselog.txt")
+
 # EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
 
 # data = '''
@@ -1019,73 +918,73 @@ parser = yacc.yacc(start="programa")
 # }
 # '''
 
-data = """
-program test;
-var int: a, xyz[20] ,b;
-bool: t, f;
-
-function int hello (float x, float y, int re, int be) {
-    a = 1;
-    b = 2;
-    t = true;
-    f = false;
-}
-
-function void there (int a, int b) {
-    a = 1;
-    b = a + 10;
-}
-
-main ()
-var int: x, c, d, y, ren, col, dev[10][2], ted[19];
-    float: xx, yy;
-    dataFrame: myData, frame;
-{
-    x = 30;
-    d = 10;
-    c = 14;
-    y = 400;
-    b = 30;
-    
-    t = true;
-    f = false;
-    
-    a = d + c;
-    x = (a + c) * d / d;
-    if (b > c) then {
-        t = f && f;
-        t = true;
-    } else {
-        t = f || f;
-    }
-
- 
-    load(myData, "miRuta", ren, col);
-   
-
-    while (x > c) do {
-        t = b + a;
-        x = x - 1; 
-    }
-
-    xx = 42.1;
-    yy = 12.3;
-    hello(xx,yy, x + c, c + x);
-
-    from a = a to b do {
-        b = x + c;
-    }
-
-    dev[1][1] = 18;
-    dev[3][0] = 10;
-
-    write(xx, yy, x);
-
-    load(frame, "i", x, y);
-    
-    return (a);
-}
-"""
+# data = """
+# program test;
+# var int: a, xyz[20] ,b;
+# bool: t, f;
+#
+# function int hello (float x, float y, int re, int be) {
+#     a = 1;
+#     b = 2;
+#     t = true;
+#     f = false;
+# }
+#
+# function void there (int a, int b) {
+#     a = 1;
+#     b = a + 10;
+# }
+#
+# main ()
+# var int: x, c, d, y, ren, col, dev[10][2], ted[19];
+#     float: xx, yy;
+#     dataFrame: myData, frame;
+# {
+#     x = 30;
+#     d = 10;
+#     c = 14;
+#     y = 400;
+#     b = 30;
+#
+#     t = true;
+#     f = false;
+#
+#     a = d + c;
+#     x = (a + c) * d / d;
+#     if (b > c) then {
+#         t = f && f;
+#         t = true;
+#     } else {
+#         t = f || f;
+#     }
+#
+#
+#     load(myData, "miRuta", ren, col);
+#
+#
+#     while (x > c) do {
+#         t = b + a;
+#         x = x - 1;
+#     }
+#
+#     xx = 42.1;
+#     yy = 12.3;
+#     hello(xx,yy, x + c, c + x);
+#
+#     from a = a to b do {
+#         b = x + c;
+#     }
+#
+#     dev[1][1] = 18;
+#     dev[3][0] = 10;
+#
+#     write(xx, yy, x);
+#
+#     load(frame, "i", x, y);
+#
+#     return (a);
+# }
+# """
 
 # data = '''
 # program donpato;
@@ -1133,10 +1032,6 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
 # }
 # '''
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filemode="w",
-    filename="../parselog.txt")
 
 
 # def parse(file: str, debug: bool = False):

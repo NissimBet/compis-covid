@@ -111,6 +111,73 @@ class ParsingContext(object):
         except IndexError:
             print(f"Error accediendo indice {jump_index} de la lista de cuadruplos")
 
+    def create_first_dim_access_quads(self):
+        """
+        Funcion que crea el cuadruplo de verificacion para el acceso de la primera dimension
+
+        :return: None
+        """
+        var_dir = self.operands.top()
+        var_type = self.types.top()
+
+        if var_type != "int":
+            print(f"Error. Indice debe ser de tipo entero")
+
+        dim_context = self.dimensions.top()
+        dim_var = self.get_variable(dim_context[0])
+        first_dimension = avail.get_next_const("int", dim_var.dimensions[0].upper_bound)
+        self.create_quad(Quadruple.OperationType.VER,
+                         var_dir,
+                         '',
+                         first_dimension)
+
+        if len(dim_var.dimensions) == 2:
+            second_dimension = avail.get_next_const("int", dim_var.dimensions[1].m)
+            self.operands.push(second_dimension)
+            self.types.push("int")
+            self.operations.push("*")
+            self.create_operation_quad(["*"])
+
+    def create_second_dim_access_quads(self):
+        var_dir = self.operands.top()
+        var_type = self.types.top()
+
+        if var_type != "int":
+            print(f"Error. Indice debe ser de tipo entero")
+
+        dim_context = self.dimensions.top()
+        dim_var = self.get_variable(dim_context[0])
+        second_dimension = avail.get_next_const("int", dim_var.dimensions[1].upper_bound)
+        self.create_quad(Quadruple.OperationType.VER,
+                         var_dir,
+                         '',
+                         second_dimension)
+
+        self.operations.push("+")
+        self.create_operation_quad(["+"])
+
+    def create_dimension_final_quads(self):
+        """
+        Funcion que genera el cuadruplo de suma
+        :return:
+        """
+        aux_var = self.operands.pop()
+        aux_type = self.types.pop()
+
+        base = self.get_variable(self.dimensions.pop()[0])
+        base_dir_const = avail.get_next_const("int", base.direction)
+
+        pointer_dir = self.generate_temp("pointer")
+        self.create_quad(
+                Quadruple.OperationType.ADD,
+                f"({aux_var})" if aux_type == "pointer" else aux_var,
+                base_dir_const,
+                str(pointer_dir))
+
+        self.operands.push(pointer_dir)
+        self.types.push("pointer")
+        self.operations.pop()
+
     def create_operation_quad(self, operations: List[str]) -> None:
         """
         Funcion que genera un cuadruplo para las operaciones de formato (op, dir, dir, res). Se le pasa un arreglo de

@@ -44,7 +44,7 @@ class Variable(object):
         dimensions: List[Dimension] = []
         # para cada limite superior, realizar el calculo de la R y crear una dimension para agregar sobre la variable
         for index in range(len(bounds)):
-            r = r * (bounds[index])
+            r = r * (bounds[index] + 1)
             dimension = Dimension(bounds[index])
             dimension.r = r
             dimensions.append(dimension)
@@ -56,7 +56,7 @@ class Variable(object):
 
         # segunda pasada para calcular el tamano de cada dimension
         for index in range(len(bounds)):
-            m = dimensions[index - 1].m // bounds[index]
+            m = dimensions[index - 1].m // (bounds[index] + 1)
             dimensions[index].m = m
 
         dimensions[-1].m = - offset

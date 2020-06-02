@@ -149,26 +149,6 @@ class AVAIL:
         reset("non_temp")
         return reset("temp")
 
-    def set_const_var(self, const_type: str, const_val: Any):
-        """
-        Funcion que genera y regresa la direccion de una constante. Si la constante ya existe, regresa la direccion ya
-        definida previamente.
-
-        :param const_type: el tipo de constante que crear
-        :param const_val: el valor a asignar a la constante
-        :return: regresa la direccion de la constante nueva o encontrada
-        """
-        if const_type in [x[0] for x in self.data_types]:
-            # si no se encuentra la variable declarada, genearala
-            if const_val not in self.const_to_dir:
-                const_dir = self.get_next_const(const_type, const_val)
-                self.const_to_dir[const_val] = const_dir
-                return const_dir
-            else:
-                return self.const_to_dir[const_val]
-        else:
-            print("ERROR. Const datatype not accepted")
-
     def get_next_const(self, var_type: str, value: Any):
         """
         Funcion que genera una direccion virtual para una constante
@@ -186,7 +166,7 @@ class AVAIL:
                 self.dir_to_const[str(count + minimum)] = {}
                 self.dir_to_const[str(count + minimum)]["value"] = value
                 self.dir_to_const[str(count + minimum)]["type"] = var_type
-                self.const_to_dir[value] = count + minimum
+                self.const_to_dir[str(value)] = count + minimum
                 return count + minimum
             else:
                 return self.const_to_dir[str(value)]

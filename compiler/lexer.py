@@ -86,46 +86,46 @@ t_AND = r'\&\&'
 def t_FALSE(t):
     r'false'
     t.type = "FALSE"
-    const_dir = avail.set_const_var("bool", "false")
+    const_dir = avail.get_next_const("bool", "false")
     t.value = const_dir
     return t
 
 def t_TRUE(t):
     r'true'
     t.type = "TRUE"
-    const_dir = avail.set_const_var("bool", "true")
+    const_dir = avail.get_next_const("bool", "true")
     t.value = const_dir
     return t
 
 # Expression rule to detect and convert floating point numbers
 def t_CTE_F(t):
     r'(\d+[.])\d+'
-    const_dir = avail.set_const_var("float", str(t.value))
+    const_dir = avail.get_next_const("float", str(t.value))
     t.value = const_dir
     return t
 
 def t_DATAFRAME(t):
     r'dataframe'
-    const_dir = avail.set_const_var("dataframe", t.value)
+    const_dir = avail.get_next_const("dataframe", t.value)
     t.value = const_dir
     return t
 
 # A regular expression rule with some action code
 def t_CTE_I(t):
     r'\d+'
-    const_dir = avail.set_const_var("int", str(t.value))
+    const_dir = avail.get_next_const("int", str(t.value))
     t.value = const_dir
     return t
 
 def t_CTE_STRING(t):
     r'\"\w*\"'
-    const_dir = avail.set_const_var("string", t.value)
+    const_dir = avail.get_next_const("string", t.value)
     t.value = const_dir
     return t
 
 def t_CTE_CHAR(t):
     r'\'.\''
-    const_dir = avail.set_const_var("char", t.value)
+    const_dir = avail.get_next_const("char", t.value)
     t.value = const_dir
     return t
 

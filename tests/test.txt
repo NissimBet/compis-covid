@@ -54,7 +54,9 @@ var int: x, c, d, y, ren, col, dev[10][2], ted[19];
         b = x + c;
     }
 
-    dev[1][1] = 18;
+    write(1);
+
+    dev[1][0] = 18;
     dev[3][0] = 10;
 
     write(xx, yy, x);
