@@ -1,4 +1,5 @@
 %%
+<<<<<<< Updated upstream
 10300,./tests/test_input_data.txt
 %%
 global,void,0,[],[]
@@ -10,4 +11,5 @@ LINES,5500,,5001
 COLS,5500,,5000
 WRITE,,,5001
 WRITE,,,5000
+=======
 END,,,

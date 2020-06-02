@@ -46,6 +46,8 @@ class Quadruple:
         COLS = "COLS"
         END_PROG = "END"
         VER = "VER"
+        # METODOS ESTADISTICOS
+        MEAN = "MEAN"
 
     @staticmethod
     def get_operator_name(name: str):

@@ -1,0 +1,15 @@
+program test;
+function int hola(int x) {
+    x = 5;
+}
+
+main ()
+var float: ren, col;
+{
+
+    ren = 2.1;
+    col = 3.3;
+    ren = col + ren;
+    
+    write(ren);
+}

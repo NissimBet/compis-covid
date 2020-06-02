@@ -7,6 +7,9 @@ from .v_memory import Memory
 from .v_function import VMFunction
 from .v_variables import get_scope, get_type, try_cast
 
+# INSTALL: python3.8 -m pip install numpy
+# import numpy as np
+
 import os
 
 
@@ -245,6 +248,11 @@ class VirtualMachine:
         elif operation == "ENDFUNC":  # END FUNC
             self.__execution_stack.pop()
             return self.__index_stack.pop() + 1
+        # elif operation == "MEAN"
+        #     var1 = self.get_var(dir1)
+        #     # Le mandamos el arreglo a la función
+        #     #TBD Saber cómo vamos a iterar cuando pasemos un arreglo
+        #     self.assign_var(dir3, np.mean(np.array([var1])))
         elif operation == "WRITE":  # WRITE
             var3 = self.get_var(dir3)
             print(var3)
