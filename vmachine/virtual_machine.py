@@ -251,14 +251,20 @@ class VirtualMachine:
         elif operation == "READ":  # READ
             data = input()
             self.assign_var(dir3, data)
-        elif operation == "LOAD":  # LOAD
-            pass
         elif operation == "FS":  # FILE SEARCH
-            pass
+            var1 = self.get_var(dir1)
+            if os.path.isfile(var1):
+                with open(var1, "r") as file:
+                    self.assign_var(dir3, file.readlines())
+            else:
+                print(f"Error. Provided file {var1} does not exist")
+                sys.exit(1)
         elif operation == "LINES":  # LINES
-            pass
+            var1 = self.get_var(dir1)
+            self.assign_var(dir3, len(var1))
         elif operation == "COLS":  # COLS
-            pass
+            var1 = self.get_var(dir1)
+            self.assign_var(dir3, len(var1[0].split(',')))
         elif operation == "VER":
             var1 = self.get_var(dir1)
             var3 = self.get_var(dir3)

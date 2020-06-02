@@ -270,12 +270,12 @@ def p_assignment(p):
     operand_type = global_context.types.pop()
     operand_name = global_context.operands.pop()
 
-    if global_context.operands.top() is not None:
-        assigned = global_context.operands.pop()
-        assigned_type = global_context.types.pop()
-    else:
-        assigned = global_context.get_variable(p[1][0]).direction
-        assigned_type = global_context.get_variable(p[1][0]).type
+    # if global_context.operands.top() is not None:
+    assigned = global_context.operands.pop()
+    assigned_type = global_context.types.pop()
+    # else:
+    #     assigned = global_context.get_variable(p[1][0]).direction
+    #     assigned_type = global_context.get_variable(p[1][0]).type
 
     global_context.create_quad(
             Quadruple.OperationType.ASSIGN,
@@ -377,11 +377,11 @@ def p_load(p):
             if var.type == "dataFrame":
                 if num_lines.type == "int" and num_vars.type == "int":
                     global_context.create_quad(
-                        Quadruple.OperationType.FILE_SEARCH, path, "", var.direction)
+                        Quadruple.OperationType.FILE_SEARCH, path, "", str(var.direction))
                     global_context.create_quad(
-                        Quadruple.OperationType.LINES, var.direction, "", num_lines.direction)
+                        Quadruple.OperationType.LINES, str(var.direction), "", str(num_lines.direction))
                     global_context.create_quad(
-                        Quadruple.OperationType.COLS, var.direction, "", num_vars.direction)
+                        Quadruple.OperationType.COLS, str(var.direction), "", str(num_vars.direction))
                 else:
                     if num_lines.type == "int":
                         print(
@@ -581,12 +581,12 @@ def p_no_condition_loop_1(_):
                             | epsilon """
 
 
-def p_num_var(p):
-    """ num_var     : ID
-                    | CTE_I
-                    | CTE_F """
-    # print("num var", p[1])
-    p[0] = p[1]
+# def p_num_var(p):
+#     """ num_var     : ID
+#                     | CTE_I
+#                     | CTE_F """
+#     # print("num var", p[1])
+#     p[0] = p[1]
 
 
 def p_string_var(p):
@@ -676,7 +676,6 @@ def p_check_param(p):
             # print(function.parameters[param_counter].direction)
             global_context.create_quad(
                 Quadruple.OperationType.PARAMETER, var, "", param_dir)
-            print(f"Parametro encontrado {var} en funcion {function.name}")
         else:
             print(
                 f"Type Error on line {p.lineno(-1)}. Expected {function.parameters[global_context.param_counter.top()].type}, got {vtype}")
