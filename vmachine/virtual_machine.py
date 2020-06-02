@@ -275,12 +275,12 @@ class VirtualMachine:
                 self.assign_var(dir3, mean_val)
             else:
                 print(f"Error. Index out of range")
-        # elif operation == "MODE":
-        #     var1 = self.get_var(dir1)
-        #     var2 = self.get_var(dir2)
-        #     if 0 <= var2 < len(var1.columns):
-        #         mode_val = var1[var2].mode()
-        #         self.assign_var(dir3, mode_val)
-        #     else:
-        #         print(f"Error. Index out of range")
+        elif operation == "MODE":
+            var1 = self.get_var(dir1)
+            var2 = self.get_var(dir2)
+            if 0 <= var2 < len(var1.columns):
+                mode_val = var1.mode().iat[0, var2]
+                self.assign_var(dir3, mode_val)
+            else:
+                print(f"Error. Index out of range")
         return self.__index_counter + 1

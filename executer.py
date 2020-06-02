@@ -8,8 +8,9 @@ if __name__ == '__main__':
     # elif len(sys.argv) < 3:
     #     print("Missing output file param")
     # else:
-
+    # print("STARTED PARSE")
     parse("tests/stat_function.txt", False)
+    # print("EXPORTING DATA")
     export("./export.obj")
     VM = vmachine.VirtualMachine("./export.obj")
     VM.execute_quads()
