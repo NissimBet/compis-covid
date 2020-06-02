@@ -122,6 +122,33 @@ class AVAIL:
         else:
             print(f"ERROR. variable type {var_type} not recognized")
 
+    def reset_global(self):
+        """
+                Funcion que reinicia los contadores para las variables locales
+
+                :return: la cantidad de variables temporales que se eliminaron para cada tipo
+                """
+
+        # Esta funcion realiza el reseteo para las variables temporales o no temporales
+        def reset(var_scope: str):
+            # Generar el diccionario de las variables y sus cantidades
+            variables = {v_key: v_val.get("counter") for v_key, v_val in self.types.get("global").get(var_scope).items()
+                         if v_val.get("counter") > 0}
+            # iterar sobre los tipos de variables, reiniciando el contador y eliminando del mapa anterior la variable
+            for val_dir in self.types.get("global").get(var_scope):
+                counter = self.types.get("global").get(var_scope).get(val_dir)["counter"]
+                minim = self.types.get("global").get(var_scope).get(val_dir)["min"]
+                maxim = self.types.get("global").get(var_scope).get(val_dir)["max"]
+                # para las variables declaradas, eliminarla del diccionario de variables
+                for index in range(minim, minim + counter):
+                    self.dir_to_var.pop(str(index), None)
+                # reiniciar el contador
+                self.types.get("global").get(var_scope).get(val_dir)["counter"] = 0
+            return variables
+
+        reset("non_temp")
+        return reset("temp")
+
     def reset_locals(self):
         """
         Funcion que reinicia los contadores para las variables locales

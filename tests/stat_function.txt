@@ -1,5 +1,9 @@
 program pruebaStat;
 
+function int test() {
+    return(1);
+}
+
 main()
    var dataFrame: data;
         int: rows, cols;
@@ -12,4 +16,6 @@ main()
     write(dataMode);
     variance(data, 0, dataVar);
     write(dataVar);
+
+    write(test());
 }

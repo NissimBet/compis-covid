@@ -198,7 +198,6 @@ def p_declare_func(p):
     if not global_context.declare_function(p[-1], None):
         print(
             f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
-        # avail.reset_locals()
 
 
 # function return_type ID ( parameters? ) vars? { bloque? }
@@ -293,12 +292,11 @@ def p_assignment_error(p):
 
 # return ( EXP )
 def p_return(p):
-    """return   : RETURN '(' exp ')' """
-    # TODO tomar prestado el nombre de la funcion ultima en el contexto
-    print(f"Retorno de funcion {global_context.function.top()}, tipo {p[3]}")
+    """return   : RETURN '(' logic_comp ')' """
     function = global_context.get_function()
     exp_type = global_context.types.pop()
     exp_val = global_context.operands.pop()
+    global_context.create_quad(Quadruple.OperationType.ASSIGN, exp_val, "", str(function.return_dir))
     if exp_type != function.return_type:
         print(
             f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
@@ -707,19 +705,29 @@ def p_called_func(p):
             f"Syntax Error, function not defined {f_name} in line {p.lineno(-1)}")
 
 
-def p_func_call(p):
-    """func_call    : ID called_func '(' func_call_1 ')'  """
-    try:
-        global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "",
-                                   global_context.function_table.function(p[1]).quad_number)
-    except IndexError:
-        print("No se pudo crear el cuadruplo")
+def p_end_func_call(p):
+    """end_func_call    :"""
     f_name = global_context.func_calls.pop()
     f_params = global_context.param_counter.pop()
     global_context.operations.remove_separator()
+
+    global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "",
+                               global_context.function_table.function(f_name).quad_number)
+
+    function = global_context.function_table.function(f_name)
+    if function and function.return_type != "void":
+        temp = avail.get_next_local(function.return_type, True, function.name)
+        global_context.create_quad(Quadruple.OperationType.ASSIGN, str(function.return_dir), "", temp)
+        global_context.operands.push(temp)
+        global_context.types.push(function.return_type)
+
     if len(global_context.function_table.function(f_name).parameters) != f_params:
         print(
-            f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
+                f"Syntax Error. Function {f_name} missing parameters, expected {len(global_context.function_table.function(f_name).parameters)}, got {f_params}")
+
+
+def p_func_call(p):
+    """func_call    : ID called_func '(' func_call_1 ')' end_func_call """
     p[0] = p[1]
 
 
@@ -877,11 +885,16 @@ def p_factor_2(_):
 def p_push_id(p):
     """push_id  :   """
     var = global_context.get_variable(p[-1])
-    if not var:
+    func = global_context.function_table.function(p[-1])
+    if not var and not func:
         print(
             f'Error de sintaxis. Variable {p[-1]} no declarada en linea {p.lineno(-1)}')
-    global_context.operands.push(var.direction)
-    global_context.types.push(var.type)
+    else:
+        if var:
+            global_context.operands.push(var.direction)
+            global_context.types.push(var.type)
+        elif func:
+            p_called_func(p)
 
 
 def p_var(_):
@@ -889,25 +902,10 @@ def p_var(_):
                 | std_methods """
 
 
-def p_check_dim(_):
-    """check_dim    : """
-    # TODO has dims?
-
-
-def p_check_logic_type(_):
-    """check_logic_type :"""
-    # TODO revisar el tipo de logic_comp (numerico?)
-
-
 def p_var_1(_):
-    """var_1    : '(' func_call_1 ')'
-                | '[' check_dim logic_comp check_logic_type  ']' var_call_dim
+    """var_1    : '(' func_call_1 ')' end_func_call
+                | dimension
                 | epsilon"""
-
-
-def p_var_call_dim(_):
-    """var_call_dim : '[' logic_comp ']'
-                    | epsilon"""
 
 
 def p_bloque(_):

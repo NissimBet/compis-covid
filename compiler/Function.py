@@ -6,6 +6,7 @@ from .Variable import Variable, VariableTable
 class Function(object):
     name: str                           # Nombre de la funcion
     return_type: str                    # tipo de retorno de la funcion
+    return_dir: int                     # direccion donde retornar
     parameters: List[Variable]          # parametros de la funcion
     variables: VariableTable            # tabla de variables de la funcion
     quad_number: int                    # cuadruplo de inicio de la funcion
@@ -23,6 +24,7 @@ class Function(object):
         self.parameters = parameters
         self.variables = VariableTable()
         self.quad_number = quad_number
+        self.return_dir = -1
         self.temps = {}
         self.vars = {}
 

@@ -74,6 +74,13 @@ class ParsingContext(object):
             # el cuadruplo inicial de la funcion
             quad = self.quad_counter + 1
             self.function_table.declare_function(f_name, f_type if f_type else self.var_type, quad)
+
+            func = self.function_table.function(f_name)
+            if func.return_type != "void":
+                temp_dir = self.generate_temp(func.return_type)
+                # self.declare_variable(f_name, [], True)
+                func.return_dir = temp_dir
+
             # asignar la funcion al stack
             self.set_function(f_name)
             return True
@@ -275,7 +282,10 @@ class ParsingContext(object):
         function_name = self.function.pop()
         if quad:
             self.create_quad(Quadruple.OperationType.END_FUNC, "", "", "")
-        temps = avail.reset_locals()
+        if function_name == "global":
+            temps = avail.reset_global()
+        else:
+            temps = avail.reset_locals()
         self.function_table.erase_var_table(function_name)
         function.temps = temps
 

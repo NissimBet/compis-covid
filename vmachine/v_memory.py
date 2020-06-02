@@ -40,7 +40,7 @@ class Memory:
             var_index = self.get_var_index(variable_dir, var_type)
             self.__memory.get(var_type).get("values")[var_index] = value
         except IndexError:
-            print(f"Error assigning to element {variable_dir} in memory")
+            print(f"Error assigning to element {variable_dir} in memory.")
 
     def push_var(self, variable_dir: int, value: Any):
         try:
