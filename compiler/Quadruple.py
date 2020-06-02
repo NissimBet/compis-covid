@@ -20,7 +20,6 @@ operator_names = {
 class Quadruple:
     @unique
     class OperationType(Enum):
-        # operaciones simples
         ADD = "SUM"
         SUBTRACT = "SUB"
         DIVIDE = "DIV"

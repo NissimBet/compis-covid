@@ -9,6 +9,9 @@ from .v_variables import get_scope, get_type, try_cast
 
 import numpy
 
+# INSTALL: python3.8 -m pip install numpy
+# import numpy as np
+
 import os
 
 
