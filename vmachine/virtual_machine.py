@@ -7,10 +7,9 @@ from .v_memory import Memory
 from .v_function import VMFunction
 from .v_variables import get_scope, get_type, try_cast
 
+import pandas as pd
 import numpy
-
-# INSTALL: python3.8 -m pip install numpy
-# import numpy as np
+from scipy import stats
 
 import os
 
@@ -126,7 +125,6 @@ class VirtualMachine:
                 print("FOUND POINTER", match.group(1))
                 direction = self.get_var(match.group(1))
             else:
-                # print(var_dir)
                 direction = int(var_dir)
         except ValueError:
             print(f"Provided Direction is not a number format {var_dir}")
@@ -146,16 +144,8 @@ class VirtualMachine:
         try:
             match = re.match(r"\((.*)\).*", var_dir)
             if match:
-                # print("FOUND POINTER", var_dir, match.group(1))
                 direction = self.get_var(match.group(1))
-                # print(direction)
-                # func_vars, func_temps = self.__execution_stack.top().get_vars()
-                # for i in func_vars:
-                #     print(i.items())
-                # print(func_vars)
-                # print(func_temps)
             else:
-                # print(var_dir)
                 direction = int(var_dir)
         except ValueError:
             print(
@@ -252,18 +242,16 @@ class VirtualMachine:
             print(var3)
         elif operation == "READ":  # READ
             data = input()
-            self.assign_var(dir3, data)
+            casted_data = try_cast(int(dir3), data)
+            if not casted_data:
+                print(f"Error. Could not read from stdin. ")
+            else:
+                self.assign_var(dir3, data)
         elif operation == "FS":  # FILE SEARCH
             var1 = self.get_var(dir1)
             if os.path.isfile(var1):
-                with open(var1, "r") as file:
-                    data = []
-                    try:
-                        for line in file:
-                            data.append([int(num) for num in line.strip('\n').split(",")])
-                    except ValueError:
-                        print(f"Error reading file {var1}")
-                    self.assign_var(dir3, data)
+                data_frame = pd.read_csv(var1, header=None)
+                self.assign_var(dir3, data_frame)
             else:
                 print(f"Error. Provided file {var1} does not exist")
                 sys.exit(1)
@@ -272,7 +260,7 @@ class VirtualMachine:
             self.assign_var(dir3, len(var1))
         elif operation == "COLS":  # COLS
             var1 = self.get_var(dir1)
-            self.assign_var(dir3, len(var1[0]))
+            self.assign_var(dir3, len(var1.columns))
         elif operation == "VER":
             var1 = self.get_var(dir1)
             var3 = self.get_var(dir3)
@@ -281,6 +269,18 @@ class VirtualMachine:
                 sys.exit(1)
         elif operation == "MEAN":
             var1 = self.get_var(dir1)
-            mean_val = numpy.mean(var1)
-            self.assign_var(dir3, mean_val)
+            var2 = self.get_var(dir2)
+            if 0 <= var2 < len(var1.columns):
+                mean_val = var1[var2].mean()
+                self.assign_var(dir3, mean_val)
+            else:
+                print(f"Error. Index out of range")
+        # elif operation == "MODE":
+        #     var1 = self.get_var(dir1)
+        #     var2 = self.get_var(dir2)
+        #     if 0 <= var2 < len(var1.columns):
+        #         mode_val = var1[var2].mode()
+        #         self.assign_var(dir3, mode_val)
+        #     else:
+        #         print(f"Error. Index out of range")
         return self.__index_counter + 1

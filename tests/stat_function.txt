@@ -3,9 +3,13 @@ program pruebaStat;
 main()
    var dataFrame: data;
         int: rows, cols;
-        float: dataMean;
+        float: dataMean, dataMode, dataVar;
 {
     load(data, "./tests/test_input_data.txt", cols, rows);
-    mean(data, dataMean);
+    mean(data, 1, dataMean);
     write(dataMean);
+    mode(data, 0, dataMode);
+    write(dataMode);
+    variance(data, 0, dataVar);
+    write(dataVar);
 }

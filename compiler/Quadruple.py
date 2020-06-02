@@ -55,6 +55,8 @@ class Quadruple:
         VER = "VER"
         # metodos estadisticos
         MEAN = "MEAN"
+        MODE = "MODE"
+        VARIANCE = "VAR"
 
     @staticmethod
     def get_operator_name(name: str):

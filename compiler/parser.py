@@ -615,9 +615,9 @@ def p_var_bool(p):
 
 # ID ( EXPRESION* ) ;
 def p_std_methods(p):
-    """std_methods : mean_func
-                    | MODE
-                    | VARIANCE
+    """std_methods  : mean_func
+                    | mode_func
+                    | variance_func
                     | NORMAL
                     | GAMMA
                     | GRAPH
@@ -629,16 +629,63 @@ def p_std_methods(p):
 
 
 def p_mean_func(p):
-    """mean_func    : MEAN '(' ID ',' ID ')' """
+    """mean_func    : MEAN '(' ID ',' logic_comp ',' ID ')' """
     frame_var = global_context.get_variable(p[3])
-    mean_var = global_context.get_variable(p[5])
+    index_var = global_context.operands.pop()
+    index_type = global_context.types.pop()
+    res_var = global_context.get_variable(p[7])
 
     if frame_var.type != "dataFrame":
         print(f"Type Error. Expected dataFrame, got {frame_var.type}")
-    if mean_var.type != "float":
-        print(f"Error. Expected dataFrame, got {mean_var.type}")
+    if index_type != "int":
+        print(f"Error. Expected integer, got {index_var.type}")
+    if res_var.type != "float":
+        print(f"Error. Expected float, got {res_var.type}")
 
-    global_context.create_quad(Quadruple.OperationType.MEAN, str(frame_var.direction), '', str(mean_var.direction))
+    global_context.create_quad(Quadruple.OperationType.MEAN,
+                               str(frame_var.direction),
+                               str(index_var),
+                               str(res_var.direction))
+
+
+def p_mode_func(p):
+    """mode_func    : MODE '(' ID ',' logic_comp ',' ID ')' """
+    frame_var = global_context.get_variable(p[3])
+    index_var = global_context.operands.pop()
+    index_type = global_context.types.pop()
+    res_var = global_context.get_variable(p[7])
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if index_type != "int":
+        print(f"Error. Expected integer, got {index_var.type}")
+    if res_var.type != "float":
+        print(f"Error. Expected float, got {res_var.type}")
+
+    global_context.create_quad(Quadruple.OperationType.MODE,
+                               str(frame_var.direction),
+                               str(index_var),
+                               str(res_var.direction))
+
+
+def p_variance_func(p):
+    """variance_func    : VARIANCE '(' ID ',' logic_comp ',' ID ')' """
+    frame_var = global_context.get_variable(p[3])
+    index_var = global_context.operands.pop()
+    index_type = global_context.types.pop()
+    res_var = global_context.get_variable(p[7])
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if index_type != "int":
+        print(f"Error. Expected integer, got {index_var.type}")
+    if res_var.type != "float":
+        print(f"Error. Expected float, got {res_var.type}")
+
+    global_context.create_quad(Quadruple.OperationType.VARIANCE,
+                               str(frame_var.direction),
+                               str(index_var),
+                               str(res_var.direction))
 
 
 def p_called_func(p):
