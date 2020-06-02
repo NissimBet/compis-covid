@@ -7,6 +7,8 @@ from .v_memory import Memory
 from .v_function import VMFunction
 from .v_variables import get_scope, get_type, try_cast
 
+import numpy
+
 import os
 
 
@@ -191,17 +193,14 @@ class VirtualMachine:
             var1 = self.get_var(dir1)
             self.assign_var(dir3, var1)
         elif operation == "GOTO":
-            # self.__index_counter = int(dir3)
             return int(dir3)
         elif operation == "GOTOV":
             var1 = self.get_var(dir1)
             if var1:
-                # self.__index_counter = int(dir3)
                 return int(dir3)
         elif operation == "GOTOF":
             var1 = self.get_var(dir1)
             if not var1:
-                # self.__index_counter = int(dir3)
                 return int(dir3)
         elif operation == "LT":
             var1 = self.get_var(dir1)
@@ -255,7 +254,13 @@ class VirtualMachine:
             var1 = self.get_var(dir1)
             if os.path.isfile(var1):
                 with open(var1, "r") as file:
-                    self.assign_var(dir3, file.readlines())
+                    data = []
+                    try:
+                        for line in file:
+                            data.append([int(num) for num in line.strip('\n').split(",")])
+                    except ValueError:
+                        print(f"Error reading file {var1}")
+                    self.assign_var(dir3, data)
             else:
                 print(f"Error. Provided file {var1} does not exist")
                 sys.exit(1)
@@ -264,13 +269,15 @@ class VirtualMachine:
             self.assign_var(dir3, len(var1))
         elif operation == "COLS":  # COLS
             var1 = self.get_var(dir1)
-            self.assign_var(dir3, len(var1[0].split(',')))
+            self.assign_var(dir3, len(var1[0]))
         elif operation == "VER":
             var1 = self.get_var(dir1)
             var3 = self.get_var(dir3)
             if var1 >= var3:
-                print(dir1, dir3)
-                print(var1, var3)
                 print(f"Error, index out of bounds")
                 sys.exit(1)
+        elif operation == "MEAN":
+            var1 = self.get_var(dir1)
+            mean_val = numpy.mean(var1)
+            self.assign_var(dir3, mean_val)
         return self.__index_counter + 1

@@ -250,6 +250,7 @@ def p_statement(_):
 
 def p_statement_1(_):
     """statement_1  : assignment
+                    | std_methods
                     | func_call
                     | return
                     | read
@@ -614,7 +615,7 @@ def p_var_bool(p):
 
 # ID ( EXPRESION* ) ;
 def p_std_methods(p):
-    """std_methods : MEAN
+    """std_methods : mean_func
                     | MODE
                     | VARIANCE
                     | NORMAL
@@ -623,9 +624,21 @@ def p_std_methods(p):
                     | NORMAL_GRAPH
                     | COV
                     | SCATTER
-                    | ID
     """
     p[0] = p[1]
+
+
+def p_mean_func(p):
+    """mean_func    : MEAN '(' ID ',' ID ')' """
+    frame_var = global_context.get_variable(p[3])
+    mean_var = global_context.get_variable(p[5])
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if mean_var.type != "float":
+        print(f"Error. Expected dataFrame, got {mean_var.type}")
+
+    global_context.create_quad(Quadruple.OperationType.MEAN, str(frame_var.direction), '', str(mean_var.direction))
 
 
 def p_called_func(p):
@@ -648,7 +661,7 @@ def p_called_func(p):
 
 
 def p_func_call(p):
-    """func_call    : std_methods called_func '(' func_call_1 ')'  """
+    """func_call    : ID called_func '(' func_call_1 ')'  """
     try:
         global_context.create_quad(Quadruple.OperationType.GO_SUB, "", "",
                                    global_context.function_table.function(p[1]).quad_number)
@@ -825,7 +838,8 @@ def p_push_id(p):
 
 
 def p_var(_):
-    """var      : ID push_id var_1"""
+    """var      : ID push_id var_1
+                | std_methods """
 
 
 def p_check_dim(_):

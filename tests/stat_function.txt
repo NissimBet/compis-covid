@@ -1,0 +1,11 @@
+program pruebaStat;
+
+main()
+   var dataFrame: data;
+        int: rows, cols;
+        float: dataMean;
+{
+    load(data, "./tests/test_input_data.txt", cols, rows);
+    mean(data, dataMean);
+    write(dataMean);
+}

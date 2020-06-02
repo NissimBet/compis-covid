@@ -2,12 +2,12 @@
 10300,./tests/test_input_data.txt
 %%
 global,void,0,[],[]
-main,void,1,[('dataFrame', 1), ('int', 2)],[]
+main,void,1,[('dataFrame', 1), ('int', 2), ('float', 1)],[]
 %%
 GOTO,,,1
 FS,10300,,5500
 LINES,5500,,5001
 COLS,5500,,5000
-WRITE,,,5001
-WRITE,,,5000
+MEAN,5500,,5100
+WRITE,,,5100
 END,,,

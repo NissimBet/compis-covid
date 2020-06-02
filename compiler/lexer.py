@@ -49,16 +49,16 @@ reserved = {
     'false'        : "FALSE",
 
     # Métodos Estadísticos
-    'getMean'      : 'MEAN',
-    'getMode'      : 'MODE',
+    'mean'      : 'MEAN',
+    'mode'      : 'MODE',
     'variance'     : 'VARIANCE',
-    'getNormal'    : 'NORMAL',
-    'getGamma'     : 'GAMMA',
+    'normal'    : 'NORMAL',
+    'gamma'     : 'GAMMA',
     # Graficar variables simples
     'graphBar'     : 'GRAPH',
     'normalGraph'  : 'NORMAL_GRAPH',
     # Correlación entre dos variables
-    'getCovariance': 'COV',
+    'covariance': 'COV',
     # Correlación gráfica entre dos variables
     'scatter'      : 'SCATTER'
 }

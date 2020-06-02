@@ -20,32 +20,42 @@ operator_names = {
 class Quadruple:
     @unique
     class OperationType(Enum):
+        # operaciones simples
         ADD = "SUM"
         SUBTRACT = "SUB"
         DIVIDE = "DIV"
         MULTIPLY = "MULT"
         ASSIGN = "ASG"
-        GOTO = "GOTO"
-        GOTO_TRUE = "GOTOV"
-        GOTO_FALSE = "GOTOF"
+        # comparacion entera
         LESS_THAN = "LT"
         GREATER_THAN = "GT"
         EQUALS = "EQ"
         NOT_EQUAL = "NEQ"
+        # comparacion logica
         LOGIC_AND = "LAND"
         LOGIC_OR = "LOR"
+        # saltos de posicion
+        GOTO = "GOTO"
+        GOTO_TRUE = "GOTOV"
+        GOTO_FALSE = "GOTOF"
+        # manejo de funciones
         GO_SUB = "GOSUB"
         ERA = "ERA"
         PARAMETER = "PARAM"
         END_FUNC = "ENDFUNC"
+        # input / output
         WRITE = "WRITE"
         READ = "READ"
         LOAD = "LOAD"
         FILE_SEARCH = "FS"
         LINES = "LINES"
         COLS = "COLS"
+        # fin de programa
         END_PROG = "END"
+        # revision de indice en arreglo
         VER = "VER"
+        # metodos estadisticos
+        MEAN = "MEAN"
 
     @staticmethod
     def get_operator_name(name: str):
