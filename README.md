@@ -16,9 +16,9 @@ python3.8 -m pip install -U pandas
 ```
 
 ## Uso
-[TBD: Manual de referencia rápida](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[Quick Start Guide](https://github.com/NissimBet/compis-covid/blob/develop/assets/README.md)
 
-[TBD: Video tutorial < 1 min](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[Video tutorial 45 segundos](https://www.youtube.com/watch?v=2N37hBQemi8&feature=youtu.be)
 
 ```c++
 program prueba;
