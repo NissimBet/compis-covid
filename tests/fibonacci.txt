@@ -10,6 +10,19 @@ function int fib(int base) {
     return(fib(base - 1) + fib(base - 2));
 }
 
-main() {
-    write(fib(8));
+main()
+    var int: first, second, fibN, i, temp;
+{
+    fibN = 8;
+    write(fib(fibN));
+
+    first = 0;
+    second = 1;
+    temp = 1;
+    from i = 0 to fibN do {
+        first = second;
+        second = temp;
+        temp = first + second;
+    }
+    write(first);
 }
