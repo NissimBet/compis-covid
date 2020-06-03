@@ -113,7 +113,7 @@ class AVAIL:
             else:
                 count = self.types.get("local").get("non_temp").get(var_type)["counter"]
                 minimum = self.types.get("local").get("non_temp").get(var_type)["min"]
-                size = self.types.get("global").get("non_temp").get(var_type).get("size")
+                size = self.types.get("local").get("non_temp").get(var_type).get("size")
                 # variables no temporales pueden ser dimensionadas, se debe tomar en cuenta el tamano de la anterior
                 self.types.get("local").get("non_temp").get(var_type)["counter"] += size
                 # la variable proxima esta en base + contador + tamano del anterior - 1 (se inicia en 0)

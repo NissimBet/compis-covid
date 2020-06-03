@@ -346,7 +346,10 @@ def p_check_write_param(_):
     var_name = global_context.operands.pop()
     var_type = global_context.types.pop()
 
-    global_context.create_quad(Quadruple.OperationType.WRITE, "", "", var_name)
+    global_context.create_quad(Quadruple.OperationType.WRITE,
+                               "",
+                               "",
+                               f"({var_name})" if var_type == "pointer" else var_name)
 
 
 def p_write_param(_):
@@ -557,6 +560,8 @@ def p_for_compare(_):
 
         global_context.operands.push(left_operand)
         global_context.types.push(left_type)
+        global_context.operands.add_separator()
+        global_context.types.add_separator()
     else:
         print(f"Error de sintaxis. Type Error")
     # global_context.operations.push("<")
@@ -568,6 +573,8 @@ def p_for_compare(_):
 # desde ID_COMPLETO = EXP to EXP hacer { ESTATUTO* }
 def p_no_condition_loop(_):
     """no_condition_loop    : FROM id_completo for_check_id '=' exp for_assign TO exp for_compare DO '{' no_condition_loop_1 '}'  """
+    global_context.operands.remove_separator()
+    global_context.types.remove_separator()
     operand = global_context.operands.pop()
     operand_type = global_context.types.pop()
 
@@ -972,7 +979,10 @@ def p_var_1(_):
 def p_bloque(_):
     """bloque   : statement bloque
                 | epsilon"""
-    pass
+    while (i := global_context.operands.top()) != global_context.operands.false_bottom and not global_context.operands.is_empty:
+        global_context.operands.pop()
+    while (i := global_context.types.top()) != global_context.types.false_bottom and not global_context.types.is_empty:
+        global_context.types.pop()
 
 
 def p_epsilon(_):
@@ -994,241 +1004,3 @@ logging.basicConfig(
     level=logging.DEBUG,
     filemode="w",
     filename="../parselog.txt")
-
-# EJEMPLO PARA PROBAR SEGÚN LA VARIABLE DATA
-
-# data = '''
-# program donpato;
-# var float:numero[0][0], mat[1], wat, dude;
-#     int: data, custom, suma;
-#     char: a;
-#     string: hi;
-#     bool: ahora;
-#
-# function void hello(int time, float day)
-#     var string: hello, world, hi;
-#     {
-#         return (hello + world);
-#     }
-# function void there()
-#     var string: hello, world;
-#     {
-#         return (hello + world);
-#     }
-#
-# main() var int: numeroPi; {
-#     numeroPi = 3.1;
-# 	if (numeroPi < hi) then {
-# 		numeroPi = 3.14159;
-# 	}
-#     else
-#     {
-# 		print("Coronavirus will destroy math");
-# 	}
-#     if (3 > 2) then {
-#         numero = 5.5;
-#         numeroPi = "12312";
-#         numero = true;
-#     }
-#     else {
-#         scatter(numeroPi);
-#         numeroPi = 12 + there();
-#     }
-# }
-# '''
-
-# data = """
-# program test;
-# var int: a, xyz[20] ,b;
-# bool: t, f;
-#
-# function int hello (float x, float y, int re, int be) {
-#     a = 1;
-#     b = 2;
-#     t = true;
-#     f = false;
-# }
-#
-# function void there (int a, int b) {
-#     a = 1;
-#     b = a + 10;
-# }
-#
-# main ()
-# var int: x, c, d, y, ren, col, dev[10][2], ted[19];
-#     float: xx, yy;
-#     dataFrame: myData, frame;
-# {
-#     x = 30;
-#     d = 10;
-#     c = 14;
-#     y = 400;
-#     b = 30;
-#
-#     t = true;
-#     f = false;
-#
-#     a = d + c;
-#     x = (a + c) * d / d;
-#     if (b > c) then {
-#         t = f && f;
-#         t = true;
-#     } else {
-#         t = f || f;
-#     }
-#
-#
-#     load(myData, "miRuta", ren, col);
-#
-#
-#     while (x > c) do {
-#         t = b + a;
-#         x = x - 1;
-#     }
-#
-#     xx = 42.1;
-#     yy = 12.3;
-#     hello(xx,yy, x + c, c + x);
-#
-#     from a = a to b do {
-#         b = x + c;
-#     }
-#
-#     dev[1][1] = 18;
-#     dev[3][0] = 10;
-#
-#     write(xx, yy, x);
-#
-#     load(frame, "i", x, y);
-#
-#     return (a);
-# }
-# """
-
-# data = '''
-# program donpato;
-# var float:numero;
-# main() {
-#     numeroPi = 3.1;
-# 	if (numeroPi < hi) {
-# 		numeroPi = 3.14159;
-# 	}
-#     else
-#     {
-# 		print("Coronavirus will destroy math");
-# 	}
-# }
-# '''
-
-# data = '''
-# program patito;
-# var float: x, y, z;
-#     int: count;
-#
-# function void there (int a, int b) {
-#     a = 1;
-#     b = a + 10;
-# }
-#
-# main() {
-#     x = 1 + 2 * 5;
-#     y = 2;
-#     z = 3;
-#     write(x + y,y,z);
-#     if (x < y) then {
-#         write("X = ", x);
-#     } else {
-#         write("Y = ", y);
-#     }
-#     while (y < x) do {
-#         write(y);
-#         y = y + 1;
-#     }
-#     from count = 1 to 5 do {
-#         write(count);
-#     }
-#     there(1,2);
-# }
-# '''
-
-
-
-# def parse(file: str, debug: bool = False):
-#     input_data = ""
-#     with open(file, "r") as input_file:
-#         input_data = "".join(input_file.readlines())
-#     parse_status = parser.parse(input_data, tracking=True, debug=debug)
-#     return parse_status == "COMPILA"
-
-
-# def export(file: str):
-#     with open(file, "w+") as export_file:
-#         export_file.write("%%\n")
-#         for value, direction in avail.const_to_dir.items():
-#             export_file.write(f"{direction},{value}\n")
-#         export_file.write("%%\n")
-#         for func in global_context.function_table.table.values():
-#             export_file.write(f"{func.name},{func.return_type}," +
-#                               f"{func.quad_number}," +
-#                               f"{[(k, v) for k, v in func.vars.items()]}," +
-#                               f"{[(k, v) for k, v in func.temps.items()]}\n")
-#         export_file.write("%%\n")
-#         for quad in range(len(global_context.quadruples)):
-#             # print(quad, global_context.quadruples[quad])
-#             quadruple = global_context.quadruples[quad]
-#             try:
-#                 quad_name = Quadruple.OperationType[quadruple.operation].value
-#                 # print("NAME", quad_name)
-#             except KeyError:
-#                 quad_name = quadruple.operation
-#             line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
-#             # print(line)
-#             export_file.write(line)
-#
-# if parser.parse(data, tracking=True, debug=logging.getLogger()) == 'COMPILA':
-#     print("Sintaxis aceptada")
-# else:
-#     print("error de sintaxis")
-
-# for k, v in global_context.function_table.table.items():
-#     print(v.__str__())
-
-# print(global_context.types)
-# print(global_context.operands)
-# print(global_context.operations)
-
-# quads display
-# with open("../export.obj", "w+") as export:
-#     export.write("%%\n")
-#     for value, direction in avail.const_to_dir.items():
-#         export.write(f"{direction},{value}\n")
-#     export.write("%%\n")
-#     for func in global_context.function_table.table.values():
-#         export.write(f"{func.name},{func.return_type}," +
-#                      f"{func.quad_number}," +
-#                      f"{[(k, v) for k, v in func.vars.items()]}," +
-#                      f"{[(k, v) for k, v in  func.temps.items()]}\n")
-#     export.write("%%\n")
-#     for quad in range(len(global_context.quadruples)):
-#         # print(quad, global_context.quadruples[quad])
-#         quadruple = global_context.quadruples[quad]
-#         try:
-#             quad_name = Quadruple.OperationType[quadruple.operation].value
-#             # print("NAME", quad_name)
-#         except KeyError:
-#             quad_name = quadruple.operation
-#         line = f"{quad_name},{quadruple.first_direction},{quadruple.second_direction},{quadruple.result}\n"
-#         # print(line)
-#         export.write(line)
-
-# for func in global_context.function_table.table.values():
-#     print(func.name, func.count_vars())
-
-# for _, function in global_context.function_table.table.items():
-#     print(function.name)
-#     for var in function.variables.table.values():
-#         print(f"{var.name}, {[dim.upper_bound for dim in var.dimensions]}, {var.size}, {var.direction}")
-
-# for var in global_context.function_table.table["global"].variables.table.values():
-#     print(var.direction)
-# print('dlelel', global_context.get_variable('ted').size)

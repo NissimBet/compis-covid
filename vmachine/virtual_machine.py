@@ -119,9 +119,8 @@ class VirtualMachine:
 
     def get_var(self, var_dir: str):
         try:
-            match = re.match(r"\((.*)\)\n", var_dir)
+            match = re.match(r"\((.*)\).*", var_dir)
             if match:
-                print("FOUND POINTER", match.group(1))
                 direction = self.get_var(match.group(1))
             else:
                 direction = int(var_dir)
