@@ -60,6 +60,7 @@ class Quadruple:
         COV = "COV"
         # metodos graficos
         BAR = "BAR"
+        SCATTER = "SCAT"
 
     @staticmethod
     def get_operator_name(name: str):

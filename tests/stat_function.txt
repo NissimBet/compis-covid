@@ -24,4 +24,5 @@ main()
     write("COVARIANCE",dataVar);
 
     graphBar(data, 1);
+    scatter(data, 1, 2);
 }

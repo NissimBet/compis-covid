@@ -306,5 +306,14 @@ class VirtualMachine:
                 self.assign_var(dir3, cov_res)
             else:
                 print(f"Error. Index out of range")
-
+        elif operation == "SCAT":
+            var1 = self.get_var(dir1)
+            var2 = self.get_var(dir2)
+            var3 = self.get_var(dir3)
+            if 0 <= var2 < len(var1.columns) and 0 <= var3 < len(var1.columns):
+                pyplot.scatter(var1[var2], var1[var3])
+                # var1.plot.scatter(x=var2, y=var3)
+                pyplot.show()
+            else:
+                print(f"Error. Index out of range")
         return self.__index_counter + 1

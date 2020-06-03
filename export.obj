@@ -4,6 +4,7 @@
 10300,./tests/test_input_data.txt
 10001,0
 10301,COVARIANCE
+10002,2
 %%
 global,void,0,[],[('float', 1)]
 test,float,1,[('float', 1)],[('int', 1), ('float', 1)]
@@ -34,4 +35,5 @@ COV,5500,10000,5102
 WRITE,,,10301
 WRITE,,,5102
 BAR,5500,10000,
+SCAT,5500,10000,10002
 END,,,

@@ -627,7 +627,7 @@ def p_std_methods(p):
                     | graph_func
                     | NORMAL_GRAPH
                     | cov_func
-                    | SCATTER
+                    | scatter_func
     """
     p[0] = p[1]
 
@@ -642,7 +642,7 @@ def p_mean_func(p):
     if frame_var.type != "dataFrame":
         print(f"Type Error. Expected dataFrame, got {frame_var.type}")
     if index_type != "int":
-        print(f"Error. Expected integer, got {index_var.type}")
+        print(f"Error. Expected integer, got {index_type}")
     if res_var.type != "float":
         print(f"Error. Expected float, got {res_var.type}")
 
@@ -662,7 +662,7 @@ def p_mode_func(p):
     if frame_var.type != "dataFrame":
         print(f"Type Error. Expected dataFrame, got {frame_var.type}")
     if index_type != "int":
-        print(f"Error. Expected integer, got {index_var.type}")
+        print(f"Error. Expected integer, got {index_type}")
     if res_var.type != "float":
         print(f"Error. Expected float, got {res_var.type}")
 
@@ -682,7 +682,7 @@ def p_variance_func(p):
     if frame_var.type != "dataFrame":
         print(f"Type Error. Expected dataFrame, got {frame_var.type}")
     if index_type != "int":
-        print(f"Error. Expected integer, got {index_var.type}")
+        print(f"Error. Expected integer, got {index_type}")
     if res_var.type != "float":
         print(f"Error. Expected float, got {res_var.type}")
 
@@ -707,6 +707,29 @@ def p_graph_func(p):
                                str(frame_var.direction),
                                str(index_var),
                                "")
+
+
+def p_scatter_func(p):
+    """scatter_func  : SCATTER '(' ID ',' logic_comp ',' logic_comp ')' """
+    frame_var = global_context.get_variable(p[3])
+
+    y_index_var = global_context.operands.pop()
+    y_index_type = global_context.types.pop()
+
+    x_index_var = global_context.operands.pop()
+    x_index_type = global_context.types.pop()
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if x_index_type != "int":
+        print(f"Error. Expected integer, got {x_index_type}")
+    if y_index_type != "int":
+        print(f"Error. Expected integer, got {y_index_type}")
+
+    global_context.create_quad(Quadruple.OperationType.SCATTER,
+                               str(frame_var.direction),
+                               str(x_index_var),
+                               str(y_index_var))
 
 
 def p_cov_func(p):
