@@ -8,8 +8,7 @@ from .v_function import VMFunction
 from .v_variables import get_scope, get_type, try_cast
 
 import pandas as pd
-import numpy
-from scipy import stats
+from matplotlib import pyplot
 
 import os
 
@@ -291,4 +290,21 @@ class VirtualMachine:
                 self.assign_var(dir3, variance)
             else:
                 print(f"Error. Index out of range")
+        elif operation == "BAR":
+            var1 = self.get_var(dir1)
+            var2 = self.get_var(dir2)
+            if 0 <= var2 < len(var1.columns):
+                var1[var2].plot.bar(rot=0)
+                pyplot.show()
+            else:
+                print(f"Error. Index out of range")
+        elif operation == "COV":
+            var1 = self.get_var(dir1)
+            var2 = self.get_var(dir2)
+            if 0 <= var2 < len(var1.columns):
+                cov_res = var1.cov()[var2][var2]
+                self.assign_var(dir3, cov_res)
+            else:
+                print(f"Error. Index out of range")
+
         return self.__index_counter + 1

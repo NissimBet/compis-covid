@@ -52,7 +52,6 @@ reserved = {
     'mean'      : 'MEAN',
     'mode'      : 'MODE',
     'variance'     : 'VARIANCE',
-    'normal'    : 'NORMAL',
     'gamma'     : 'GAMMA',
     # Graficar variables simples
     'graphBar'     : 'GRAPH',

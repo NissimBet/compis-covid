@@ -3,6 +3,7 @@
 10000,1
 10300,./tests/test_input_data.txt
 10001,0
+10301,COVARIANCE
 %%
 global,void,0,[],[('float', 1)]
 test,float,1,[('float', 1)],[('int', 1), ('float', 1)]
@@ -29,4 +30,8 @@ PARAM,5102,,5100
 GOSUB,,,1
 ASG,2100,,6100
 WRITE,,,6100
+COV,5500,10000,5102
+WRITE,,,10301
+WRITE,,,5102
+BAR,5500,10000,
 END,,,

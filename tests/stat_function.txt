@@ -19,4 +19,9 @@ main()
     write(dataVar);
 
     write(test(dataVar));
+
+    covariance(data, 1, dataVar);
+    write("COVARIANCE",dataVar);
+
+    graphBar(data, 1);
 }

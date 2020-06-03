@@ -623,11 +623,10 @@ def p_std_methods(p):
     """std_methods  : mean_func
                     | mode_func
                     | variance_func
-                    | NORMAL
                     | GAMMA
-                    | GRAPH
+                    | graph_func
                     | NORMAL_GRAPH
-                    | COV
+                    | cov_func
                     | SCATTER
     """
     p[0] = p[1]
@@ -693,6 +692,43 @@ def p_variance_func(p):
                                str(res_var.direction))
 
 
+def p_graph_func(p):
+    """graph_func    : GRAPH '(' ID ',' logic_comp ')' """
+    frame_var = global_context.get_variable(p[3])
+    index_var = global_context.operands.pop()
+    index_type = global_context.types.pop()
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if index_type != "int":
+        print(f"Error. Expected integer, got {index_var.type}")
+
+    global_context.create_quad(Quadruple.OperationType.BAR,
+                               str(frame_var.direction),
+                               str(index_var),
+                               "")
+
+
+def p_cov_func(p):
+    """cov_func    : COV '(' ID ',' logic_comp ',' ID ')' """
+    frame_var = global_context.get_variable(p[3])
+    index_var = global_context.operands.pop()
+    index_type = global_context.types.pop()
+    res_var = global_context.get_variable(p[7])
+
+    if frame_var.type != "dataFrame":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+    if index_type != "int":
+        print(f"Error. Expected integer, got {index_var.type}")
+    if res_var.type != "float":
+        print(f"Type Error. Expected dataFrame, got {frame_var.type}")
+
+    global_context.create_quad(Quadruple.OperationType.COV,
+                               str(frame_var.direction),
+                               str(index_var),
+                               str(res_var.direction))
+
+
 def p_called_func(p):
     """called_func  : """
     f_name = p[-1]
@@ -701,11 +737,7 @@ def p_called_func(p):
         global_context.func_calls.push(f_name)
         global_context.param_counter.push(0)
         function_size = global_context.function_table.function(f_name).vars
-        # print(function_size)
-        # print(global_context.function_table.function(f_name).temps)
-        total_vars = sum([i for i in function_size.values()])
-        # for var_type, var_nums in function_size.items():
-        #     global_context.create_quad(Quadruple.OperationType.ERA, var_type, "", var_nums)
+
         global_context.create_quad(Quadruple.OperationType.ERA, "", "", f_name)
     else:
         print(
@@ -727,7 +759,6 @@ def p_end_func_call(p):
         global_context.create_quad(Quadruple.OperationType.ASSIGN, str(function.return_dir), "", temp)
         global_context.operands.push(temp)
         global_context.types.push(function.return_type)
-
 
     if len(global_context.function_table.function(f_name).parameters) != f_params:
         print(
