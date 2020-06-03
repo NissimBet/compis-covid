@@ -7,11 +7,12 @@ COVID19p es un lenguaje de programación bajo el fundamento de Little Languages 
 Clona el repositorio y extrae el directorio principal a tu computadora.
 Además, para utilizarlo necesitas:
 * Python3.8 y pip
-* Las librerías [plotly](https://plotly.com/python/) y [numpy](https://numpy.org/). Puedes instalarlas a través de pip
+* Las librerías [pyplot](https://matplotlib.org/api/pyplot_api.html) y [pandas](https://pandas.pydata.org/). Puedes instalarlas a través de pip
 
 ```bash
-pip install [inserte nombre de paquete plotly]
-python3.8 -m pip install numpy
+python3.8 -m pip install -U matplotlib
+python3.8 -m pip install -U pandas
+
 ```
 
 ## Uso
