@@ -195,6 +195,7 @@ def p_tipo(p):
 
 def p_declare_func(p):
     """declare_func : """
+    global_context.jumpStack.add_separator()
     if not global_context.declare_function(p[-1], None):
         print(
             f'Error de Sintaxis en declacion de funciones. Linea {p.lineno(-1)}. Funcion "{p[-1]}" ya esta declarada')
@@ -203,6 +204,10 @@ def p_declare_func(p):
 # function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(_):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
+    while not global_context.jumpStack.is_bottom:
+        # print(global_context.jumpStack.top())
+        global_context.fill_quad()
+    global_context.jumpStack.remove_separator()
     global_context.end_function()
 
 
@@ -297,6 +302,8 @@ def p_return(p):
     exp_type = global_context.types.pop()
     exp_val = global_context.operands.pop()
     global_context.create_quad(Quadruple.OperationType.ASSIGN, exp_val, "", str(function.return_dir))
+    global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
+    global_context.create_jump()
     if exp_type != function.return_type:
         print(
             f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
@@ -720,6 +727,7 @@ def p_end_func_call(p):
         global_context.create_quad(Quadruple.OperationType.ASSIGN, str(function.return_dir), "", temp)
         global_context.operands.push(temp)
         global_context.types.push(function.return_type)
+
 
     if len(global_context.function_table.function(f_name).parameters) != f_params:
         print(
