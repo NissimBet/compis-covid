@@ -1,5 +1,6 @@
 from typing import Any
 
+# categorias / division local de la VM
 categs = [("global", "non_temp", 2000, 1000), ("global", "temp", 18000, 1000),
           ("local", "non_temp", 3000, 1000), ("local", "temp", 8000, 1000),
           ("constant", "value", 15000, 1000)]
@@ -9,6 +10,7 @@ data_types = [("int", 0, 100), ("float", 100, 100),
               ("bool", 400, 100), ("dataFrame", 500, 100),
               ("pointer", 600, 100)]
 
+# categorias / division local del compilador
 compiler_categs = [("global", "non_temp", 1000, 1000), ("global", "temp", 2000, 1000),
                    ("local", "non_temp", 5000, 1000), ("local", "temp", 6000, 1000),
                    ("constant", "value", 10000, 1000)]
@@ -20,6 +22,7 @@ compiler_data_types = [("int", 0, 100), ("float", 100, 100),
 
 
 def convert_dir(mem_direction: int):
+    """Convertir una direccion del compilador a una direccion de la VM"""
     for categ_idx, categ in enumerate(compiler_categs):
         if categ[2] <= mem_direction < categ[2] + categ[3]:
             direction = mem_direction - categ[2]
@@ -30,12 +33,14 @@ def convert_dir(mem_direction: int):
 
 
 def get_scope(mem_direction: int):
+    """Regresa la categoria de de la direccion"""
     for categ in categs:
         if categ[2] <= mem_direction < categ[2] + categ[3]:
             return categ[0]
 
 
 def get_type(mem_direction: int):
+    """Regresa el tipo de dato correspondiente a la variable"""
     for categ in categs:
         if categ[2] <= mem_direction < categ[2] + categ[3]:
             direction = mem_direction - categ[2]
@@ -45,6 +50,7 @@ def get_type(mem_direction: int):
 
 
 def try_cast(mem_direction: int, mem_value: Any):
+    """Intenta convertir una variable al tipo de dato correcto"""
     val_type = get_type(mem_direction)
     try:
         if val_type == "int":

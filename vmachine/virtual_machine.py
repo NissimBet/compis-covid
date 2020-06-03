@@ -14,12 +14,17 @@ import os
 
 
 class VirtualMachine:
+    # program counter
     __index_counter: int
+    # lista de cuadruplos cargados del .obj
     __quads: List[List[str]]
+    # stack de ejecucion de funciones
     __execution_stack: Stack[VMFunction]
+    # tabla de funciones recreada
     __function_table: Dict[str, Dict[str, Any]]
 
     def __init__(self, file_path):
+        # memorias de la maquina virtual
         self.__global_memory = Memory(2000)
         self.__global_temps = Memory(18000)
         self.__constants = Memory(15000)
@@ -36,6 +41,12 @@ class VirtualMachine:
         self.load_file_contents(file_path)
 
     def execute_quads(self):
+        """
+        Funcion que ejecuta los cuadruplos cargados  en memoria
+        :return:
+        """
+
+        # inicializar las variables de cada funcion
         global_func = self.__function_table.get("global")
         for var, size in global_func.get("num_vars").items():
             self.__global_memory.initialize_var_type(var, size)
@@ -49,26 +60,29 @@ class VirtualMachine:
         for var, size in function.get("num_temps").items():
             function_context.era(var, size, True)
         self.__execution_stack.push(function_context)
+
+        # ejecutar los cuadruplos en "orden"
         while self.__index_counter < len(self.__quads):
             current_quad = self.__quads[self.__index_counter]
-            # print("counter ", self.__index_counter, len(self.__quads))
-            # print("QUAD", current_quad)
             self.__index_counter = self.load_quad(
                 current_quad[0], current_quad[1], current_quad[2], current_quad[3])
 
     def load_file_contents(self, filename: str):
+        """Carga los contenidos de un archivo obj"""
         if os.path.exists(filename):
             with open(filename, "r") as file:
                 stop_string = file.readline()
-                # CONST TABLE
+                # CONST TABLE #
                 for line in file:
                     if line == stop_string:
                         break
                     else:
+                        # separar los datos y eliminar newlines
                         values = line.strip("\r\n").split(',')
                         if len(values) < 2:
                             print(f"Error, malformed pair for constant variables")
                         else:
+                            # convertir la direccion del compilador a una de la VM
                             direction = convert_dir(int(values[0]))
                             self.__constants.push_var(
                                 direction, try_cast(direction, values[1]))
@@ -77,13 +91,13 @@ class VirtualMachine:
                     if line == stop_string:
                         break
                     else:
+                        # separar los datos para cada funcion (nombre, tipo , cuad_inicio , variables locales, variable temporales)
                         values = re.match(
                             r"(\w*),(\w*),(\w*),(\[.*\]),(\[.*\])", line.strip('\r\n'))
                         func_vars = re.findall(r"\(.*?,.*?\)", values.group(4))
                         temp_vars = re.findall(r"\(.*?,.*?\)", values.group(5))
-                        # print(values.groups())
-                        # print(func_vars)
-                        # print(temp_vars)
+
+                        # contar la cantidad de variables por tipo de variable
                         num_vars = {}
                         num_temps = {}
                         for func_var in func_vars:
@@ -98,6 +112,7 @@ class VirtualMachine:
                         if len(values.groups()) < 5:
                             print(f"Error, malformed fucntion table data")
                         else:
+                            # crear una funcion en la tabla de funciones
                             new_function = {
                                 "type": values[2],
                                 "dir_start": values[3],
@@ -113,15 +128,16 @@ class VirtualMachine:
                         print("Error, malformed quad", quad)
                     else:
                         self.__quads.append(quad)
-                # print(f"Found Constants {[c for c in self.__constants.get_vars()]}")
-                # print(f"Found Functions {[f for f in self.__function_table.keys()]}")
         else:
             print(f"File {filename} was not found")
 
     def get_var(self, var_dir: str):
+        """Regresa el valor de una variable segun el contexto actual del VM"""
         try:
+            # revisar si es un apuntador
             match = re.match(r"\((.*)\).*", var_dir)
             if match:
+                # si es apuntador, conseguir direccion de esa direccion
                 direction = self.get_var(match.group(1))
             else:
                 direction = int(var_dir)
@@ -141,9 +157,12 @@ class VirtualMachine:
             return self.__constants.get_var(direction)
 
     def assign_var(self, var_dir: str, value: Any):
+        """Asigna un valor a una direccino de memoria segun el contexto de la direccion"""
         try:
+            # revisar si es un apuntador
             match = re.match(r"\((.*)\).*", var_dir)
             if match:
+                # si es buscar la direccion correspondiente
                 direction = self.get_var(match.group(1))
             else:
                 direction = int(var_dir)
@@ -159,10 +178,8 @@ class VirtualMachine:
             elif 2000 <= direction < 3000:
                 return self.__global_temps.assign_var(direction, value)
         elif var_scope == "local":
-            # self.__execution_stack.top().assign_var(direction, try_cast(direction, value))
             self.__execution_stack.top().assign_var(direction, value)
         elif var_scope == "constant":
-            # return self.__constants.assign_var(direction, try_cast(direction, value))
             self.__constants.assign_var(direction, value)
 
     def load_quad(self, operation: str, dir1: str, dir2: str, dir3: str):
@@ -225,8 +242,11 @@ class VirtualMachine:
             self.__execution_stack.push(self.__context)
             return int(dir3)
         elif operation == "ERA":  # ERA
+            # buscar la funcion de la tabla
             function = self.__function_table.get(dir3)
+            # cambiar el contexto actual
             function_context = VMFunction(dir3)
+            # crear variables
             for var, size in function.get("num_vars").items():
                 function_context.era(var, size, False)
             for var, size in function.get("num_temps").items():
