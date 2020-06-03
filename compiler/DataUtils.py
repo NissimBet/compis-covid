@@ -41,6 +41,7 @@ class ParsingContext(object):
         self.param_counter = Stack()
         self.func_calls = Stack()
         self.dimensions = Stack()
+        self.return_pos = Stack()
 
     @property
     def quad_counter(self):

@@ -1,0 +1,15 @@
+program fibonacci;
+
+function int fib(int base) {
+    if (base == 0) then {
+        return(0);
+    }
+    if (base == 1) then {
+        return(1);
+    }
+    return(fib(base - 1) + fib(base - 2));
+}
+
+main() {
+    write(fib(8));
+}

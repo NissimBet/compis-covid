@@ -204,9 +204,8 @@ def p_declare_func(p):
 # function return_type ID ( parameters? ) vars? { bloque? }
 def p_function(_):
     """function     : FUNCTION return_type ID declare_func '(' function_1 ')' function_2 '{' bloque '}' """
-    while not global_context.jumpStack.is_bottom:
-        # print(global_context.jumpStack.top())
-        global_context.fill_quad()
+    while i := global_context.return_pos.pop():
+        global_context.fill_quad(i)
     global_context.jumpStack.remove_separator()
     global_context.end_function()
 
@@ -303,7 +302,7 @@ def p_return(p):
     exp_val = global_context.operands.pop()
     global_context.create_quad(Quadruple.OperationType.ASSIGN, exp_val, "", str(function.return_dir))
     global_context.create_quad(Quadruple.OperationType.GOTO, "", "", "")
-    global_context.create_jump()
+    global_context.return_pos.push(global_context.quad_counter)
     if exp_type != function.return_type:
         print(
             f"Error, wrong return type. Expecting {function.return_type} on function {function.name}")
