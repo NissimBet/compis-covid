@@ -629,9 +629,7 @@ def p_std_methods(p):
     """std_methods  : mean_func
                     | mode_func
                     | variance_func
-                    | GAMMA
                     | graph_func
-                    | NORMAL_GRAPH
                     | cov_func
                     | scatter_func
     """
