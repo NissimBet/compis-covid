@@ -9,7 +9,7 @@ if __name__ == '__main__':
     #     print("Missing output file param")
     # else:
     print("STARTED PARSE")
-    parse("tests/sort_array.txt", False)
+    parse("tests/mat_mult.txt", False)
     print("EXPORTING DATA")
     export("./export.obj")
     VM = vmachine.VirtualMachine("./export.obj")

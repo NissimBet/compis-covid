@@ -140,7 +140,7 @@ class ParsingContext(object):
                          first_dimension)
 
         if len(dim_var.dimensions) == 2:
-            second_dimension = avail.get_next_const("int", dim_var.dimensions[1].m)
+            second_dimension = avail.get_next_const("int", dim_var.dimensions[1].upper_bound)
             self.operands.push(second_dimension)
             self.types.push("int")
             self.operations.push("*")
