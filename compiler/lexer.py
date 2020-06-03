@@ -52,10 +52,9 @@ reserved = {
     'mean'      : 'MEAN',
     'mode'      : 'MODE',
     'variance'     : 'VARIANCE',
-    'gamma'     : 'GAMMA',
     # Graficar variables simples
     'graphBar'     : 'GRAPH',
-    'normalGraph'  : 'NORMAL_GRAPH',
+    # 'normalGraph'  : 'NORMAL_GRAPH',
     # Correlación entre dos variables
     'covariance': 'COV',
     # Correlación gráfica entre dos variables

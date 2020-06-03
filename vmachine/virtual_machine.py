@@ -5,7 +5,7 @@ from typing import List, Any, Dict
 
 from .v_memory import Memory
 from .v_function import VMFunction
-from .v_variables import get_scope, get_type, try_cast
+from .v_variables import get_scope, get_type, try_cast, convert_dir
 
 import pandas as pd
 from matplotlib import pyplot
@@ -20,9 +20,9 @@ class VirtualMachine:
     __function_table: Dict[str, Dict[str, Any]]
 
     def __init__(self, file_path):
-        self.__global_memory = Memory(1000)
-        self.__global_temps = Memory(2000)
-        self.__constants = Memory(10000)
+        self.__global_memory = Memory(2000)
+        self.__global_temps = Memory(18000)
+        self.__constants = Memory(15000)
         self.__execution_stack = Stack[VMFunction]()
 
         self.__index_counter = 0
@@ -69,8 +69,9 @@ class VirtualMachine:
                         if len(values) < 2:
                             print(f"Error, malformed pair for constant variables")
                         else:
+                            direction = convert_dir(int(values[0]))
                             self.__constants.push_var(
-                                int(values[0]), try_cast(int(values[0]), values[1]))
+                                direction, try_cast(direction, values[1]))
                 # FUNCTION TABLE
                 for line in file:
                     if line == stop_string:
@@ -127,11 +128,12 @@ class VirtualMachine:
         except ValueError:
             print(f"Provided Direction is not a number format {var_dir}")
             return
+        direction = convert_dir(direction)
         var_scope = get_scope(direction)
         if var_scope == "global":
-            if 1000 <= direction < 2000:
+            if 2000 <= direction < 3000:
                 return self.__global_memory.get_var(direction)
-            elif 2000 <= direction < 3000:
+            elif 18000 <= direction < 19000:
                 return self.__global_temps.get_var(direction)
         elif var_scope == "local":
             return self.__execution_stack.top().get_var(direction)
@@ -149,6 +151,7 @@ class VirtualMachine:
             print(
                 f"Provided Direction is not a number format {var_dir}, cannot assign {value}")
             return
+        direction = convert_dir(direction)
         var_scope = get_scope(direction)
         if var_scope == "global":
             if 1000 <= direction < 2000:

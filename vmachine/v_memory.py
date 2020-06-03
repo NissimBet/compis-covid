@@ -3,7 +3,9 @@ from .v_variables import data_types, get_type
 
 
 class Memory:
+    # direccion base de la memoria
     __base_dir: int
+    # estructura de memoria
     __memory: Dict[str, Dict[str, Union[int, List[Any]]]]
 
     def __init__(self, base: int):
