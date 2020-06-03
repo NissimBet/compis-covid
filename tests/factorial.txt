@@ -1,0 +1,21 @@
+program factorial;
+
+function int fact(int f) {
+    if (f < 2) then {
+        return (f);
+    }
+    return (fact(f - 1) * f);
+}
+
+main()
+    var int: N, mult, i;
+{
+    N = 5;
+    write(fact(N));
+
+    mult = 1;
+    from i = 1 to N + 1 do {
+        mult = mult * i;
+    }
+    write(mult);
+}
