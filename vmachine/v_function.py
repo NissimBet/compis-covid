@@ -15,7 +15,7 @@ class VMFunction:
         :param var_direction: direccion de la memoria
         :return: El valor en la direccion
         """
-        if 3000 <= var_direction < 8000:
+        if 3000 <= var_direction < 4000:
             return self.__local_memory.get_var(var_direction)
         elif 8000 <= var_direction < 9000:
             return self.__temp_memory.get_var(var_direction)
@@ -28,7 +28,7 @@ class VMFunction:
         :param value: el valor que asignar
         :return: None
         """
-        if 3000 <= var_direction < 8000:
+        if 3000 <= var_direction < 4000:
             return self.__local_memory.assign_var(var_direction, value)
         elif 8000 <= var_direction < 9000:
             return self.__temp_memory.assign_var(var_direction, value)

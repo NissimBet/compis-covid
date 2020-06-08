@@ -135,7 +135,7 @@ class VirtualMachine:
         """Regresa el valor de una variable segun el contexto actual del VM"""
         try:
             # revisar si es un apuntador
-            match = re.match(r"\((.*)\).*", var_dir)
+            match = re.match(r"\((.*)\).*", str(var_dir))
             if match:
                 # si es apuntador, conseguir direccion de esa direccion
                 direction = self.get_var(match.group(1))
@@ -160,7 +160,7 @@ class VirtualMachine:
         """Asigna un valor a una direccino de memoria segun el contexto de la direccion"""
         try:
             # revisar si es un apuntador
-            match = re.match(r"\((.*)\).*", var_dir)
+            match = re.match(r"\((.*)\).*", str(var_dir))
             if match:
                 # si es buscar la direccion correspondiente
                 direction = self.get_var(match.group(1))
@@ -173,9 +173,9 @@ class VirtualMachine:
         direction = convert_dir(direction)
         var_scope = get_scope(direction)
         if var_scope == "global":
-            if 1000 <= direction < 2000:
+            if 2000 <= direction < 3000:
                 return self.__global_memory.assign_var(direction, value)
-            elif 2000 <= direction < 3000:
+            elif 18000 <= direction < 19000:
                 return self.__global_temps.assign_var(direction, value)
         elif var_scope == "local":
             self.__execution_stack.top().assign_var(direction, value)
@@ -183,7 +183,6 @@ class VirtualMachine:
             self.__constants.assign_var(direction, value)
 
     def load_quad(self, operation: str, dir1: str, dir2: str, dir3: str):
-        # print(operation, dir1, dir2, dir3, sep=",")
         if operation == "SUM":
             var1 = self.get_var(dir1)
             var2 = self.get_var(dir2)
@@ -254,7 +253,7 @@ class VirtualMachine:
             self.__context = function_context
         elif operation == "PARAM":  # PARAM
             var1 = self.get_var(dir1)
-            self.__context.pass_param(int(dir3), var1)
+            self.__context.pass_param(convert_dir(int(dir3)), var1)
         elif operation == "ENDFUNC":  # END FUNC
             self.__execution_stack.pop()
             return self.__index_stack.pop() + 1
